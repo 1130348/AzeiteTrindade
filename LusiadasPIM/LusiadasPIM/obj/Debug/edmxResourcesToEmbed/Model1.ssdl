@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="Oracle.ManagedDataAccess.Client" ProviderManifestToken="11.2" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'MEDICO.V_INTERNAMENTOS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="V_INTERNAMENTOS">
+    <Key>
+      <PropertyRef Name="T_DOENTE" />
+      <PropertyRef Name="DOENTE" />
+      <PropertyRef Name="N_INT" />
+      <PropertyRef Name="COD_SERV" />
+      <PropertyRef Name="DT_INT" />
+      <PropertyRef Name="EPISODIO" />
+    </Key>
+    <Property Name="T_DOENTE" Type="varchar2" MaxLength="5" Nullable="false" />
+    <Property Name="DOENTE" Type="varchar2" MaxLength="12" Nullable="false" />
+    <Property Name="NOME" Type="varchar2" MaxLength="80" />
+    <Property Name="N_INT" Type="varchar2" MaxLength="15" Nullable="false" />
+    <Property Name="COD_SERV" Type="varchar2" MaxLength="10" Nullable="false" />
+    <Property Name="CAMA" Type="varchar2" MaxLength="10" />
+    <Property Name="ENFERMARIA" Type="varchar2" MaxLength="10" />
+    <Property Name="SALA" Type="varchar2" MaxLength="10" />
+    <Property Name="COD_SERV_VALENCIA" Type="varchar2" MaxLength="10" />
+    <Property Name="DT_INT" Type="date" Nullable="false" />
+    <Property Name="HORA_INT" Type="varchar2" MaxLength="5" />
+    <Property Name="DT_ALTA" Type="date" />
+    <Property Name="HR_ALTA" Type="varchar2" MaxLength="5" />
+    <Property Name="DT_OPER" Type="date" />
+    <Property Name="HR_INI" Type="varchar2" MaxLength="5" />
+    <Property Name="DURACAO" Type="varchar2" MaxLength="5" />
+    <Property Name="DESCR_SERV" Type="varchar2" MaxLength="40" />
+    <Property Name="T_EPISODIO" Type="char" MaxLength="13" />
+    <Property Name="EPISODIO" Type="varchar2" MaxLength="15" Nullable="false" />
+    <Property Name="N_MECAN" Type="varchar2" MaxLength="10" />
+    <Property Name="NOME_MEDICO" Type="varchar2" MaxLength="20" />
+    <Property Name="DESC_OPER" Type="varchar2" MaxLength="4000" />
+    <Property Name="T_EPISODIO_PAI" Type="varchar2" MaxLength="8" />
+    <Property Name="EPISODIO_PAI" Type="varchar2" MaxLength="4000" />
+    <Property Name="TRI_NUM" Type="varchar2" MaxLength="10" />
+    <Property Name="MOT_INTERN" Type="varchar2" MaxLength="2048" />
+  </EntityType>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="V_INTERNAMENTOS" EntityType="Self.V_INTERNAMENTOS" store:Type="Views" store:Schema="MEDICO">
+      <DefiningQuery>SELECT 
+"V_INTERNAMENTOS"."T_DOENTE" AS "T_DOENTE", 
+"V_INTERNAMENTOS"."DOENTE" AS "DOENTE", 
+"V_INTERNAMENTOS"."NOME" AS "NOME", 
+"V_INTERNAMENTOS"."N_INT" AS "N_INT", 
+"V_INTERNAMENTOS"."COD_SERV" AS "COD_SERV", 
+"V_INTERNAMENTOS"."CAMA" AS "CAMA", 
+"V_INTERNAMENTOS"."ENFERMARIA" AS "ENFERMARIA", 
+"V_INTERNAMENTOS"."SALA" AS "SALA", 
+"V_INTERNAMENTOS"."COD_SERV_VALENCIA" AS "COD_SERV_VALENCIA", 
+"V_INTERNAMENTOS"."DT_INT" AS "DT_INT", 
+"V_INTERNAMENTOS"."HORA_INT" AS "HORA_INT", 
+"V_INTERNAMENTOS"."DT_ALTA" AS "DT_ALTA", 
+"V_INTERNAMENTOS"."HR_ALTA" AS "HR_ALTA", 
+"V_INTERNAMENTOS"."DT_OPER" AS "DT_OPER", 
+"V_INTERNAMENTOS"."HR_INI" AS "HR_INI", 
+"V_INTERNAMENTOS"."DURACAO" AS "DURACAO", 
+"V_INTERNAMENTOS"."DESCR_SERV" AS "DESCR_SERV", 
+"V_INTERNAMENTOS"."T_EPISODIO" AS "T_EPISODIO", 
+"V_INTERNAMENTOS"."EPISODIO" AS "EPISODIO", 
+"V_INTERNAMENTOS"."N_MECAN" AS "N_MECAN", 
+"V_INTERNAMENTOS"."NOME_MEDICO" AS "NOME_MEDICO", 
+"V_INTERNAMENTOS"."DESC_OPER" AS "DESC_OPER", 
+"V_INTERNAMENTOS"."T_EPISODIO_PAI" AS "T_EPISODIO_PAI", 
+"V_INTERNAMENTOS"."EPISODIO_PAI" AS "EPISODIO_PAI", 
+"V_INTERNAMENTOS"."TRI_NUM" AS "TRI_NUM", 
+"V_INTERNAMENTOS"."MOT_INTERN" AS "MOT_INTERN"
+FROM "MEDICO"."V_INTERNAMENTOS" "V_INTERNAMENTOS"</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

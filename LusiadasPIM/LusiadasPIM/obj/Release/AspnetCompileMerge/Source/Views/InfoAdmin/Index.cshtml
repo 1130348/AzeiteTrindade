@@ -1,0 +1,306 @@
+﻿@using LDFHelper.Helpers;
+@using LusiadasPIM.Models;
+@model Tuple<ModelInfoAdTable, ValenciaModel, ParameterModel>
+
+
+<link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
+<script src="/Scripts/ldfTable.min.js"></script>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Gestão Administrativa
+        <small>Deslocações</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Início</a></li>
+        <li class="active">Gestão Administrativa</li>
+        <li class="active">Deslocações</li>
+    </ol>
+</section>
+
+
+<!-- Main content -->
+<section class="content">
+    <form action="#" method="post">
+        <div class="box box-primary box-solid">
+            <div class="box-header" style="padding:6px;">
+                <h3 class="box-title" style="font-size:16px;">Filtro</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label>Serviço</label>
+                        <select class="form-control" id="select-servico">
+                            <option value="">Ver todos</option>
+                            @foreach (Valencia item in Model.Item2.listValencias)
+                            {
+                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Localização Atual</label>
+                        <select class="form-control" id="select-ult-local">
+                            <option value="">Ver todos</option>
+                            @foreach (Valencia item in Model.Item2.listValencias)
+                            {
+                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Utentes</label>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="check-view-mine" class="minimal" />
+                                <span style="font-weight:normal;">Ver apenas utentes deslocados</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="box">
+            <div class="box-body">
+                <div class="row listwrapper no-border">@Html.TableRender(Model.Item1.callbacks, Model.Item1.list_headers, new LDFTableAttributes() { ID = "infADTable", className = "tableInternal", autoRefreshTime=0 })</div>
+            </div>
+        </div>
+    </form>
+</section>
+
+
+<div class="modal fade" id="modal-desloc-timeline" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="modal-select-tl-title"></h4>
+            </div>
+            <div class="modal-body" id="modal-desloc-tl-body">
+          
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Fechar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-desloc-prod" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="modal-select-prod-title"></h4>
+            </div>
+            <div class="modal-body" id="modal-desloc-prod-body">
+                @{
+                    Tuple<ModelDeslocProdTable, ParameterModel, ValenciaModel> tpMod = new Tuple<ModelDeslocProdTable, ParameterModel, ValenciaModel>(new ModelDeslocProdTable(), Model.Item3, Model.Item2);
+                }
+                @Html.Partial("_deslocProd", tpMod)
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Fechar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section customJS
+{
+    <script type="text/javascript">
+
+        var servicoCod  = "";
+        var ultLocalCod = "";
+        var viewOnlocal = 0;
+
+        var iCheckObj = $('#check-view-mine.minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+
+        iCheckObj.on('ifChanged', function (e) {
+            viewOnlocal = (($("#check-view-mine").is(":checked") == true) ? 1 : 0);
+            FilterData();
+        });
+
+
+        $("#select-ult-local").on("change", function (el) {
+            ultLocalCod = this.value;
+            FilterData();
+        });
+
+        $("#select-servico").on("change", function (el) {
+            servicoCod = this.value;
+            FilterData();
+        });
+
+
+
+        $(document).on("change", ".infad-selected-item", function (el) {
+            
+            var isConfirmed = confirm("Tem a certeza que pretende alterar a localização atual do doente?");
+            var selItem     = $(this).attr("data-previous-elem");
+            if (!isConfirmed)
+            {
+                RevertSelection(this, selItem);
+                return false;
+            }
+
+            var itemRow = $(this).attr("data-select-row");
+            var curobj  = this;
+
+            $.ajax({
+                url: '@Url.Action("UpdateDeslocRow", "InfoAdmin")',
+                data: { "itemRow": itemRow, "deslocCod": $(this).val() },
+                type: "post",
+                cache: false,
+                success: function (result) {
+                    if (result.res == true) {
+                        $.data(curobj, 'current', $(curobj).val());
+                        $(curobj).attr("data-previous-elem", $(curobj).val());
+                    }
+                    else {
+                        RevertSelection(this, selItem);
+                        return false;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        });
+
+
+        $(document).on("click", ".text-primary.infADModalDesloc", function () {
+
+            var tDoente = $(this).attr("data-tdoente");
+            var doente = $(this).attr("data-doente");
+            var nomeDoente = $(this).attr("data-nome");
+
+            $.ajax({
+                url: '@Url.Action("ShowDeslocTimeLine", "InfoAdmin")',
+                data: { "tdoente": tDoente, "doente": doente },
+                type: "GET",
+                cache: false,
+                success: function (result) {
+                    if (result != "")
+                    {
+                        $("#modal-select-tl-title").html("Deslocações de " + nomeDoente);
+                        $("#modal-desloc-tl-body").html(result);
+                    } else {
+                        $("#modal-desloc-tl-body").html("");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        });
+
+        $(document).on("click", ".infADModalDeslocProd", function () {
+            var tDoente     = $(this).attr("data-tdoente");
+            var doente      = $(this).attr("data-doente");
+            var nomeDoente  = $(this).attr("data-nome");
+            var curServ     = $(this).attr("data-codserv");
+            var ultLoc      = $(this).attr("data-ultloc");
+            var ncons       = $(this).attr("data-ncons");
+            var tEpis       = $(this).attr("data-tEpis");
+            var epis        = $(this).attr("data-epis");
+
+            $.ajax({
+                url: '@Url.Action("ShowDeslocProd", "InfoAdmin")',
+                data: { "tdoente": tDoente, "doente": doente, "curserv": curServ, "ultlocal": ultLoc, "ncons": ncons, "tEpis": tEpis, "epis": epis },
+                type: "GET",
+                cache: false,
+                success: function (result) {
+                    if (result != "") {
+                        $("#modal-select-prod-title").html("Teste de " + nomeDoente);
+                        $("#modal-desloc-prod-body").html(result);
+                    } else {
+                        $("#modal-desloc-prod-body").html("");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        });
+
+        
+
+        function RevertSelection(curobj, selItem)
+        {
+            if (selItem == '') {
+                $(curobj).val("0");
+            } else {
+                $(curobj).val(selItem);
+            }
+        }
+
+        function FilterData()
+        {
+            $.ajax({
+                url: '@Url.Action("FilterData", "InfoAdmin")',
+                data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "viewOnlocal": viewOnlocal },
+                type: "get",
+                cache: false,
+                success: function (result) {
+                    LDFTableRenderBody(result, 'infADTable');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+
+
+        $(document).on("change", ".infaddeslocprod-selected-item", function (el) {
+            var isConfirmed = confirm("Tem a certeza que pretende alterar a localização atual do produto?");
+            var selItem = $(this).attr("data-previous-elem");
+
+
+            if (!isConfirmed) {
+                RevertSelection(this, selItem);
+                return false;
+            }
+
+            var itemRow = $(this).attr("data-select-row");
+            var curobj = this;
+
+            $.ajax({
+                url: '@Url.Action("UpdateDeslocProd", "InfoAdmin")',
+                data: { "itemRow": itemRow, "selDest": $(this).val() },
+                type: "POST",
+                cache: false,
+                success: function (result) {
+                    if (result.res == true) {
+                        $.data(curobj, 'current', $(curobj).val());
+                    }
+                    else {
+                        RevertSelection(this, selItem);
+                        return false;
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        });
+
+
+</script>
+}

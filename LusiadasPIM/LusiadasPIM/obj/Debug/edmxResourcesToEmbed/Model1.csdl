@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="V_INTERNAMENTOS">
+    <Key>
+      <PropertyRef Name="T_DOENTE" />
+      <PropertyRef Name="DOENTE" />
+      <PropertyRef Name="N_INT" />
+      <PropertyRef Name="COD_SERV" />
+      <PropertyRef Name="DT_INT" />
+      <PropertyRef Name="EPISODIO" />
+    </Key>
+    <Property Name="T_DOENTE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="DOENTE" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="NOME" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+    <Property Name="N_INT" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="COD_SERV" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CAMA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="ENFERMARIA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="SALA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="COD_SERV_VALENCIA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="DT_INT" Type="DateTime" Nullable="false" />
+    <Property Name="HORA_INT" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="DT_ALTA" Type="DateTime" />
+    <Property Name="HR_ALTA" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="DT_OPER" Type="DateTime" />
+    <Property Name="HR_INI" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="DURACAO" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="DESCR_SERV" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+    <Property Name="T_EPISODIO" Type="String" MaxLength="13" FixedLength="true" Unicode="false" />
+    <Property Name="EPISODIO" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="N_MECAN" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="NOME_MEDICO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DESC_OPER" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+    <Property Name="T_EPISODIO_PAI" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+    <Property Name="EPISODIO_PAI" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+    <Property Name="TRI_NUM" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="MOT_INTERN" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="V_INTERNAMENTOS" EntityType="Self.V_INTERNAMENTOS" />
+  </EntityContainer>
+</Schema>

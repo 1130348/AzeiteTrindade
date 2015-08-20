@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using PIMDAL;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class PisosModel
     {

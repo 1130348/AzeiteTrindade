@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class ModelPIMTable : LDFTableHelper
     {

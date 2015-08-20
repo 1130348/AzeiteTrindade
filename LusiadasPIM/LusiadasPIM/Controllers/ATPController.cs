@@ -1,4 +1,4 @@
-﻿using LusiadasPIM.Models;
+﻿using LusiadasSolucaoWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace LusiadasPIM.Controllers
+namespace LusiadasSolucaoWeb.Controllers
 {
     public class ATPController : Controller
     {
@@ -18,6 +18,17 @@ namespace LusiadasPIM.Controllers
         [LogErrorHandler("UPSI DUPSI")]
         public ActionResult Index()
         {
+            if (Session[Constants.SS_USER] != null)
+            {
+                uinfo = (UserInfo)Session[Constants.SS_USER];
+                ViewBag.UserName = String.Format("{0} {1}", uinfo.titulo, uinfo.nome);
+                ViewBag.NUM_CEDULA = uinfo.getcatProfissional();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View(atpTable);
         }
 

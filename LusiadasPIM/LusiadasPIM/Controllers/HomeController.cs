@@ -1,4 +1,4 @@
-﻿using LusiadasPIM.Models;
+﻿using LusiadasSolucaoWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using LDF.ErrorLogging.Logging;
 
-namespace LusiadasPIM.Controllers
+namespace LusiadasSolucaoWeb.Controllers
 {
     public class HomeController : Controller
     {

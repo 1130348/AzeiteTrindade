@@ -9,7 +9,7 @@ using System.Net;
 using LDF.Authentication;
 using System.ComponentModel;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class AuthenticationHandler : AuthorizeAttribute, IAuthorizationFilter
     {

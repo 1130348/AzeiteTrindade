@@ -1,5 +1,5 @@
 ﻿@using LDFHelper.Helpers;
-@using LusiadasPIM.Models;
+@using LusiadasSolucaoWeb.Models;
 @model Tuple<ModelDeslocProdTable, ParameterModel, ValenciaModel>
 
 <div class="box box-success">
@@ -64,7 +64,7 @@
         var selDest = $("#select-deslocProd-destino").val();
 
         $.ajax({
-            url: '@Url.Action("AddDeslocProd", "InfoAdmin")',
+            url: '@Url.Action("AddDeslocProd", "Deslocacoes")',
             data: { "tdoente": tdoente, "doente": doente, "ncons": ncons, "tEpis":tEpis, "epis": epis, "selProd": selProd, "selOrig": selOrig, "selDest": selDest },
             type: "POST",
             cache: false,

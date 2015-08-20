@@ -47,8 +47,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="LDF.Authentication, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LDFAuthentication.0.0.6\lib\net40\LDF.Authentication.dll</HintPath>
+      <HintPath>..\packages\LDFAuthentication.0.0.7\lib\net40\LDF.Authentication.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="LDF.BL">
+      <HintPath>..\..\..\Lusiadas - LDF\LDF.BL\bin\Debug\LDF.BL.dll</HintPath>
     </Reference>
     <Reference Include="LDF.ErrorLogging, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LDFErrorHandling.0.0.5\lib\net40\LDF.ErrorLogging.dll</HintPath>

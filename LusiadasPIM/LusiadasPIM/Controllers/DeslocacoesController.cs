@@ -4,10 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PIMDAL;
-using LusiadasPIM.Models;
+using LusiadasSolucaoWeb.Models;
 using System.Configuration;
 
-namespace LusiadasPIM.Controllers
+namespace LusiadasSolucaoWeb.Controllers
 {
     public class DeslocacoesController : Controller
     {

@@ -5,7 +5,7 @@ using System.Web;
 using LDF.ParameterManager;
 using System.Configuration;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class ParameterModel
     {

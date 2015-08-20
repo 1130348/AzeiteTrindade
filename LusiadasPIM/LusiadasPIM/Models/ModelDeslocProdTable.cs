@@ -7,7 +7,7 @@ using LDFHelper.Helpers;
 using System.Web.Mvc;
 using System.Configuration;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class ModelDeslocProdTable : LDFTableHelper
     {

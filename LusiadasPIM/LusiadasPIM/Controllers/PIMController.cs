@@ -1,10 +1,10 @@
-﻿using LusiadasPIM.Models;
+﻿using LusiadasSolucaoWeb.Models;
 using System;
 using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 
-namespace LusiadasPIM.Controllers
+namespace LusiadasSolucaoWeb.Controllers
 {
     public class PIMController : Controller
     {

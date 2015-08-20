@@ -23,7 +23,6 @@ C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\System.Web.WebPages.dll
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\System.Web.WebPages.Razor.dll
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\WebGrease.dll
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\EntityFramework.dll
-C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\LDF.BL.dll
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\PIMDAL.pdb
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\Antlr3.Runtime.pdb
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\LDF.ParameterManager.pdb
@@ -42,7 +41,8 @@ C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\System.Web.WebPages.xml
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\System.Web.WebPages.Deployment.xml
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\System.Web.WebPages.Razor.xml
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\EntityFramework.xml
-C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\LDF.BL.pdb
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\obj\Debug\Lusiadas-Solucao-Web.csprojResolveAssemblyReference.cache
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\obj\Debug\LusiadasSolucaoWeb.dll
 C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\obj\Debug\LusiadasSolucaoWeb.pdb
+C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\LDF.BL.dll
+C:\BoldBitBucket\Lusiadas\LusiadasPIM\LusiadasPIM\bin\LDF.BL.pdb

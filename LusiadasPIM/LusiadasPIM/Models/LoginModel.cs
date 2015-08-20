@@ -7,7 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class LoginModel
     {
@@ -40,7 +40,7 @@ namespace LusiadasPIM.Models
             LDFAuthentication auth = new LDFAuthentication(ConfigurationManager.AppSettings["LDAPServer"], ConfigurationManager.AppSettings["Domain"], true);
 
             if (autoLogin && _password == ConfigurationManager.AppSettings[Constants.GLB_Login_Key])
-                isAuthed = auth.ValidateUser(ConfigurationManager.AppSettings[Constants.GLB_Login_ADUser], ConfigurationManager.AppSettings[Constants.GLB_Login_ADPass]);
+                isAuthed = auth.ValidateUser(ConfigurationManager.AppSettings[Constants.GLB_Login_ADUser], ConfigurationManager.AppSettings[Constants.GLB_Login_ADPass], UserName);
             else
                 isAuthed = auth.ValidateUser(UserName, _password);
 

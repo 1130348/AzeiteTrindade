@@ -8,7 +8,7 @@ using LDF.ErrorLogging.Logging;
 using LDF.ErrorLogging.ErrorHandling;
 using System.Net;
 
-namespace LusiadasPIM.Models
+namespace LusiadasSolucaoWeb.Models
 {
     public class LogErrorHandler : FilterAttribute, IExceptionFilter
     {

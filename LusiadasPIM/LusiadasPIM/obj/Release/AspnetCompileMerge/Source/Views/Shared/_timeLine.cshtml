@@ -1,9 +1,9 @@
-﻿@using LusiadasPIM.Models;
+﻿@using LusiadasSolucaoWeb.Models;
 @model List<Deslocacao>
 
 @if (Model != null)
 {
-    var listGrouped = Model.OrderByDescending(q => q.DESCR_SERV).GroupBy(q => q.DT_DESLOC.ToString("dd MMM yyyy")).ToList();
+    var listGrouped = Model.OrderByDescending(q => q.DESCR_SERV).OrderByDescending(q => q.DT_DESLOC).GroupBy(q => q.DT_DESLOC.ToString("dd MMM yyyy")).ToList();
     
     <div class="wrapper" style="background-color:#ecf0f5;">
         <section class="content">

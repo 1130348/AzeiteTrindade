@@ -1,0 +1,861 @@
+.calendar_menu, .mobileCalendarFooter{
+	height: 100px;
+	padding: 0 35px;
+	background-color: #E5F8FE;
+	font-size: 0;
+
+	@media screen and ( max-width: 450px ){
+		padding: 0;
+		height: 50px;
+	}
+
+	.pickDay{
+		float: right;
+		height: 100%;
+
+		@media screen and ( max-width: 870px ){
+			float: none;
+			clear: both;
+			text-align: center;
+		}
+
+		&:before{
+			content: '';
+			@include vAlign( middle );
+			@media screen and ( max-width: 450px ){
+				display: none;
+			}
+		}
+		input.hasDatepicker{
+			display: inline-block;
+			vertical-align: middle;
+			max-width: 150px;
+			height: 40px;
+			line-height: 40px;
+			padding: 0 10px;
+
+			font-size: 16px;
+			text-align: center;
+			
+
+			@include border-radius( 5px );
+
+			@media screen and ( max-width: 450px ){
+				box-sizing: border-box;
+				display: block;
+				width: 100%;
+				max-width: none;
+				height: 50px;
+				line-height: 50px;
+				padding-right: 50px;
+				text-align: left;
+			}
+		}
+		input[type="button"]{
+			display: inline-block;
+			vertical-align: middle;
+			width: 40px;
+			height: 40px;
+			margin-left: 10px;
+
+			@include border-radius( 5px );
+
+			background: url('../img/search.png') no-repeat center center;
+			background-color: #ffffff;
+
+            @include transition( background, 0.3s, linear );
+
+            &:hover{
+                background: url('../img/search_hover.png') no-repeat center center;
+                background-color: $main-color;
+            }
+
+            @media screen and ( max-width: 450px ){
+            	display: block;
+            	width: 50px;
+            	height: 50px;
+
+            	position: absolute;
+            	top: 0;
+            	right: 0;
+
+            }
+		}
+		@include placeholder{
+		    color: #4D6579!important;
+		} 
+	}
+
+	.weekControls{
+		float: left;
+		height: 100%;
+
+		&:before{
+			content: '';
+			@include vAlign( middle );
+		}
+		a{
+			display: inline-block;
+			vertical-align: middle;
+			height: 40px;
+			line-height: 40px;
+			margin: 0 10px;
+
+			font-size: 20px;
+			text-align: center;
+			text-decoration: none;
+
+			@include border-radius( 5px );
+
+			color: #4D6579;
+			background-color: #ffffff;
+
+			&.controlWeek{
+				width: 40px;
+
+				&.curWeek{
+					min-width: 100px;
+					font-size: 16px;
+					font-weight: bold;
+					text-transform: uppercase;
+					
+					@include transition( all, 0.3s, ease-in-out );
+					&:hover{
+						color: #ffffff;
+						background-color: $main-color;
+					}
+				}
+
+				&.prevWeek, &.nextWeek{
+					line-height: 46px;
+					@include transition( all, 0.3s, ease-in-out );
+					&:hover{
+						color: #ffffff;
+						background-color: $main-color;
+					}
+				}
+			}
+		}
+	}
+
+	h1{
+		height: 100%;
+		line-height: 100px;
+		font-size: 26px;
+		text-transform: uppercase;
+		text-align: center;
+		overflow: hidden;
+		color: #718495;
+
+		@media screen and ( max-width: 960px ){
+			font-size: 20px;
+		}
+
+		span{
+			font-weight: normal;
+		}
+	}
+
+}
+
+.fullSchedule{
+	width: 100%;
+	background-color: #F9FAFA;
+
+	@media screen and( max-width: 870px ){
+		display: none;
+	}
+
+	thead{
+		vertical-align: middle;
+		text-transform: uppercase;
+
+		.timeHeader{
+			height: 140px;
+			font-size: 18px;
+
+			border: 1px solid #96ACC1;
+			color: #4D6579;
+			background-color: #96ACC1;
+		}
+
+		.dateHeader{
+			position: relative;
+
+			color: #718495;
+
+			box-sizing: border-box;
+			border: 1px solid #eeeeee;
+			border-right: 2px solid #eeeeee;
+    		border-spacing:0px;
+    		border-collapse:collapse;
+
+    		&:first-child{
+    			border-left: 0!important;
+    		}
+    		&:last-child{
+    			border-right: 0!important;
+    		}
+			.dateNumber{
+				font-size: 45px;
+				margin-bottom: 10px;
+			}
+			.dateDay{
+				font-size: 18px;
+			}
+		}
+
+		.timeHeader + .dateHeader{
+			//border-left: 0!important;
+			&:after{
+				content: '';
+				display: block;
+				height: 10px;
+				position: absolute;
+				top: 0;
+				left: 15%;
+				right: 15%;
+
+				background-color: #95ACC2;
+
+				box-shadow: 0px 4px 12px -3px rgba(0,0,0,0.59);
+			}	
+		}
+	}
+	tbody{
+
+		td{
+			box-sizing: border-box;
+			vertical-align: top;
+			width: 10%;
+			height: 80px;
+
+			position: relative;
+
+			border: 1px solid #eeeeee;
+			border-left: 2px solid #eeeeee;
+			border-right: 2px solid #eeeeee;
+    		border-spacing:0px;
+			border-collapse:collapse;
+
+    		&:nth-of-type(2){
+    			border-left: 0!important;
+    		}
+
+    		&:last-child{
+    			border-right: 0!important
+    		}
+
+			&.hourCollumn{
+				width: 10%;
+
+				position: relative;
+
+				font-size: 14px;
+				font-weight: bold;
+
+				border: 1px solid #96ACC1;
+				//border-collapse:collapse;
+    			border-spacing:0px;
+
+				color: #ffffff;
+				background-color: #96ACC1;
+				span{
+					position: absolute;
+					top: -12px;
+					right: 20px;
+				}
+
+				&:before{
+					display: none;
+				}
+			}
+
+			.calendarExpand{
+				box-sizing: border-box;
+				display: none;
+				vertical-align: top;
+				padding: 3px 10px;
+				margin: 5px;
+				margin-bottom: 10px;
+
+				font-size: 12px;
+
+				@include border-radius( 12px );
+
+				color: #ffffff;
+				background-color: $main-color;
+
+				@include transition( all, 0.3s, ease-in-out );
+
+				&:hover{
+					background-color: lighten($main-color, 10%);
+				}
+
+				&.isExpanded{
+					&:after{
+						@include icon-font( 'e' );
+						font-size: 8px;
+						padding-left: 7px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.itemcalendar{
+	box-sizing: border-box;
+
+	display: block;
+	height: 39px;
+	max-width: 100%;
+	margin-bottom: 1px;
+	padding: 4px;
+	padding-left: 25px;
+
+	position: relative;
+	
+
+	font-size:12px;
+	font-weight:bold;
+	text-overflow: ellipsis;
+
+	opacity: 1;
+	cursor:pointer;
+
+	@include transition( all, 0.3s, ease-in-out);
+
+	&.typeConsult{
+		background-color: rgba(57, 177, 27, 0.1);
+		&:after{
+			background-color: #39B11B;
+		}
+
+		&.extraItem{
+			.datecontent{
+				&:after{
+					display: block;
+					color: #39B11B;
+				}
+			}
+		}
+	}
+
+	&.typeExam{
+		background-color: rgba(0, 110, 209, 0.1);
+		&:after{
+			background-color: #006ED1;
+		}
+		
+		&.extraItem{
+			.datecontent{
+				&:after{
+					display: block;
+					color: #006ED1;
+				}
+			}
+		}
+	}
+
+	&.typeSurgery{
+		background-color: rgba(255, 147, 0, 0.1);
+		&:after{
+			background-color: #FF9300;
+		}
+		&.extraItem{
+			.datecontent{
+				&:after{
+					display: block;
+					color: #FF9300;
+				}
+			}
+		}
+	}
+
+	&:after{
+		content: '';
+		display: block;
+		width: 9px;
+		height: 9px;
+
+		position: absolute;
+		top: 6px;
+		left: 10px;
+
+		@include border-radius( 9px );
+	}
+
+	.datecontent{
+		position: relative;
+		font-size: 12px;
+		line-height: 14px;
+		color: #4E657A;
+
+		&:after{
+			@include icon-font( 'v' );
+			display: none;
+			width: 9px;
+			height: 9px;
+
+			position: absolute;
+			top: 3px;
+			right: -15px;
+
+			font-size: 9px;
+		}
+	}
+	.textcontent{
+		display: block;
+		max-width: 100px;
+		font-size: 12px;
+		overflow: hidden;
+		text-transform: capitalize;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
+		@media screen and( max-width: 960px ){
+			max-width: 70px;
+		}
+	}
+
+	.placeHint{
+		display: inline-block;
+		padding: 0 4px;
+
+		position: absolute;
+		top: 6px;
+		right: 4px;
+		overflow: hidden;
+
+		font-size: 10px;
+		text-transform: uppercase;
+
+		@include border-radius( 10px );
+
+		color: #708496;
+		background-color: #ffffff;
+
+		&:hover{
+			overflow: visible;
+			.tooltip{
+				opacity: 1;
+				bottom: 25px;
+			}
+		}
+
+		.tooltip{
+			box-sizing: border-box;
+			width: 100px;
+			padding: 8px;
+
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			margin-left: -50px;
+
+			text-align: center;
+			text-transform: none;
+
+			@include border-radius( 20px );
+
+			box-shadow: 0px 4px 12px -3px rgba(0,0,0,0.59);
+
+			opacity: 0;
+			background-color: #ffffff;
+
+			@include transition( all, 0.3s, linear );
+
+			&:after{
+				content: '';
+				width: 0;
+				height: 0;
+				border-style: solid;
+				border-width: 6px 5px 0 5px;
+				border-color: #ffffff transparent transparent transparent;
+
+				position: absolute;
+				bottom: -5px;
+				left: 50%;
+				margin-left: -5px;
+
+			}
+		}
+	}
+
+	&.inExcess{
+		height: 0;
+		padding: 0;
+		padding-left: 25px;
+		margin-bottom: 0;
+		overflow: hidden;
+
+		opacity: 0;
+	}
+}
+
+aside.legend{
+	display: block;
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	position: relative;
+	font-size: 0;
+	background-color: #ffffff;
+	*{
+		box-sizing: border-box;
+	}
+	h1{
+		display: inline-block;
+		vertical-align: top;
+		width: 15%;
+		font-size: 18px;
+		text-align: center;
+		text-transform: uppercase;
+		color: #BEC7CE;
+		background-color: #EEF1F2;
+
+		@media screen and( max-width: 650px){
+			width: 100px;
+		}
+	}
+	ul{
+		display: inline-block;
+		vertical-align: top;
+		width: 85%;
+		padding-left: 20px;
+
+		@media screen and( max-width: 650px){
+			width: auto;
+			padding: 5px 20px;
+		}
+
+		&:before{
+			content: '';
+			@include vAlign(middle);
+
+			@media screen and( max-width: 650px){
+				display: none;
+			}
+		}
+		li{
+			display: inline-block;
+			vertical-align: middle;
+			padding: 0 20px;
+			position: relative;
+			font-size: 14px;
+			color: $main-color;
+
+			@media screen and( max-width: 650px){
+				display: block;
+				line-height: 16px;
+			}
+
+			&:after{
+				content: '';
+				display: block;
+				width: 9px;
+				height: 9px;
+
+				position: absolute;
+				top: 50%;
+				left: 5px;
+				margin-top: -4.5px;
+
+				@include border-radius( 9px );
+			}
+
+			&.typeConsult{
+				&:after{
+					background-color: #39B11B;
+				}
+			}
+
+			&.typeExam{
+				&:after{
+					background-color: #006ED1;
+				}
+			}
+
+			&.typeSurgery{
+				&:after{
+					background-color: #FF9300;
+				}
+			}
+		}
+	}
+	.closeLegend{
+		display: block;
+		width: 15px;
+		height: 15px;
+		position: absolute;
+		top: 50%;
+		right: 15px;
+		margin-top: -7.5px;
+
+		border: 0;
+
+		background: url("../img/cross.png") no-repeat center center;
+	}
+}
+
+.mobileCalendar{
+	position: relative;
+	overflow: hidden;
+	.mobileSchedule{
+		display: none;
+		@media screen and( max-width: 870px ){
+			display: block;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: -100%;
+
+			font-size: 0;
+			background-color: #eeeeee;
+
+			@include transition( all, 0.5s, ease-in-out);
+
+			&.active{
+				position: relative;
+				left: 0;
+			}
+
+			.mobileDate{
+				box-sizing: border-box;
+				display: inline-block;
+				vertical-align: top;
+				width: 33.333%;
+				padding: 20px 50px 20px 20px;
+
+				position: relative;
+				font-weight: bold;
+
+				border: 2px solid #eeeeee;
+				background-color: #ffffff;
+				cursor: pointer;
+
+				@media screen and( max-width: 450px ){
+					width: 50%;
+				}
+
+				.dateNumber{
+					display: block;
+					width: 50px;
+					text-align: center;
+					font-size: 35px;
+				}
+
+				.dateDay{
+					display: block;
+					width: 50px;
+					font-size: 16px;
+					text-align: center;
+					text-transform: uppercase;
+				}
+
+				.itemsTotals{
+					width: 50px;
+					position: absolute;
+					top: 20px;
+					right: 0;
+
+					font-size: 12px;
+					font-weight: bold;
+					color: $main-color;
+
+					.singleTotal{
+						padding: 4px 8px;
+						margin-bottom: 2px;
+
+						&:before{
+							content: '';
+							display: inline-block;
+							width: 9px;
+							height: 9px;
+							margin-right: 5px;
+
+							@include border-radius( 50% );
+
+							background-color: #000;
+						}
+
+						&.consultTotal{
+							background-color: rgba(57, 177, 27, 0.1);
+							&:before{
+								background-color: #39B11B;
+							}
+						}
+
+						&.examTotal{
+							background-color: rgba(0, 110, 209, 0.1);
+							&:before{
+								background-color: #006ED1;
+							}
+						}
+
+						&.surgeryTotal{
+							background-color: rgba(255, 147, 0, 0.1);
+							&:before{
+								background-color: #FF9300;
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	.mobileDays{
+		display: none;
+		@media screen and( max-width: 870px ){
+			display: block;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			right: -100%;
+
+			@include transition( all, 0.5s, ease-in-out);
+
+			&.active{
+				position: relative;
+				right: 0;
+			}
+
+			.singleDay{
+				display: none;
+				position: relative;
+
+				color: #718495;
+				background-color: #ffffff;
+				.dayOverview{
+					display: block;
+					min-height: 300px;
+					width: 100%;
+					position: absolute;
+					top: 0;
+					left: -100%;
+
+					@include transition( all, 0.5s, ease-in-out);
+
+					&.active{
+						position: relative;
+						left: 0;
+					}
+
+					.dayHeader{
+						padding: 10px 20px;
+						padding-bottom: 0;
+						position: relative;
+						font-weight: bold;
+						.dayNumber{
+							font-size: 35px;
+						}
+						.dayDate{
+							padding-left: 5px;
+							font-size: 16px;
+							text-transform: uppercase;
+						}
+						.icon-cross{
+							display: block;
+							height: 14px;
+							width: 14px;
+
+							position: absolute;
+							top: 50%;
+							right: 20px;
+							margin-top: -7px;
+
+							color: #718495;
+						}
+					}
+					.dayAppts{
+						padding: 10px;
+						.textcontent{
+							max-width: 100%;
+						}
+
+						.placeHint{
+							.tooltip{
+								display: none;
+							}
+						}
+					}
+				}
+				.dayPopups{
+					display: block;
+					width: 100%;
+					position: absolute;
+					top: 0;
+					right: -100%;
+
+					@include transition( all, 0.5s, ease-in-out);
+
+					&.active{
+						position: relative;
+						right: 0;
+					}
+
+					.singlePopup{
+						display: none;
+
+						.popupHeader{
+							padding: 10px 20px;
+							position: relative;
+							font-weight: bold;
+							font-size: 35px;
+							text-transform: uppercase;
+
+							&:before{
+								content: '';
+								@include vAlign( middle );
+							}
+
+							.icon-arrow-prev{
+								display: inline-block;
+								vertical-align: middle;
+								font-size: 16px;
+
+								color: #718495;
+
+								&:before{
+									padding-right: 20px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.mobileCalendarFooter{
+	display: none;
+	@media screen and( max-width: 870px ){
+		display: block;
+		height: auto;
+		padding: 10px;
+
+		text-align: center;
+
+		.weekControls, .curMonth{
+			float: none;
+			clear: both;
+			display: inline-block;
+			width: 100%;
+			height: auto;
+			margin: 10px auto;
+			line-height: normal;
+		}
+	}
+}
+
+@media screen and( max-width: 870px ){
+	.calendar_menu{
+		.weekControls, .curMonth{
+			display: none;
+		}
+	}
+}

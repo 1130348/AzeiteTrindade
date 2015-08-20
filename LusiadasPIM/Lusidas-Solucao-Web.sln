@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lusiadas-Solucao-Web", "LusiadasPIM\Lusiadas-Solucao-Web.csproj", "{94AED54D-D123-466A-A2E5-784EBFEDBE80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PIMDAL", "PIMDAL\PIMDAL.csproj", "{8103ADA5-DA3F-4BF9-81A2-9A99B2B93674}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94AED54D-D123-466A-A2E5-784EBFEDBE80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AED54D-D123-466A-A2E5-784EBFEDBE80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AED54D-D123-466A-A2E5-784EBFEDBE80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AED54D-D123-466A-A2E5-784EBFEDBE80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8103ADA5-DA3F-4BF9-81A2-9A99B2B93674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8103ADA5-DA3F-4BF9-81A2-9A99B2B93674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8103ADA5-DA3F-4BF9-81A2-9A99B2B93674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8103ADA5-DA3F-4BF9-81A2-9A99B2B93674}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,203 @@
+.filterDate{
+	display: inline-block;
+	vertical-align: middle;
+    width: 180px;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 10px;
+
+    position: relative;
+
+    h2{
+    	width: 100%;
+	    height: 100%;
+	    /*padding: 15px!important;*/
+	    /* padding-left: 20px; */
+	    padding-right: 40px!important;
+	    position: relative;
+
+	    font-size: 16px;
+	    text-align: center;
+	    text-overflow: ellipsis;
+	    text-transform: uppercase;
+
+	    @include border-radius( 4px );
+
+	    color: #4C657C;
+	    background: #ffffff;
+	    
+	    cursor: pointer;
+	    box-sizing: border-box;
+
+	    &:before{
+	        content: '';
+	        display: inline-block;
+	        width: 40px;
+	        height: 100%;
+	        position: absolute;
+	        top:0;
+	        right: 0;
+	        bottom:0;
+	        z-index: 1;
+	    }
+
+	    &:after{
+	        display: inline-block;
+	        width: 40px;
+	        height: 12px;
+
+	        position: absolute;
+	        top: 50%;
+	        right: 0;
+	        z-index: 1;
+	        margin-top: -6px;
+
+	        font-size: 12px;
+	        text-align: center;
+
+	        color: #4C657C;
+	        
+	        @include icon-font( 'q' );   
+	    }
+    }
+    
+	.pseudoCalendar{
+	    display: none;
+	    width: 280px;
+	    padding: 0;
+	    margin: 0;
+
+	    position: absolute;
+	    top: 100%;
+	    left: 0;
+	    z-index: 1;
+	    overflow-y: auto;
+
+	    @include border-radius( 4px );
+
+	    .calendarYear{
+	    	box-sizing: border-box;
+	    	display: block;
+	    	height: 60px;
+	    	padding: 10px 50px;
+	    	position: relative;
+	    	background-color: #95ACC2;
+
+    		.inputYear{
+    			display: block;
+    			width: 100px;
+    			height: 100%;
+    			margin: 0 auto;
+
+    			font-size: 16px;
+    			font-weight: bold;
+    			text-align: center;
+
+    			@include border-radius( 4px );
+
+    			color: $main-color;
+    		}
+
+	    	.yearControls{
+	    		display: block;
+	    		height: 100%;
+	    		width: 50px;
+	    		position: absolute;
+	    		top: 0;
+
+	    		text-align: center;
+	    		color: #ffffff;
+
+	    		@include transition( all, 0.3s, linear );
+
+	    		&:hover{
+	    			color: $main-color;
+	    			background-color: #ffffff;
+	    		}
+
+	    		&.prevYear{
+	    			line-height: 60px;
+	    			left: 0;
+
+	    			&:before{
+	    				vertical-align: middle;
+		    			font-size: 16px;
+
+		    			@include icon-font( 'a' );
+	    			}
+	    		}
+
+	    		&.nextYear{
+	    			line-height: 60px;
+	    			right: 0;
+
+	    			&:before{
+	    				vertical-align: middle;
+		    			font-size: 16px;
+
+		    			@include icon-font( 'b' );
+	    			}
+	    		}
+	    	}
+	    }
+
+	    .calendarMonths{
+	    	padding: 10px;
+	    	background-color: #4D657B;
+	    	font-size: 0;
+
+	    	li{
+	    		display: inline-block;
+	    		vertical-align: top;
+	    		width: 25%;
+	    		margin: 10px;
+
+	    		font-size: 16px;
+	    		font-weight: bold;
+	    		text-align: center;
+	    		text-transform: uppercase;
+
+	    		@include border-radius( 4px );
+
+	    		background-color: #ffffff;
+
+	    		@include transition( all, 0.3s, linear );
+
+	    		&:hover, &.active{
+	    			background-color: lighten(#4D657B, 10%);
+	    			a{
+	    				color: #ffffff;
+	    			}
+	    		}
+	    		a{
+	    			display: block;
+	    			height: 100%;
+	    			width: 100%;
+		    		color: $main-color;
+		    	}
+	    	}
+	    }
+
+	    /* > li{
+	        padding: 0;
+	        margin: 0;
+	        list-style-type: none;
+	        width: 100%;
+	        padding: 15px!important;
+	        font-size: 16px;
+	        line-height: 18px;
+	        color: #ffffff;
+	        background: #4D657B;
+
+	        @include transition( all, 0.3s, linear);
+	        
+	        cursor: pointer;
+	        box-sizing: border-box;
+
+	        &:hover, &.active{
+	            background: lighten(#4D657B, 10%);
+	        }
+	    } */
+	}
+}
+

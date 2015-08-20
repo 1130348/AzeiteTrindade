@@ -1,0 +1,475 @@
+main#billing{
+	.content.main{
+		background: none;
+		background-image: none;
+		background-color: #ffffff;
+	}
+
+	>.content{
+	}
+
+	header{
+		height: 40px;
+		/* line-height: 80px; */
+		padding: 30px 40px;
+		background-color: #E2F6FC;
+
+		@media screen and( max-width: 960px ){
+			height: auto;
+		}
+
+		@media screen and( max-width: 960px ){
+			padding: 20px;
+			
+		}
+		@media screen and( max-width: 600px ){
+			padding: 0;
+			padding-top: 20px;
+		}
+
+		h1{
+			float: left;
+			font-size: 20px;
+			font-weight: normal;
+			line-height: 40px;
+			text-transform: uppercase;
+
+			@media screen and( max-width: 960px ){
+				display: block;
+				width: 100%;
+				margin-bottom: 20px;
+				line-height: 1;
+			}
+
+			@media screen and( max-width: 600px ){
+				text-align: center;
+			}
+		}
+		.filtersWrapper{
+			float: right;
+			display: inline-block;
+			font-size: 0;
+
+			&.noOptions{
+				.clearFilters{
+					opacity: .5;
+					background-color: #cccccc!important;
+
+					cursor: initial;
+					pointer-events: none;
+				}
+			}
+
+			h2{
+				display: inline-block;
+				vertical-align: middle;
+
+				padding-right: 20px;
+
+				font-size: 14px;
+				font-weight: normal;
+				text-transform: uppercase;
+
+			}
+
+			> h2{
+				@media screen and( max-width: 750px ){
+					display: none;
+				}				
+			}
+
+			@media screen and( max-width: 960px ){
+				float: none;
+				clear: both;
+				display: block;
+			}
+
+			@media screen and( max-width: 600px ){
+				.filterDate, .filterSelect{
+					width: 42%;
+					margin: 0;
+					@include border-radius( 0 );
+
+					h2{
+						font-size: 12px;
+					}
+				}
+				.clearFilters{
+					width: 16%;
+					margin: 0;
+					font-size: 12px;
+					@include border-radius( 0 );
+				}
+
+				.filterSelect{
+					ol.selectDrop{
+						left: auto;
+						right: 0;
+					}
+				}
+			}
+		}
+
+		.clearFilters{
+			display: inline-block;
+			vertical-align: middle;
+		    width: 100px;
+		    height: 40px;
+		    line-height: 40px;
+		    margin-left: 10px;
+
+		    font-size: 14px;
+		    text-transform: uppercase;
+
+		    border: 0;
+		    @include border-radius( 4px );
+
+		    color: #ffffff;
+		    background-color: $main-color;
+
+		    @include transition( all, 0.3s, linear );
+
+		    &:hover{
+		    	background-color: lighten( $main-color, 10% );
+		    }
+		}
+	}
+
+	.billingDetails{
+		padding: 30px 40px;
+
+		@media screen and( max-width: 800px ){
+			padding: 30px 20px;
+		}
+
+		.searchTitles{
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+
+			overflow: hidden;
+
+			font-size: 14px;
+			font-weight: bold;
+
+			border-bottom: 3px solid #E6ECF0;
+
+			.searchValue{
+				float: left;
+				max-width: 50%;
+
+				text-transform: uppercase;
+				color: #4ECFFA;
+
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			.searchTotals{
+				display: block;
+
+				overflow: hidden;
+
+				text-align: right;
+				text-transform: uppercase;
+				span{
+					padding-left: 10px;
+					color: #4ECFFA;
+				}
+			}
+		}
+
+		.billingTable{
+			width: 100%;
+			thead{
+				tr{
+					background-color: transparent!important;
+				}
+			}
+			th{
+				padding: 10px 0px;
+				font-size: 14px;
+				text-align: left;
+				text-transform: uppercase;
+
+				color: #4B6579;
+
+				@media screen and( max-width: 1060px ){
+					font-size: 12px;
+				}
+
+				&.billDate{
+					width: 100px;
+					@media screen and( max-width: 800px ){
+						width: 80px;
+					}
+				}
+				&.billPatient{
+					width: 80px;
+					@media screen and( max-width: 750px ){
+						display: none;
+					}
+				}
+				&.billName{
+					max-width: 200px;
+					@media screen and( max-width: 750px ){
+						display: none;
+					}
+				}
+				&.billService{
+					width: 200px;
+					@media screen and( max-width: 1060px ){
+						width: 150px;
+					}
+					@media screen and( max-width: 980px ){
+						width: 100px;
+					}
+					@media screen and( max-width: 750px ){
+						display: none;
+					}
+				}
+				&.billEntity{
+					max-width: 200px;
+					@media screen and( max-width: 750px ){
+						display: none;
+					}
+				}
+				&.billAct{
+					max-width: 200px;
+				}
+				&.billQtd{
+					width: 60px;
+					@media screen and( max-width: 750px ){
+						display: none;
+					}
+				}
+				&.billValue{
+					width: 100px;
+					@media screen and( max-width: 800px ){
+						width: 50px;
+					}
+				}
+				&.billMore{
+					width: 60px;
+					@media screen and( max-width: 800px ){
+						width: 30px;
+					}
+				}
+			}
+			tr{
+				background-color: #EDF1F4;
+
+				&:nth-of-type(odd){
+					background-color: #E6ECF0;
+				}
+
+				@include transition( all, 0.3s, linear);
+
+				&.active{
+					td{
+						span{
+							white-space: normal;
+						}
+						&.billDetail{
+							&:before{
+								@include icon-font('t');
+							}
+						}
+					}
+				}
+			}
+			td{
+				box-sizing: border-box;
+				padding: 15px;
+
+				font-size: 14px;
+				text-align: center;
+
+				border: 2px solid #ffffff;
+				@include border-radius( 4px );
+
+				@media screen and( max-width: 1060px ){
+					padding: 10px;
+					font-size: 12px;
+				}
+
+				span{
+					display: block;
+					max-width: 130px;
+					white-space: nowrap;
+  					overflow: hidden;
+  					text-align: left;
+					text-overflow: ellipsis;
+
+					@media screen and( max-width: 1230px ){
+						max-width: 90px;
+					}
+
+					@media screen and( max-width: 1060px ){
+						max-width: 80px;
+					}
+					@media screen and( max-width: 980px ){
+						max-width: 60px;
+					}
+					@media screen and( max-width: 750px ){
+						max-width: 400px;
+					}
+					@media screen and( max-width: 650px ){
+						max-width: 350px;
+					}
+					@media screen and( max-width: 600px ){
+						max-width: 300px;
+					}
+					@media screen and( max-width: 550px ){
+						max-width: 250px;
+					}
+					@media screen and( max-width: 500px ){
+						max-width: 200px;
+					}
+					@media screen and( max-width: 450px ){
+						max-width: 150px;
+					}
+					@media screen and( max-width: 400px ){
+						max-width: 100px;
+					}
+					@media screen and( max-width: 350px ){
+						max-width: 80px;
+					}
+				}
+
+				&.billDetail{
+					padding: 0!important;
+					text-align: center;
+
+					cursor: pointer;
+
+					&:before{
+						vertical-align: middle;
+						@include icon-font('r');
+					}
+				}
+
+				@media screen and( max-width: 750px ){
+					&.billPatientTD, &.billNameTD, &.billServiceTD, &.billEntityTD, &.billQtdTD{
+						display: none;
+					}
+				}
+			}
+
+			.hideLine{
+				display: none;
+				height: 0;
+				padding: 0;
+				padding-left: 25px;
+				margin-bottom: 0;
+				overflow: hidden;
+
+				opacity: 0;
+			}
+		}
+
+		.showMoreBill{
+			display: none;
+			&.hasPages{
+				display: block;
+			}
+		}
+	}
+}
+
+.billingContents{
+	position: relative;
+	overflow-x: hidden;
+
+	.desktopBilling{
+		min-height: 450px;
+		@include transition( all, 0.3s, linear );
+		@media screen and ( max-width: 750px ) {
+            display: block;
+            width: 100%;
+            max-height: 300px;
+            overflow: hidden;
+
+            position: absolute;
+            top: 0;
+            right: 100%;
+
+
+            &.active{
+            	max-height: none;
+                position: relative;
+                overflow: visible;
+                right: 0;
+            }
+        }
+	}
+
+	.mobileBilling{
+		display: none;
+		@include transition( all, 0.3s, linear );
+
+		@media screen and ( max-width: 750px ) {
+            display: block;
+            width: 100%;
+
+            position: absolute;
+            top: 0;
+            left: 100%;
+
+
+            &.active{
+                position: relative;
+                left: 0;
+            }
+
+            .singleBill{
+            	display: none;
+            	.billHeader{
+					padding: 10px 20px;
+					position: relative;
+					font-weight: bold;
+					font-size: 35px;
+					text-transform: uppercase;
+
+					&:before{
+						content: '';
+						@include vAlign( middle );
+					}
+
+					.icon-arrow-prev{
+						display: inline-block;
+						vertical-align: middle;
+						font-size: 16px;
+
+						color: #718495;
+
+						&:before{
+							padding-right: 20px;
+						}
+					}
+            	}
+            	.billMobileContents{
+            		padding: 20px;
+            	}
+            	.billTitle{
+            		padding-bottom: 5px;
+            		font-size: 12px;
+            		font-weight: bold;
+            		text-transform: uppercase;
+            	}
+            	.billData{
+            		padding-bottom: 10px;
+            		font-size: 12px;
+            	}
+            	.billValueMobile{
+            		margin: 5px auto;
+            		padding: 5px;
+            		border-top: 2px solid #E6ECF0;
+            		border-bottom: 2px solid #E6ECF0;
+            		.mValue{
+            			float: right;
+            		}
+            	}
+            }
+        } 
+	}
+}

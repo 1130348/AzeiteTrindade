@@ -1,0 +1,80 @@
+
+.login-box {
+	.field-validation-valid {
+		display:none;
+	}
+
+	.field-validation-error 
+	{
+		color:red;
+		&:before{
+			padding-right:5px;
+		}
+	}
+
+}
+
+.text-pink
+{
+	color:#FF00B2 !important;
+}
+
+.internamento-filter {
+	font-size:12px;
+}
+
+.login-box-body{
+	.input-validation-error {
+		border-color:red;
+	}
+}
+
+.infad-selected-item {
+	&.active {
+		background-color:#FFCD8E;
+	}
+}
+/****WAIT AJAX****/
+.loadingModal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('/Content/ajaxWait.gif') 
+                50% 50% 
+                no-repeat;
+}
+body.loading {
+    overflow: hidden;   
+}
+body.loading .loadingModal {
+    display: block;
+}
+/****END WAIT AJAX****/
+.main-sidebar{
+
+		@media screen and( max-width: 1024px ){
+			
+			.sidebar-mini.sidebar-collapse .main-sidebar {
+			    -webkit-transform: translate(0, 0);
+			    -ms-transform: translate(0, 0);
+			    -o-transform: translate(0, 0);
+			    transform: translate(0, 0);
+			    width: 50px!important;
+			    z-index: 850;
+			}
+		}
+}
+
+.user-panel{
+	.info {
+		p {
+			white-space:normal;
+		}
+	}
+
+}

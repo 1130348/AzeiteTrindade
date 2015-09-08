@@ -1,0 +1,86 @@
+﻿@using LDFHelper.Helpers;
+@using LusiadasSolucaoWeb.Models;
+@model Tuple<DeslocProdModel, ParameterModel, ValenciaModel>
+
+<div class="box box-success">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <label>Produto</label>
+                <select class="form-control" id="select-deslocProd-produto">
+                    @foreach (Produtos prod in Model.Item2.list_prods)
+                    {
+                        <option value="@prod.VALOR">@prod.NOME_CAMPO</option>
+                    }
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label>Origem</label>
+                <select class="form-control" id="select-deslocProd-origem">
+                    @foreach (Valencia val in Model.Item3.listValencias)
+                    {
+                        <option value="@val.COD_SERV">@val.DESCR_SERV</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Destino</label>
+                <select class="form-control" id="select-deslocProd-destino">
+                    @foreach (Valencia val in Model.Item3.listValencias)
+                    {
+                        <option value="@val.COD_SERV">@val.DESCR_SERV</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 text-right">
+                <button class="btn btn-primary btn-sm btn-flat" id="add-new-event">Adicionar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="box">
+    <div class="box-body">
+        @if (Model.Item1.list_headers.Count > 0)
+        {
+            <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "deslocProdTable", className = "tableInternal"})</div>
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $("#add-new-event").on("click", function () {
+        var tdoente = "@Model.Item1.tdoente";
+        var doente  = "@Model.Item1.doente";
+        var ncons   = "@Model.Item1.ncons";
+        var tEpis   = "@Model.Item1.tEpis";
+        var epis    = "@Model.Item1.epis";
+        var selProd = $("#select-deslocProd-produto").val();
+        var selOrig = $("#select-deslocProd-origem").val();
+        var selDest = $("#select-deslocProd-destino").val();
+
+        $.ajax({
+            url: '@Url.Action("AddDeslocProd", "Deslocacoes")',
+            data: { "tdoente": tdoente, "doente": doente, "ncons": ncons, "tEpis":tEpis, "epis": epis, "selProd": selProd, "selOrig": selOrig, "selDest": selDest },
+            type: "POST",
+            cache: false,
+            success: function (result) {
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr);
+            }
+        });
+
+
+    });
+
+
+    
+
+
+</script>

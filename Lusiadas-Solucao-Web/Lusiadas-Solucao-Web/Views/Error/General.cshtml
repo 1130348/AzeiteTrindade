@@ -1,0 +1,19 @@
+﻿@model string
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content">
+    <div class="error-page">
+        <h2 class="headline text-yellow"> Erro genérico</h2>
+        <div class="error-content">
+            <h3><i class="fa fa-warning text-yellow"></i> Oops! Página nao encontrada.</h3>
+            <p>
+                Não conseguimos encontrar a página que estava à procura.
+                Entretanto, pode <a href="/Home/Index">regressar à página inicial</a> se pretender.
+
+                @Model
+            </p>
+        </div><!-- /.error-content -->
+    </div><!-- /.error-page -->
+</section>

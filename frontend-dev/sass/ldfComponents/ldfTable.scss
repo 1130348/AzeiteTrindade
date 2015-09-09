@@ -5,7 +5,7 @@
 	h2{
 		background-color:whitesmoke; 
 		color:		#2780e3;
-    	border:1px solid #d9d9d9;
+    	border:		1px solid #d9d9d9;
 		font-size:	15px;
 
 		max-height:	40px;
@@ -19,10 +19,9 @@
 		padding:0px 2%;
 
 		.tableInternal{
-			margin: 40px auto;
+			margin: 0px auto;
 			width:100%;
-			font-size:10px;
-			color:#000000;
+			font-size:12px; 
 			text-align: left;
 
 
@@ -38,10 +37,17 @@
 			td, th {
 				border:1px solid #d9d9d9;
 				padding-left:5px;
-				line-height: 25px;
+				line-height: 30px;
 			}
 
 			thead{
+				.auto-refresh-header{
+					td{
+						border:0;
+						text-align: right; 
+					}
+
+				}
 				th{
 					border-bottom:2px solid #d9d9d9;
 

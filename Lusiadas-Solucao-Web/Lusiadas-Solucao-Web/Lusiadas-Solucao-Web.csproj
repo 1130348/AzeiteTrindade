@@ -50,7 +50,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="LDF.BL">
-      <HintPath>..\..\..\Lusiadas - LDF\LDF.BL\bin\Debug\LDF.BL.dll</HintPath>
+      <HintPath>lib\LDF.BL.dll</HintPath>
     </Reference>
     <Reference Include="LDF.ErrorLogging, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LDFErrorHandling.1.0.0.9\lib\net40\LDF.ErrorLogging.dll</HintPath>

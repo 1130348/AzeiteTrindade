@@ -7,6 +7,7 @@
 <link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
 <script src="/Content/js/ldfTable.min.js"></script>
 
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
@@ -22,13 +23,66 @@
 
 <!-- Main content -->
 <section class="content">
-    <form action="#" method="post">
-        <div class="box box-default">
-            <div class="box-body">
-                <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal", autoRefreshTime = 30000 })</div>
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>150</h3>
+                    <p>Triagem</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-clipboard"></i>
+                </div>
             </div>
-        </div>
-    </form>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>53</h3>
+                    <p>Análises</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-ios-pulse"></i>
+                </div>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>44</h3>
+                    <p>Imagiologia</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-easel"></i>
+                </div>
+            </div>
+        </div><!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>65<sup style="font-size: 20px">%</sup></h3>
+                    <p>Consultas Ext. Realizadas</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+            </div>
+        </div><!-- ./col -->
+    </div>
+
+    <div class="row">
+        <form action="#" method="post">
+            <div class="box box-default">
+                <div class="box-body">
+                    <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal", autoRefreshTime = 30000 })</div>
+                </div>
+            </div>
+        </form>
+    </div>
 </section>
 
 

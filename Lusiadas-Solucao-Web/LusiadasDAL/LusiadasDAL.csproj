@@ -72,25 +72,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DALDeslocacoes.cs" />
-    <Compile Include="DALAtPermanente.cs" />
-    <Compile Include="DBDeslocacoesContext.cs" />
-    <Compile Include="DBAtPermanenteContext.cs" />
-    <Compile Include="DBInternamentoContext.cs" />
-    <Compile Include="DALInternamento.cs" />
-    <Compile Include="DALSDServ.cs" />
-    <Compile Include="DALPiso.cs" />
+    <Compile Include="Deslocacoes\DALDeslocacoes.cs" />
+    <Compile Include="AtPermanente\DALAtPermanente.cs" />
+    <Compile Include="Deslocacoes\DBDeslocacoesContext.cs" />
+    <Compile Include="AtPermanente\DBAtPermanenteContext.cs" />
+    <Compile Include="Internamento\DBInternamentoContext.cs" />
+    <Compile Include="Internamento\DALInternamento.cs" />
+    <Compile Include="Internamento\DALSDServ.cs" />
+    <Compile Include="Internamento\DALPiso.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TblDeslocProd.cs" />
-    <Compile Include="VwDeslocProd.cs" />
-    <Compile Include="VwDesloc.cs" />
-    <Compile Include="TblSDPessHosp.cs" />
-    <Compile Include="TblDesloc.cs" />
-    <Compile Include="TblSDServ.cs" />
-    <Compile Include="VwDoentesPresentes.cs" />
-    <Compile Include="VwDashboardATP.cs" />
-    <Compile Include="VwPisosIntern.cs" />
-    <Compile Include="VwInternamentos.cs" />
+    <Compile Include="Objects\TblDeslocProd.cs" />
+    <Compile Include="Objects\VwDeslocProd.cs" />
+    <Compile Include="Objects\VwDesloc.cs" />
+    <Compile Include="Objects\TblSDPessHosp.cs" />
+    <Compile Include="Objects\TblDesloc.cs" />
+    <Compile Include="Objects\TblSDServ.cs" />
+    <Compile Include="Objects\VwDoentesPresentes.cs" />
+    <Compile Include="Objects\VwDashboardATP.cs" />
+    <Compile Include="Objects\VwPisosIntern.cs" />
+    <Compile Include="Objects\VwInternamentos.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

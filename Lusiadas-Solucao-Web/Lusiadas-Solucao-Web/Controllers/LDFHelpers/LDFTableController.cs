@@ -48,7 +48,7 @@ namespace LusiadasSolucaoWeb.Controllers
             object[] funcParams = new object[] { rowID, fields,  Activator.CreateInstance(_model.objType)};
             res = (bool)theMethod.Invoke(_model, funcParams);
 
-            return Json(res);
+            return Json(_model.GetJSON(res));
         }
 
         [HttpGet]

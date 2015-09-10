@@ -18,9 +18,8 @@ namespace LusiadasDAL
             }
             catch (Exception err)
             {
-
+                throw err;
             }
-            return null;
         }
 
         public List<TblSDPessHosp> GetInfoPessHosp(string user)
@@ -34,7 +33,19 @@ namespace LusiadasDAL
             {
                 throw err;
             }
-            return null;
+        }
+
+        public List<TblSDPessHosp> GetEnfermeiros()
+        {
+            try
+            {
+                DBInternamentoContext efInt = new DBInternamentoContext();
+                return efInt.tblSdPessHosp.Where(q => q.FLG_ACTIVO == "S" && q.T_PESS_HOSP == "ENF").ToList();
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
         }
 
     }

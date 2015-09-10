@@ -28,7 +28,7 @@ namespace LusiadasSolucaoWeb.Models
         {
            foreach(LDFTableHeader item in list_headers)
            {
-               if (item.headerName == "Triagem" || item.headerName == "Nota Médica" || item.headerName == "Box" || item.headerName == "Cadeirão" || item.headerName == "Penso" || item.headerName == "Análises" || item.headerName == "Medicação" || item.headerName == "Imagiologia" || item.headerName == "ECG" || item.headerName == "Consulta Externa")
+               if (item.headerID == "TRIAGEM" || item.headerID == "NOTA_MEDICA" || item.headerID == "BOX_APLICAVEL" || item.headerID == "CADEIRAO_PRESENTE" || item.headerID == "PENSO_APLICAVEL" || item.headerID == "ANALISES_OK" || item.headerID == "MEDICACAO_PRESCRITA_PCE" || item.headerID == "IMAGIOLOGIA_REQUESITADOS" || item.headerID == "ECG_REQUESITADOS" || item.headerID == "CEXTERNA_REQUISITADOS")
                    item.headerStyle.Add("text-align", "center");
            }
         }
@@ -37,6 +37,9 @@ namespace LusiadasSolucaoWeb.Models
         {
             string nomeDescr = "", field = "", curdate = "", dtnasc = "", hora = "";
             string red = "text-red", green = "text-green", yellow = "text-yellow", gray = "text-gray";
+            string triagem, nota_medica, box_aplicavel, penso_aplicavel, analises_ok, medicacao_presc;
+            int medAMB, medPCE, medAGL, mEDPGL;
+
 
             foreach (LDFTableRow item in list_rows)
             {
@@ -65,34 +68,35 @@ namespace LusiadasSolucaoWeb.Models
                 item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = curdate;
 
 
-                string triagem = Generic.GetItemValue(item, "TRIAGEM");
-                string nota_medica = Generic.GetItemValue(item, "NOTA_MEDICA");
-                string box_aplicavel = Generic.GetItemValue(item, "BOX_APLICAVEL");
-                string penso_aplicavel = Generic.GetItemValue(item, "PENSO_APLICAVEL");
-                string analises_ok = Generic.GetItemValue(item, "ANALISES_OK");
-                string medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
+                triagem         = Generic.GetItemValue(item, "TRIAGEM");
+                nota_medica     = Generic.GetItemValue(item, "NOTA_MEDICA");
+                box_aplicavel   = Generic.GetItemValue(item, "BOX_APLICAVEL");
+                penso_aplicavel = Generic.GetItemValue(item, "PENSO_APLICAVEL");
+                analises_ok     = Generic.GetItemValue(item, "ANALISES_OK");
+                medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
 
-                int medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
-                int medPCE = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE"));
-                int medAGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_GLINTT"));
-                int mEDPGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT"));
+                medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
+                medPCE = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE"));
+                medAGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_GLINTT"));
+                mEDPGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT"));
 
-                item.rowItems.First(q => q.itemColumnName == "TRIAGEM").itemValue = "<i class='fa fa-circle lg " + ((triagem == "S") ? green : red) + "'></i>";
-                item.rowItems.First(q => q.itemColumnName == "NOTA_MEDICA").itemValue = "<i class='fa fa-circle lg " + ((nota_medica == "S") ? green : red) + "'></i>";
+                GetFieldCircle(item, "TRIAGEM", ((triagem == "S") ? green : red));
+                GetFieldCircle(item, "NOTA_MEDICA", ((nota_medica == "S") ? green : red));
+                GetFieldCircle(item, "CADEIRAO_PRESENTE", gray);
 
                 field = green;
                 if (Generic.GetItemValue(item, "BOX_APLICAVEL") == "N")
                     field = gray;
                 else if (Generic.GetItemValue(item, "BOX_PRESENTE") == "N")
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "BOX_APLICAVEL").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "BOX_APLICAVEL", field);
 
                 field = green;
                 if (Generic.GetItemValue(item, "PENSO_APLICAVEL") == "N")
                     field = gray;
                 else if (Generic.GetItemValue(item, "PENSO_REGISTO") == "N")
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "PENSO_APLICAVEL").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "PENSO_APLICAVEL", field);
 
                 field = green;
                 if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "N")
@@ -101,33 +105,35 @@ namespace LusiadasSolucaoWeb.Models
                     field = yellow;
                 else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "S" && analises_ok == "N")
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "ANALISES_OK", field);
+
+                
 
                 field = green;
                 if (Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE") == "0" && Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT") == "0")
                     field = gray;
                 else if (medAMB < medPCE || medAGL < mEDPGL)
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "MEDICACAO_PRESCRITA_PCE").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "MEDICACAO_PRESCRITA_PCE", field);
                 
                 field = green;
                 if (Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS") == "0")
                     field = gray;
-                item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "IMAGIOLOGIA_REQUESITADOS", field);
 
                 field = green;
                 if (Generic.GetItemValue(item, "ECG_REQUESITADOS") == "0")
                     field = gray;
                 else if (Convert.ToInt32(Generic.GetItemValue(item, "ECG_REQUESITADOS")) <= Convert.ToInt32(Generic.GetItemValue(item, "ECG_REALIZADOS")))
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "ECG_REQUESITADOS").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "ECG_REQUESITADOS", field);
 
                 field = green;
                 if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") == "0")
                     field = gray;
                 else if (Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) < Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS")))
                     field = red;
-                item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = "<i class='fa fa-circle lg " + field + "'></i>";
+                GetFieldCircle(item, "CEXTERNA_REQUISITADOS", field);
             }
         }
 
@@ -152,6 +158,11 @@ namespace LusiadasSolucaoWeb.Models
             }
 
             return res;
+        }
+
+        private void GetFieldCircle(LDFTableRow item, string rowName, string value)
+        {
+            item.rowItems.First(q => q.itemColumnName == rowName).itemValue  = "<i class='fa fa-circle lg " + value + "'></i>";
         }
         
         #endregion

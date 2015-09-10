@@ -1,0 +1,131 @@
+﻿@using LusiadasDAL;
+@model LusiadasSolucaoWeb.Models.EnfermeirosModel
+
+<style type="text/css">
+    .bootstrap-switch-fail {
+        background:#E63737;
+        color: #fff;
+    }
+
+    .example-val {
+        font: 400 12px Arial;
+        color:#888;
+        display:block;
+        margin:15px 0;
+    }
+
+    /* Position the bar and color it. */
+    #DOR {
+        background: linear-gradient(to right, rgba(77, 175, 12, 1) 0%, rgba(247, 247, 37, 1) 50%, rgba(255, 30, 30, 1) 100%);
+    }
+
+    .bootstrap-switch-sliderElementClass {
+        float:right;
+    }
+
+    .enfSelect {
+
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Balão Infusor</label>
+            <select id="BALAO_INFUSOR" name="BALAO_INFUSOR" class="form-control">
+                <option value="1">EV</option>
+                <option value="2">Epidural</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>SOS</label>
+            <input type="checkbox" id="SOS" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+        <div class="form-group">
+            <label>Nausea</label>
+            <input type="checkbox" id="NAUSEA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+        <div class="form-group">
+            <label>Vómitos</label>
+            <input type="checkbox" id="VOMITOS" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+        <div class="form-group">
+            <label>Insonia</label>
+            <input type="checkbox" id="INSONIA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+        <div class="form-group">
+            <label>Cefaleia</label>
+            <input type="checkbox" id="CEFALEIA" name="CEFALEIA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+        <div class="form-group">
+            <label>Alteração terapeutica</label>
+            <input type="checkbox" id="ALTERACAO_TERAPEUTICA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+        </div>
+
+
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Balão Infusor Sit</label>
+            <select id="BALAO_INFUSOR_SIT" name="BALAO_INFUSOR_SIT" class="form-control">
+                <option value="F">Fechado</option>
+                <option value="C">Em Curso</option>
+                <option value="R">Retirado</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Dor</label>
+            <div class="sliders" id="DOR" name="DOR"></div>
+            <span class="example-val" id="spanSliderDOR"></span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Enfermeiros</label>
+            <select id="ENF" name="ENF" class="form-control enfSelect select2">
+                @foreach (TblSDPessHosp item in Model.listEnfermeiros)
+                {
+                    <option value="@item.N_MECAN">@item.NOME</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Anestesista Visita</label>
+            <select id="ANESTESISTA_VISITA" name="ANESTESISTA_VISITA" class="form-control">
+                <option value="1">EV</option>
+                <option value="2">Epidural</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Outros sintomas</label>
+            <input type="text" class="form-control" id="OUTROS_SINTOMAS" name="OUTROS_SINTOMAS" />
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Observações</label>
+            <input type="text" class="form-control" id="OBSERVACOES" name="OBSERVACOES" />
+        </div>
+    </div>
+</div>

@@ -17,7 +17,7 @@ namespace LusiadasDAL
         [Description("Nome")] public string NOME      { get; set; }
         [Description("Hora")] public DateTime HR_CONS                       { get; set; }
         [Description("Triagem")] public string TRIAGEM                      { get; set; }
-        [Description("Nota Médica")] public string NOTA_MEDICA              { get; set; }
+        [Description("Nota Méd.")] public string NOTA_MEDICA              { get; set; }
         [Description("Box")] public string BOX_APLICAVEL                    { get; set; }
         [Description("Cadeirão")] public string CADEIRAO_PRESENTE           { get; set; }
         [Description("Penso")] public string PENSO_APLICAVEL                { get; set; }
@@ -25,7 +25,7 @@ namespace LusiadasDAL
         [Description("Medicação")] public int? MEDICACAO_PRESCRITA_PCE      { get; set; }
         [Description("Imagiologia")] public int? IMAGIOLOGIA_REQUESITADOS   { get; set; }
         [Description("ECG")] public int? ECG_REQUESITADOS                   { get; set; }
-        [Description("Consulta Externa")] public int? CEXTERNA_REQUISITADOS { get; set; }
+        [Description("Consulta Ext.")] public int? CEXTERNA_REQUISITADOS { get; set; }
 
         
         [Key, Column(Order = 1)] [LDFTableIsVisible(false)] public string DOENTE     { get; set; }

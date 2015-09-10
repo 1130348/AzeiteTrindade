@@ -21,7 +21,6 @@ namespace LusiadasSolucaoWeb.Models
 
         public DeslocProdModel()
         {
-
             tdoente = (string)HttpContext.Current.Session["DeslocProd_TDOENTE"];
             doente = (string)HttpContext.Current.Session["DeslocProd_DOENTE"];
             ncons = (string)HttpContext.Current.Session["DeslocProd_NCONS"];

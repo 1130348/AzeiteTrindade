@@ -40,8 +40,8 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LDFTable.Package, Version=1.1.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LDFTable.1.1.3.1\lib\net40\LDFTable.Package.dll</HintPath>
+    <Reference Include="LDFTable.Package, Version=1.1.3.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LDFTable.1.1.3.4\lib\net40\LDFTable.Package.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -72,6 +72,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsultaDor\DALConsultaDor.cs" />
+    <Compile Include="ConsultaDor\DBConsultaDorContext.cs" />
     <Compile Include="Deslocacoes\DALDeslocacoes.cs" />
     <Compile Include="AtPermanente\DALAtPermanente.cs" />
     <Compile Include="Deslocacoes\DBDeslocacoesContext.cs" />
@@ -80,6 +82,8 @@
     <Compile Include="Internamento\DALInternamento.cs" />
     <Compile Include="Internamento\DALSDServ.cs" />
     <Compile Include="Internamento\DALPiso.cs" />
+    <Compile Include="Objects\TblConsultaDor.cs" />
+    <Compile Include="Objects\VwPosOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\TblDeslocProd.cs" />
     <Compile Include="Objects\VwDeslocProd.cs" />

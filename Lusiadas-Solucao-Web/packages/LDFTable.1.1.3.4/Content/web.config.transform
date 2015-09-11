@@ -1,0 +1,13 @@
+
+<configuration>
+  <system.web>
+    <pages>
+      <namespaces>
+        <add namespace="LDFHelper.Helpers" />
+      </namespaces>
+    </pages>
+    
+    
+    
+	</system.web>
+</configuration>

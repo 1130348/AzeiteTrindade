@@ -1,0 +1,13 @@
+
+<configuration>
+  <system.web>
+    <pages>
+      <namespaces>
+        <add namespace="LDF.Authentication" />
+      </namespaces>
+    </pages>
+    
+    
+    
+	</system.web>
+</configuration>

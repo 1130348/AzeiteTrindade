@@ -1,0 +1,13 @@
+
+<configuration>
+  <system.web>
+    <pages>
+      <namespaces>
+        <add namespace="LDF.ErrorLogging.ErrorHandling" />
+      </namespaces>
+    </pages>
+    
+    
+    
+	</system.web>
+</configuration>

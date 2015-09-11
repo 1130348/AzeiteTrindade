@@ -33,7 +33,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Balão Infusor</label>
-            <select id="BALAO_INFUSOR" name="BALAO_INFUSOR" class="form-control">
+            <select id="BAL_INFUSOR" name="BALAO_INFUSOR" class="form-control">
                 <option value="1">EV</option>
                 <option value="2">Epidural</option>
             </select>
@@ -66,7 +66,7 @@
 
         <div class="form-group">
             <label>Alteração terapeutica</label>
-            <input type="checkbox" id="ALTERACAO_TERAPEUTICA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+            <input type="checkbox" id="ALT_TERAP" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
         </div>
 
 
@@ -75,7 +75,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Balão Infusor Sit</label>
-            <select id="BALAO_INFUSOR_SIT" name="BALAO_INFUSOR_SIT" class="form-control">
+            <select id="BALAO_INFUSOR_SIT" name="BAL_INFUSOR_SIT" class="form-control">
                 <option value="F">Fechado</option>
                 <option value="C">Em Curso</option>
                 <option value="R">Retirado</option>
@@ -106,7 +106,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Anestesista Visita</label>
-            <select id="ANESTESISTA_VISITA" name="ANESTESISTA_VISITA" class="form-control">
+            <select id="ANEST_VISITA" name="ANESTESISTA_VISITA" class="form-control">
                 <option value="1">EV</option>
                 <option value="2">Epidural</option>
             </select>
@@ -118,14 +118,17 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Outros sintomas</label>
-            <input type="text" class="form-control" id="OUTROS_SINTOMAS" name="OUTROS_SINTOMAS" />
+            <input type="text" class="form-control" id="OUTROS_SINT" name="OUTROS_SINT" />
         </div>
     </div>
 
     <div class="col-md-6">
         <div class="form-group">
             <label>Observações</label>
-            <input type="text" class="form-control" id="OBSERVACOES" name="OBSERVACOES" />
+            <input type="text" class="form-control" id="OBS" name="OBS" />
         </div>
     </div>
 </div>
+
+<input type="hidden" id="formDador_tdoente" />
+<input type="hidden" id="formDador_doente" />

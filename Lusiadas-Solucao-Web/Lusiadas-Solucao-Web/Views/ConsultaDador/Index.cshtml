@@ -18,7 +18,6 @@
     </ol>
 </section>
 
-
 <!-- Main content -->
 <section class="content">
     <form action="#" method="post">
@@ -28,26 +27,18 @@
             </div>
         </div>
     </form>
-
-    <button type="button" class="btn btn-success pull-right" id="show-modal-patologia" data-toggle="modal" data-target="#modalPatologia"><i class="fa fa-medkit"></i></button>
-    
-    <button type="button" class="btn btn-success pull-right" id="show-modal-historicoDador" data-toggle="modal" data-target="#modalHistoricoDador"><i class="fa fa-history"></i></button>
-
-    <button type="button" class="btn btn-success pull-right" id="show-modal-Formulario" data-toggle="modal" data-target="#modalFormularioDador"><i class="fa fa-heartbeat"></i></button>
-
 </section>
-
 
 <div class="modal modal-info fade" id="modalPatologia" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="modal-select-tl-title"><i class="fa fa-medkit"></i> Patologia</h4>
+                <h4 class="modal-title" id="modal-select-tl-title-patologia"><i class="fa fa-medkit"></i> Patologia</h4>
             </div>
-            <div class="modal-body" id="modal-desloc-tl-body">
-                    <h4>I am an info callout!</h4>
-                    <p>Follow the steps to continue to payment.</p>
+            <div class="modal-body" id="modal-desloc-tl-body-patologia">
+                <h4>I am an info callout!</h4>
+                <p>Follow the steps to continue to payment.</p>
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" data-dismiss="modal">Fechar</a>
@@ -61,9 +52,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="modal-select-tl-title"><i class="fa fa-history"></i> Histórico Dador</h4>
+                <h4 class="modal-title" id="modal-select-tl-title-histdador"><i class="fa fa-history"></i> Histórico Dador</h4>
             </div>
-            <div class="modal-body" id="modal-desloc-tl-body">
+            <div class="modal-body" id="modal-desloc-tl-body-histdador">
 
             </div>
             <div class="modal-footer">
@@ -79,9 +70,9 @@
             <form id="form-formularioDador">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="modal-select-tl-title"><i class="fa fa-heartbeat"></i> Formulário Dador</h4>
+                    <h4 class="modal-title" id="modal-select-tl-title-formDador"><i class="fa fa-heartbeat"></i> Formulário Dador</h4>
                 </div>
-                <div class="modal-body" id="modal-desloc-tl-body">
+                <div class="modal-body" id="modal-desloc-tl-body-formDador">
                     @Html.Partial("_formulario", Model)
                 </div>
                 <div class="modal-footer">
@@ -102,7 +93,7 @@
         var vomitosCheckBox = $('#VOMITOS').bootstrapSwitch();
         var insoniaCheckBox = $('#INSONIA').bootstrapSwitch();
         var cefaliaCheckBox = $('#CEFALEIA').bootstrapSwitch();
-        var altTerapCheckBox = $('#ALTERACAO_TERAPEUTICA').bootstrapSwitch();
+        var altTerapCheckBox = $('#ALT_TERAP').bootstrapSwitch();
 
         var dorElement = document.getElementById("DOR");
         noUiSlider.create(dorElement, {
@@ -128,11 +119,65 @@
             formValues += "&VOMITOS=" + ((vomitosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&INSONIA=" + ((insoniaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&CEFALEIA=" + ((cefaliaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&ALTERACAO_TERAPEUTICA=" + ((altTerapCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&DOR=" + dorElement.noUiSlider.get();
+            formValues += "&ALT_TERAP=" + ((altTerapCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues += "&DOR=" + dorElement.noUiSlider.get().split('.')[0];
 
-            
+            @*var tDoente = $("#formDador_tdoente").val();
+            var doente = $("#formDador_doente").val();
+
+            $.ajax({
+                url: '@Url.Action("SaveFormularioDador", "ConsultaDador")',
+                data: { "tdoente": tDoente, "doente": doente, "formulario": formValues },
+                dataType: 'JSON',
+                type: "POST",
+                cache: false,
+                success: function (result) {
+                    if (result.header.status == false) {
+                        console.log(result);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });*@
         });
+
+
+        //$(document).on("click", ".consdadorFormulario", function () {
+        //    var tDoente = $(this).attr("data-tdoente");
+        //    var doente = $(this).attr("data-doente");
+        //    var nomeDoente = $(this).attr("data-nome");
+
+        //    $("#formDador_tdoente").val(tDoente);
+        //    $("#formDador_doente").val(doente);
+        //});
+
+        @*$(document).on("click", ".consdadorHistorico", function () {
+
+            var tDoente = $(this).attr("data-tdoente");
+            var doente = $(this).attr("data-doente");
+            var nomeDoente = $(this).attr("data-nome");
+
+            $.ajax({
+                url: '@Url.Action("ShowHistoricoDador", "ConsultaDador")',
+                data: { "tdoente": tDoente, "doente": doente },
+                type: "GET",
+                cache: false,
+                success: function (result) {
+                    if (result != "") {
+                        console.log(result);
+                        $("#modal-select-tl-title-histdador").html("<i class=\"fa fa-history\"></i> Histórico Dador : " + nomeDoente);
+                        $("#modal-desloc-tl-body-histdador").html(result);
+                    } else {
+                        $("#modal-desloc-tl-body-histdador").html("");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        });*@
     </script>
 
 }

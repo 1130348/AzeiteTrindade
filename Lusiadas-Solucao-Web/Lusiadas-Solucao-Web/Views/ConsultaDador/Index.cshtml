@@ -1,7 +1,7 @@
 ﻿@using LDFHelper.Helpers;
 @using LusiadasSolucaoWeb.Models;
 
-@model EnfermeirosModel
+@model Tuple<ConsultaDadorModel, EnfermeirosModel>
 
 <link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
 <script src="/Content/js/ldfTable.min.js"></script>
@@ -23,7 +23,7 @@
     <form action="#" method="post">
         <div class="box box-default">
             <div class="box-body">
-                <div class="row listwrapper no-border">@*@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal", autoRefreshTime = 30000 })*@</div>
+                <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal" })</div>
             </div>
         </div>
     </form>
@@ -34,11 +34,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="modal-select-tl-title-patologia"><i class="fa fa-medkit"></i> Patologia</h4>
+                <h4 class="modal-title" id="modal-patologia-title"><i class="fa fa-medkit"></i> Patologia</h4>
             </div>
-            <div class="modal-body" id="modal-desloc-tl-body-patologia">
-                <h4>I am an info callout!</h4>
-                <p>Follow the steps to continue to payment.</p>
+            <div class="modal-body" id="modal-patologia-body">
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" data-dismiss="modal">Fechar</a>
@@ -54,7 +52,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h4 class="modal-title" id="modal-select-tl-title-histdador"><i class="fa fa-history"></i> Histórico Dador</h4>
             </div>
-            <div class="modal-body" id="modal-desloc-tl-body-histdador">
+            <div class="modal-body" id="modal-histDor-body">
 
             </div>
             <div class="modal-footer">
@@ -73,7 +71,7 @@
                     <h4 class="modal-title" id="modal-select-tl-title-formDador"><i class="fa fa-heartbeat"></i> Formulário Dador</h4>
                 </div>
                 <div class="modal-body" id="modal-desloc-tl-body-formDador">
-                    @Html.Partial("_formulario", Model)
+                    @Html.Partial("_formulario", Model.Item2)
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
@@ -92,7 +90,7 @@
         var nauseaCheckBox = $('#NAUSEA').bootstrapSwitch();
         var vomitosCheckBox = $('#VOMITOS').bootstrapSwitch();
         var insoniaCheckBox = $('#INSONIA').bootstrapSwitch();
-        var cefaliaCheckBox = $('#CEFALEIA').bootstrapSwitch();
+        var cefaleiaCheckBox = $('#CEFALEIA').bootstrapSwitch();
         var altTerapCheckBox = $('#ALT_TERAP').bootstrapSwitch();
 
         var dorElement = document.getElementById("DOR");
@@ -109,54 +107,75 @@
         });
 
         $("#ENF").select2({ width: "100%" });
+        $("#ANEST_VISITA").select2({ width: "100%" });
+        
 
         $("#form-formularioDador").submit(function (e) {
             e.preventDefault();
             var formValues = $(this).serialize();
-
+            
+            console.log(sosCheckBox.bootstrapSwitch("state"));
             formValues += "&SOS=" + ((sosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&NAUSEA=" + ((nauseaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&VOMITOS=" + ((vomitosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&INSONIA=" + ((insoniaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&CEFALEIA=" + ((cefaliaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues += "&CEFALEIA=" + ((cefaleiaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&ALT_TERAP=" + ((altTerapCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
             formValues += "&DOR=" + dorElement.noUiSlider.get().split('.')[0];
 
-            @*var tDoente = $("#formDador_tdoente").val();
-            var doente = $("#formDador_doente").val();
+            var tDoente     = $("#formDador_tdoente").val();
+            var doente      = $("#formDador_doente").val();
+            var nint        = $("#formDador_nint").val();
+            var nregoper    = $("#formDador_nregoper").val();
 
             $.ajax({
                 url: '@Url.Action("SaveFormularioDador", "ConsultaDador")',
-                data: { "tdoente": tDoente, "doente": doente, "formulario": formValues },
+                data: { "tdoente": tDoente, "doente": doente, "nint":nint, "nregoper":nregoper,  "formulario": formValues },
                 dataType: 'JSON',
                 type: "POST",
                 cache: false,
                 success: function (result) {
+                    result = $.parseJSON(result);
                     if (result.header.status == false) {
-                        console.log(result);
+                        alert(result.header.message);
+                    } else {
+                        $("#modalFormularioDador").modal("hide");
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
                 }
-            });*@
+            });
         });
 
 
-        //$(document).on("click", ".consdadorFormulario", function () {
-        //    var tDoente = $(this).attr("data-tdoente");
-        //    var doente = $(this).attr("data-doente");
-        //    var nomeDoente = $(this).attr("data-nome");
-
-        //    $("#formDador_tdoente").val(tDoente);
-        //    $("#formDador_doente").val(doente);
-        //});
-
-        @*$(document).on("click", ".consdadorHistorico", function () {
-
-            var tDoente = $(this).attr("data-tdoente");
-            var doente = $(this).attr("data-doente");
+        $(document).on("click", ".consdadorPatologia", function () {
             var nomeDoente = $(this).attr("data-nome");
+            var patologia  = $(this).attr("data-patologia");
+
+            $("#modal-patologia-body").html(patologia);
+            $("#modal-patologia-title").html("<i class='fa fa-medkit'></i> " + nomeDoente);
+        });
+
+
+        $(document).on("click", ".consdadorFormularioDador", function () {
+            var tDoente     = $(this).attr("data-tdoente");
+            var doente      = $(this).attr("data-doente");
+            var nomeDoente  = $(this).attr("data-nome");
+            var nint        = $(this).attr("data-nint");
+            var nregoper    = $(this).attr("data-nregoper");
+
+            $("#formDador_tdoente").val(tDoente);
+            $("#formDador_doente").val(doente);
+            $("#formDador_nint").val(doente);
+            $("#formDador_nregoper").val(nregoper);
+        });
+
+        $(document).on("click", ".consdadorHistorico", function () {
+
+            var tDoente     = $(this).attr("data-tdoente");
+            var doente      = $(this).attr("data-doente");
+            var nomeDoente  = $(this).attr("data-nome");
 
             $.ajax({
                 url: '@Url.Action("ShowHistoricoDador", "ConsultaDador")',
@@ -165,11 +184,10 @@
                 cache: false,
                 success: function (result) {
                     if (result != "") {
-                        console.log(result);
                         $("#modal-select-tl-title-histdador").html("<i class=\"fa fa-history\"></i> Histórico Dador : " + nomeDoente);
-                        $("#modal-desloc-tl-body-histdador").html(result);
+                        $("#modal-histDor-body").html(result);
                     } else {
-                        $("#modal-desloc-tl-body-histdador").html("");
+                        $("#modal-histDor-body").html("");
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -177,7 +195,7 @@
                 }
             });
 
-        });*@
+        });
     </script>
 
 }

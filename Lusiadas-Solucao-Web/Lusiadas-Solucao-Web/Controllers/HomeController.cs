@@ -31,7 +31,7 @@ namespace LusiadasSolucaoWeb.Controllers
                     else
                     {
                         Session[Constants.SS_USER] = uinfo;
-                        return RedirectToAction("Index", "ATP");
+                        return RedirectToAction("Index", "ConsultaDador");
                     }
                 }
                 else

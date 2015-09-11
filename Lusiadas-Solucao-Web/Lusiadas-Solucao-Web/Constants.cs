@@ -11,6 +11,8 @@
     public const string GLB_Login_ADUser = "GLB_Login_ADUser";
     public const string GLB_Login_ADPass = "GLB_Login_ADPass";
 
+    public const string SS_TABLEPAGE    = "TableRowsPerPage";
+
 }
 
 public class Auth

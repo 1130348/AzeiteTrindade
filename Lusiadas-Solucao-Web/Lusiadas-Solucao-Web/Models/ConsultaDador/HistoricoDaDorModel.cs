@@ -11,6 +11,8 @@ using System.Web.Helpers;
 using System.Web.Script.Serialization;
 using System.Globalization;
 using Oracle.ManagedDataAccess.Client;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace LusiadasSolucaoWeb.Models
 {
@@ -35,6 +37,12 @@ namespace LusiadasSolucaoWeb.Models
             callbacks.removeCallBack = helper.Action("RemoveHist", "ConsultaDaDor");
 
             LDFTableHeaders();
+            CreateNewColumns();
+        }
+
+        private void CreateNewColumns()
+        {
+            list_headers.Add(new LDFTableHeader() { headerID = "COL1_CLICK" });
         }
 
         public void LDFTableTreatData()
@@ -42,13 +50,39 @@ namespace LusiadasSolucaoWeb.Models
             ParameterModel defs = new ParameterModel();
             defs.FillDefinitions();
             DALSDServ dal = new DALSDServ();
+
+            string query;
             foreach (LDFTableRow item in list_rows)
             {
-                foreach(LDFTableItem rItem in item.rowItems)
+                query = "data-tdoente='" + Generic.GetItemValue(item, "T_DOENTE") + "'";
+                query += "data-doente='" + Generic.GetItemValue(item, "DOENTE") + "'";
+                query += "data-nint='" + Generic.GetItemValue(item, "N_INT") + "'";
+                query += "data-nregoper='" + Generic.GetItemValue(item, "N_REG_OPER") + "'";
+                query += "data-rowID='" + item.rowID + "'";
+                query += "data-balInfusor='" + Generic.GetItemValue(item, "BAL_INFUSOR") + "'";
+                query += "data-balInfusorSit='" + Generic.GetItemValue(item, "BAL_INFUSOR_SIT") + "'";
+                query += "data-SOS='" + Generic.GetItemValue(item, "SOS") + "'";
+                query += "data-nausea='" + Generic.GetItemValue(item, "NAUSEA") + "'";
+                query += "data-vomitos='" + Generic.GetItemValue(item, "VOMITOS") + "'";
+                query += "data-insonia='" + Generic.GetItemValue(item, "INSONIA") + "'";
+                query += "data-cefaleia='" + Generic.GetItemValue(item, "CEFALEIA") + "'";
+                query += "data-altTerap='" + Generic.GetItemValue(item, "ALT_TERAP") + "'";
+                query += "data-dor='" + Generic.GetItemValue(item, "DOR") + "'";
+                query += "data-enf='" + Generic.GetItemValue(item, "ENF") + "'";
+                query += "data-anestVisita='" + Generic.GetItemValue(item, "ANEST_VISITA") + "'";
+                query += "data-outrosSint='" + Generic.GetItemValue(item, "OUTROS_SINT") + "'";
+                query += "data-obs='" + Generic.GetItemValue(item, "OBS") + "'";
+
+                item.rowItems.Add(new LDFTableItem("COL1_CLICK", ""));
+//                item.rowItems.First(q => q.itemColumnName == "COL1_CLICK").itemValue = "<a data-toggle='modal' data-target='#modalFormularioDaDor' " + query + " data-rowID='" + item.rowID + "'  class='fa fa-lg fa-history editHistDaDor' title='Histórico Da Dor'></a>";
+                item.rowItems.First(q => q.itemColumnName == "COL1_CLICK").itemValue = "<button type='button' class='btn btn-success editHistDaDor' data-toggle='modal' data-target='#modalFormularioDaDor' value='Editar' " + query + "><li class='fa fa-edit'></li> Editar</button>";
+
+                foreach (LDFTableItem rItem in item.rowItems)
                 {
-                    if(defs.list_defs.Any(q => q.VALOR == rItem.itemValue))
+                    List<Produtos> prods = defs.list_defs.Where(q => q.CODIGO_PAI != null && q.CODIGO_PAI.Split(';').Count(x => x == rItem.itemColumnName) == 1).ToList();
+                    if (prods.Count > 0)
                     {
-                        rItem.itemValue = defs.list_defs.First(q => q.VALOR == rItem.itemValue).NOME_CAMPO;
+                        rItem.itemValue = prods.First(q => q.VALOR == rItem.itemValue).NOME_CAMPO;
                     }
                 }
             }
@@ -80,60 +114,52 @@ namespace LusiadasSolucaoWeb.Models
             return res;
         }
 
-        public bool EditRow(string rowID, string formulario)
+        public string EditRow(string tdoente, string doente, string rowID, string formulario)
         {
-           List<string[]> obj2 = formulario.Split('&').Select(q => q.Split('=')).ToList();
-
             UserInfo uinfo = (UserInfo)HttpContext.Current.Session[Constants.SS_USER];
-           
-            TblConsultaDor obj = new TblConsultaDor();
-            obj.NUM_CONS_DOR = (string)HttpContext.Current.Session["HistDor_ROWID"];
-            obj.ROWID = (string)HttpContext.Current.Session["HistDor_ROWID"];
-            obj.T_DOENTE = (string)HttpContext.Current.Session["HistDor_T_DOENTE"];
-            obj.DOENTE = (string)HttpContext.Current.Session["HistDor_DOENTE"];
+            var obj = JsonConvert.DeserializeObject(formulario);
+            bool status = false;
 
-            obj.SOS = obj2.First(q => q[0] == "SOS")[1].ToString();
-            obj.NAUSEA = obj2.First(q => q[0] == "NAUSEA")[1].ToString();
-            obj.VOMITOS = obj2.First(q => q[0] == "VOMITOS")[1].ToString();
-            obj.INSONIA = obj2.First(q => q[0] == "INSONIA")[1].ToString();
-            obj.CEFALEIA = obj2.First(q => q[0] == "CEFALEIA")[1].ToString();
-            obj.ALT_TERAP = obj2.First(q => q[0] == "ALT_TERAP")[1].ToString();
-            obj.DOR = obj2.First(q => q[0] == "DOR")[1].ToString();
-            obj.BAL_INFUSOR = obj2.First(q => q[0] == "BAL_INFUSOR")[1].ToString();
-            obj.BAL_INFUSOR_SIT = obj2.First(q => q[0] == "BAL_INFUSOR_SIT")[1].ToString();
-            obj.OUTROS_SINT = obj2.First(q => q[0] == "OUTROS_SINT")[1].ToString();
-            obj.OBS = obj2.First(q => q[0] == "OBS")[1].ToString();
-            obj.ENF = obj2.First(q => q[0] == "ENF")[1].ToString();
-            obj.ANEST_VISITA = obj2.First(q => q[0] == "ANEST_VISITA")[1].ToString();
-            obj.USER_ACT = uinfo.userID;
-            obj.DT_ACT = DateTime.Now;
+            TblConsultaDor dor = new TblConsultaDor();
+            dor.NUM_CONS_DOR    = rowID;
+            dor.ROWID           = rowID;
+            dor.T_DOENTE        = tdoente;
+            dor.DOENTE          = doente;
+            
+            dor.SOS = ((dynamic)((JObject)(obj))).SOS;
+            dor.NAUSEA = ((dynamic)((JObject)(obj))).NAUSEA;
+            dor.VOMITOS = ((dynamic)((JObject)(obj))).VOMITOS;
+            dor.INSONIA = ((dynamic)((JObject)(obj))).INSONIA;
+            dor.CEFALEIA = ((dynamic)((JObject)(obj))).CEFALEIA;
+            dor.ALT_TERAP = ((dynamic)((JObject)(obj))).ALT_TERAP;
+            dor.DOR = ((dynamic)((JObject)(obj))).DOR;
+            dor.BAL_INFUSOR = ((dynamic)((JObject)(obj))).BAL_INFUSOR;
+            dor.BAL_INFUSOR_SIT = ((dynamic)((JObject)(obj))).BAL_INFUSOR_SIT;
+            dor.OUTROS_SINT = ((dynamic)((JObject)(obj))).OUTROS_SINT;
+            dor.OBS = ((dynamic)((JObject)(obj))).OBS;
+            dor.ENF_RESP = uinfo.userID;
+            dor.ENF = ((dynamic)((JObject)(obj))).ENF;
+            dor.ANEST_VISITA = ((dynamic)((JObject)(obj))).ANEST_VISITA;
+            dor.USER_ACT = uinfo.userID;
+            dor.DT_ACT = DateTime.Now;
 
-
-
-
-
-
-            if (ParameterManager.UpdateParameter<TblConsultaDor>("BDHLUQLD", "MEDICO", "CONSULTA_DOR", obj, new List<string> { "BAL_INFUSOR", "BAL_INFUSOR_SIT", "SOS", "DOR", "NAUSEA", "VOMITOS", "INSONIA", "CEFALEIA", "OBS", "ENF", "ANEST_VISITA", "USER_ACT", "OUTROS_SINT", "ALT_TERAP" }, new List<string> { "NUM_CONS_DOR" }) > 0)
+            if (ParameterManager.UpdateParameter<TblConsultaDor>("BDHLUQLD", "MEDICO", "CONSULTA_DOR", dor, new List<string> { "BAL_INFUSOR", "BAL_INFUSOR_SIT", "SOS", "DOR", "NAUSEA", "VOMITOS", "INSONIA", "CEFALEIA", "OBS", "ENF", "ANEST_VISITA", "USER_ACT", "OUTROS_SINT", "ALT_TERAP" }, new List<string> { "NUM_CONS_DOR" }) > 0)
             {
                 OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BDHLUQLD"].ConnectionString);
-                
+
                 OracleCommand cmd = new OracleCommand("UPDATE CONSULTA_DOR SET DT_ACT = :dt_act where NUM_CONS_DOR = :num_cons_dor", conn);
-                
+
                 cmd.Parameters.Add(new OracleParameter("dt_act", OracleDbType.Date)).Value = DateTime.Now;
-                cmd.Parameters.Add(new OracleParameter("num_cons_dor", OracleDbType.Varchar2)).Value = obj.NUM_CONS_DOR;
+                cmd.Parameters.Add(new OracleParameter("num_cons_dor", OracleDbType.Varchar2)).Value = dor.NUM_CONS_DOR;
 
                 cmd.Connection.Open();
                 cmd.ExecuteNonQuery();
-            
 
-                return true;
-            }
-            else
-            {
-                return false;
+                status =  true;
             }
 
-
+            string res = "{ \"header\" : { \"status\" : " + status.ToString().ToLower() + ", \"message\" : \"" + (status ? "" : "Ocorreu um erro") + "\"} }";
+            return res;
         }
         
         public bool RemoveRow(string rowID)

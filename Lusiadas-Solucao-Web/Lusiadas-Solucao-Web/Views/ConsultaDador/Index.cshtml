@@ -48,7 +48,7 @@
 </div>
 
 <div class="modal fade" id="modalHistoricoDaDor" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:1200px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -133,84 +133,95 @@
 
         $("#form-formularioDaDor").submit(function (e) {
             e.preventDefault();
-            var formValues = $(this).serialize();
 
-            formValues += "&SOS=" + ((sosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&NAUSEA=" + ((nauseaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&VOMITOS=" + ((vomitosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&INSONIA=" + ((insoniaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&CEFALEIA=" + ((cefaliaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&ALT_TERAP=" + ((altTerapCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&DOR=" + dorElement.noUiSlider.get().split('.')[0];
+            var formValues      = {};
+            var formSerialize   = $(this).serializeArray();
+            formValues = SerializeForm(formValues, formSerialize);
+            formValues = FillOptionAndDor(formValues);
 
             var tDoente = $("#formDaDor_tdoente").val();
-            var doente = $("#formDaDor_doente").val();
-            var nint = $("#formDaDor_nint").val();
-            var nregoper = $("#formDaDor_nregoper").val();
+            var doente  = $("#formDaDor_doente").val();
+
+            if ($("#formDaDor_rowID").val() === "0") {
+                SaveDaDorForm(tDoente, doente, formValues);
+            } else {
+                EditDaDorForm(tDoente, doente, formValues);
+            }
+          
+        });
+
+        function CloseDaDorForm(result, isEdit)
+        {
+            result = $.parseJSON(result);
+            if (result.header.status == false) {
+                alert(result.header.message);
+            } else {
+                if (isEdit == true)
+                    RenderEditData();
+                $("#modalFormularioDaDor").modal("hide");
+            }
+        }
+
+        function SaveDaDorForm(tDoente, doente, formValues)
+        {
+            var nregoper    = $("#formDaDor_nregoper").val();
+            var nint        = $("#formDaDor_nint").val();
 
             $.ajax({
                 url: '@Url.Action("SaveFormularioDaDor", "ConsultaDaDor")',
-                data: { "tdoente": tDoente, "doente": doente, "nint": nint, "nregoper": nregoper, "formulario": formValues },
+                data: { "tdoente": tDoente, "doente": doente, "nint": nint, "nregoper": nregoper, "formulario": JSON.stringify(formValues) },
                 dataType: 'JSON',
                 type: "POST",
                 cache: false,
                 success: function (result) {
-                    result = $.parseJSON(result);
-                    if (result.header.status == false) {
-                        alert(result.header.message);
-                    } else {
-                        $("#modalFormularioDaDor").modal("hide");
-                    }
+                    CloseDaDorForm(result, false);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
                 }
             });
-        });
+        }
 
-        $("#form-formularioDaDorEdit").submit(function (e) {
-            e.preventDefault();
-            var formValues = $(this).serialize();
-
-            formValues += "&SOS=" + ((sosCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&NAUSEA=" + ((nauseaCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&VOMITOS=" + ((vomitosCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&INSONIA=" + ((insoniaCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&CEFALEIA=" + ((cefaliaCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&ALT_TERAP=" + ((altTerapCheckBoxEdit.bootstrapSwitch("state") == true) ? "S" : "N");
-            formValues += "&DOR=" + dorElement.noUiSlider.get().split('.')[0];
-
-            var tDoente = $("#formDaDor_tdoente").val();
-            var doente = $("#formDaDor_doente").val();
-            var rowid = $("#formDaDor_rowid").val();
+        function EditDaDorForm(tDoente, doente, formValues) {
+            var rowid = $("#formDaDor_rowID").val();
 
             $.ajax({
                 url: '@Url.Action("EditHistoricoTable", "ConsultaDaDor")',
-                data: { "tdoente": tDoente, "doente": doente, "rowid": rowid, "formulario": formValues },
+                data: { "tdoente": tDoente, "doente": doente, "rowid": rowid, "formulario": JSON.stringify(formValues) },
                 dataType: 'JSON',
                 type: "POST",
                 cache: false,
                 success: function (result) {
-                    result = $.parseJSON(result);
-                    if (result == false) {
-                        alert(result.header.message);
-                    } else {
-                        $("#modalFormularioDaDorEdit").modal("hide");
-                        $("#modalHistoricoDaDor").modal("show");
-                        $(".ldfTableCancelEditRow_histDorTable").trigger("click");
-
-                    }
+                    CloseDaDorForm(result, true);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
                 }
             });
-        });
+        }
 
+        function RenderEditData()
+        {
+            var curRow = $("#histDorTable").find("tr[data-rowid='" + $("#formDaDor_rowID").val() + "']");
+            $(curRow).find("td[data-column='BAL_INFUSOR']").html($("#BAL_INFUSOR option:selected").text());
+            $(curRow).find("td[data-column='BAL_INFUSOR_SIT']").html($("#BAL_INFUSOR_SIT option:selected").text());
+            $(curRow).find("td[data-column='ENF']").html($("#ENF option:selected").text());
+            $(curRow).find("td[data-column='ANEST_VISITA']").html($("#ANEST_VISITA option:selected").text());
+            $(curRow).find("td[data-column='OUTROS_SINT']").html($("#OUTROS_SINT").val());
+            $(curRow).find("td[data-column='OBS']").html($("#OBS").val());
+
+            $(curRow).find("td[data-column='SOS']").html(((sosCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não"));
+            $(curRow).find("td[data-column='NAUSEA']").html((nauseaCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não");
+            $(curRow).find("td[data-column='VOMITOS']").html((vomitosCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não");
+            $(curRow).find("td[data-column='INSONIA']").html((insoniaCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não");
+            $(curRow).find("td[data-column='CEFALEIA']").html((cefaliaCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não");
+            $(curRow).find("td[data-column='ALT_TERAP']").html((altTerapCheckBox.bootstrapSwitch("state") == true) ? "Sim" : "Não");
+            $(curRow).find("td[data-column='DOR']").html(dorElement.noUiSlider.get().split('.')[0]);
+            
+        }
 
 
         $(document).on("click", ".consdadorPatologia", function () {
-
             var nomeDoente = $(this).attr("data-nome");
             var patologia = $(this).attr("data-patologia");
 
@@ -222,98 +233,66 @@
         });
 
 
-        $(document).on("click", ".consdadorFormularioDaDor", function () {
-            var tDoente = $(this).attr("data-tdoente");
-            var doente = $(this).attr("data-doente");
-            var nomeDoente = $(this).attr("data-nome");
-            var nint = $(this).attr("data-nint");
-            var nregoper = $(this).attr("data-nregoper");
+        $(document).on("click", ".consdadorFormularioDador", function () {
+            var tDoente     = $(this).attr("data-tdoente");
+            var doente      = $(this).attr("data-doente");
+            var nomeDoente  = $(this).attr("data-nome");
+            var nint        = $(this).attr("data-nint");
+            var nregoper    = $(this).attr("data-nregoper");
 
             $("#formDaDor_tdoente").val(tDoente);
             $("#formDaDor_doente").val(doente);
             $("#formDaDor_nint").val(nint);
             $("#formDaDor_nregoper").val(nregoper);
+            $("#formDaDor_rowID").val(0);
+
+            sosCheckBox.bootstrapSwitch('state', false);
+            nauseaCheckBox.bootstrapSwitch('state', false);
+            vomitosCheckBox.bootstrapSwitch('state', false);
+            insoniaCheckBox.bootstrapSwitch('state', false);
+            cefaliaCheckBox.bootstrapSwitch('state', false);
+            altTerapCheckBox.bootstrapSwitch('state', false);
+
+            dorElement.noUiSlider.set(5);
+
+            $("#OUTROS_SINT").val("");
+            $("#OBS").val("");
+
+            $("#ENF").select2("val", "");
+            $("#ANEST_VISITA").select2("val", "");
         });
 
         
-        $(document).on("click", ".ldfTableEditRow_histDorTable", function (e) {
+        $(document).on("click", ".editHistDaDor", function (e) {
+            $("#formDaDor_tdoente").val($(this).attr("data-tdoente"));
+            $("#formDaDor_doente").val($(this).attr("data-doente"));
+            $("#formDaDor_nint").val( $(this).attr("data-nint"));
+            $("#formDaDor_nregoper").val($(this).attr("data-nregoper"));
+            $("#formDaDor_rowID").val($(this).attr("data-rowid"));
 
-            e.preventDefault();
-            var tDoente = $(this).closest("tr").attr("data-tdoente");
-            var doente = $(this).closest("tr").attr("data-doente");
-            var nomeDoente = $(this).closest("tr").attr("data-nome");
-            var nint = $(this).closest("tr").attr("data-nint");
-            var nregoper = $(this).closest("tr").attr("data-nregoper");
-            var rowid = $(this).closest("tr").attr("data-rowid");
-            var formValues = $(this).serialize();
-            formValues += "{"
-            $("#formDaDor_tdoente").val(tDoente);
-            $("#formDaDor_doente").val(doente);
-            $("#formDaDor_nint").val(nint);
-            $("#formDaDor_nregoper").val(nregoper);
-            $("#formDaDor_rowid").val(rowid);
-            $(this).closest("tr").children().each(function () {
-                switch ($(this).attr("data-column")) {
-                    case "BAL_INFUSOR": formValues += '"BAL_INFUSOR": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "BAL_INFUSOR_SIT": formValues += '"BAL_INFUSOR_SIT": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "SOS": formValues += '"SOS": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "NAUSEA": formValues += '"NAUSEA": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "VOMITOS": formValues += '"VOMITOS": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "INSONIA": formValues += '"INSONIA": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "CEFALEIA": formValues += '"CEFALEIA": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "ALT_TERAP": formValues += '"ALT_TERAP": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "DOR": formValues += '"DOR": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "ENF": formValues += '"ENF": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "ANEST_VISITA": formValues += '"ANEST_VISITA": "' + $(this).data("curvalue") + '"';
-                        break;
-                    case "OUTROS_SINT": formValues += '"OUTROS_SINT": "' + $(this).data("curvalue") + '",';
-                        break;
-                    case "OBS": formValues += '"OBS": "' + $(this).data("curvalue") + '",';
-                        break;
-            }
-            });
-            formValues += "}";
+            sosCheckBox.bootstrapSwitch('state', ($(this).attr("data-SOS") === "S" ? true : false));
+            nauseaCheckBox.bootstrapSwitch('state', ($(this).attr("data-nausea") === "S" ? true : false));
+            vomitosCheckBox.bootstrapSwitch('state', ($(this).attr("data-vomitos") === "S" ? true : false));
+            insoniaCheckBox.bootstrapSwitch('state', ($(this).attr("data-insonia") === "S" ? true : false));
+            cefaliaCheckBox.bootstrapSwitch('state', ($(this).attr("data-cefaleia") === "S" ? true : false));
+            altTerapCheckBox.bootstrapSwitch('state', ($(this).attr("data-altTerap") === "S" ? true : false));
 
-            //$("#modalHistoricoDador").removeClass("fade").modal("hide");
-            //$("#modalFormularioDadorEdit").modal("show").addClass("fade");
-            $.ajax({
-                url: '@Url.Action("EditHistoricoDaDor", "ConsultaDaDor")',
-                data: {  "rowid": rowid, "formulario": formValues },
-                type: "GET",
-                cache: false,
-                success: function (result) {
-                    if (result != "") {
-                        $("#modalHistoricoDaDor").removeClass("fade").modal("hide");
-                        $("#modalFormularioDaDorEdit").modal("show").addClass("fade");
-                        $("#modal-desloc-tl-body-formDaDorEdit").html(result);
-                    } else {
-                        $("#modal-desloc-tl-body-formDador").html("");
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(xhr);
-                }
-            });
+            dorElement.noUiSlider.set($(this).attr("data-dor"));
+
+            $("#OUTROS_SINT").val($(this).attr("data-outrosSint"));
+            $("#OBS").val($(this).attr("data-obs"));
+
+            $("#BAL_INFUSOR").val($(this).attr("data-balInfusor"));
+            $("#BAL_INFUSOR_SIT").val($(this).attr("data-balInfusorSit"));
+            $("#ENF").select2("val", $(this).attr("data-enf"));
+            $("#ANEST_VISITA").select2("val", $(this).attr("data-anestVisita"));
         });
-
-        
 
 
         $(document).on("click", ".consdadorHistorico", function () {
-
-            var tDoente = $(this).attr("data-tdoente");
-            var doente = $(this).attr("data-doente");
-            var nomeDoente = $(this).attr("data-nome");
+            var tDoente     = $(this).attr("data-tdoente");
+            var doente      = $(this).attr("data-doente");
+            var nomeDoente  = $(this).attr("data-nome");
 
             $.ajax({
                 url: '@Url.Action("ShowHistoricoDaDor", "ConsultaDaDor")',
@@ -334,6 +313,36 @@
             });
 
         });
+
+
+        function SerializeForm(formValues, a)
+        {
+            $.each(a, function () {
+                if (formValues[this.name]) {
+                    if (!formValues[this.name].push) {
+                        formValues[this.name] = [formValues[this.name]];
+                    }
+                    formValues[this.name].push(this.value || '');
+                } else {
+                    formValues[this.name] = this.value || '';
+                }
+            });
+
+            return formValues;
+        }
+
+        function FillOptionAndDor(formValues)
+        {
+            formValues["SOS"] = ((sosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["NAUSEA"] = ((nauseaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["VOMITOS"] = ((vomitosCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["INSONIA"] = ((insoniaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["CEFALEIA"] = ((cefaliaCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["ALT_TERAP"] = ((altTerapCheckBox.bootstrapSwitch("state") == true) ? "S" : "N");
+            formValues["DOR"] = dorElement.noUiSlider.get().split('.')[0];
+
+            return formValues;
+        }
     </script>
 
 }

@@ -74,10 +74,10 @@ namespace LusiadasSolucaoWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditHistoricoTable(string tdoente, string doente, string nint, string nregoper, string rowid, string formulario)
+        public JsonResult EditHistoricoTable(string tdoente, string doente, string rowid, string formulario)
         {
             HistoricoDaDorModel hist = new HistoricoDaDorModel();
-            return Json(hist.EditRow(rowid, formulario));
+            return Json(hist.EditRow(tdoente, doente, rowid, formulario));
         }
 
 

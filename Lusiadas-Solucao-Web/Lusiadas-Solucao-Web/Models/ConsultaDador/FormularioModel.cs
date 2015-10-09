@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LusiadasSolucaoWeb.Models
 {
@@ -10,35 +12,33 @@ namespace LusiadasSolucaoWeb.Models
     {
         public string AddDor(string tdoente, string doente, string nInt, string nRegOper, string formulario)
         {
-            bool status = false; 
-            string res ="";
+            TblConsultaDor  dor     = new TblConsultaDor();
+            string          res     = "";
+            bool            status  = false; 
 
-            TblConsultaDor dor = new TblConsultaDor();
+            UserInfo uinfo      = (UserInfo)HttpContext.Current.Session[Constants.SS_USER];
+            var obj             = JsonConvert.DeserializeObject(formulario);
 
-            List<string[]> obj = formulario.Split('&').Select(q => q.Split('=')).ToList();
-
-            UserInfo uinfo = (UserInfo)HttpContext.Current.Session[Constants.SS_USER];
-
-            dor.NUM_CONS_DOR = "";
-            dor.T_DOENTE = tdoente;
-            dor.DOENTE = doente;
-            dor.N_INT = nInt;
-            dor.N_REG_OPER=nRegOper; 
-            dor.SOS = obj.First(q=>q[0]=="SOS")[1].ToString();
-            dor.NAUSEA = obj.First(q => q[0] == "NAUSEA")[1].ToString();
-            dor.VOMITOS = obj.First(q => q[0] == "VOMITOS")[1].ToString();
-            dor.INSONIA = obj.First(q => q[0] == "INSONIA")[1].ToString();
-            dor.CEFALEIA = obj.First(q => q[0] == "CEFALEIA")[1].ToString();
-            dor.ALT_TERAP = obj.First(q => q[0] == "ALT_TERAP")[1].ToString();
-            dor.DOR = obj.First(q => q[0] == "DOR")[1].ToString();
-            dor.BAL_INFUSOR = obj.First(q => q[0] == "BAL_INFUSOR")[1].ToString();
-            dor.BAL_INFUSOR_SIT = obj.First(q => q[0] == "BAL_INFUSOR_SIT")[1].ToString();
-            dor.OUTROS_SINT = obj.First(q => q[0] == "OUTROS_SINT")[1].ToString();
-            dor.OBS = obj.First(q => q[0] == "OBS")[1].ToString();
-            dor.ENF_RESP = uinfo.userID;
-            dor.ENF = obj.First(q => q[0] == "ENF")[1].ToString();
-            dor.ANEST_VISITA = obj.First(q => q[0] == "ANEST_VISITA")[1].ToString();
-            dor.USER_CRI = uinfo.userID;
+            dor.NUM_CONS_DOR    = "";
+            dor.T_DOENTE        = tdoente;
+            dor.DOENTE          = doente;
+            dor.N_INT           = nInt;
+            dor.N_REG_OPER      = nRegOper;
+            dor.SOS             = ((dynamic)((JObject)(obj))).SOS;
+            dor.NAUSEA          = ((dynamic)((JObject)(obj))).NAUSEA;
+            dor.VOMITOS         = ((dynamic)((JObject)(obj))).VOMITOS;
+            dor.INSONIA         = ((dynamic)((JObject)(obj))).INSONIA;
+            dor.CEFALEIA        = ((dynamic)((JObject)(obj))).CEFALEIA;
+            dor.ALT_TERAP       = ((dynamic)((JObject)(obj))).ALT_TERAP;
+            dor.DOR             = ((dynamic)((JObject)(obj))).DOR;
+            dor.BAL_INFUSOR     = ((dynamic)((JObject)(obj))).BAL_INFUSOR;
+            dor.BAL_INFUSOR_SIT = ((dynamic)((JObject)(obj))).BAL_INFUSOR_SIT;
+            dor.OUTROS_SINT     = ((dynamic)((JObject)(obj))).OUTROS_SINT;
+            dor.OBS             = ((dynamic)((JObject)(obj))).OBS;
+            dor.ENF_RESP        = uinfo.userID;
+            dor.ENF             = ((dynamic)((JObject)(obj))).ENF;
+            dor.ANEST_VISITA    = ((dynamic)((JObject)(obj))).ANEST_VISITA;
+            dor.USER_CRI        = uinfo.userID;
 
 
             DALConsultaDor dal = new DALConsultaDor();

@@ -20,7 +20,7 @@ namespace LusiadasSolucaoWeb.Models
 
         public void FillDefinitions()
         {
-            list_defs = ParameterManager.GetParametersFrom<Produtos>("name=" + (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "TAB_CAMPODEF", "CODIGO, NOME_CAMPO, VALOR", "CODIGO='HISTORICO'", "");
+            list_defs = ParameterManager.GetParametersFrom<Produtos>("name=" + (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "TAB_CAMPODEF", "CODIGO, NOME_CAMPO, VALOR, CODIGO_PAI", "CODIGO='HISTORICO'", "");
         }
     }
 
@@ -29,5 +29,6 @@ namespace LusiadasSolucaoWeb.Models
         public string CODIGO { get; set; }
         public string NOME_CAMPO { get; set; }
         public string VALOR { get; set; }
+        public string CODIGO_PAI { get; set; }
     }
 }

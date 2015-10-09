@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace LusiadasDAL
 {
@@ -12,8 +13,9 @@ namespace LusiadasDAL
 
     public partial class DBInternamentoContext : DbContext
     {
-        public DBInternamentoContext()
-            : base("name=DBSolucaoWeb")
+        //a escolha da BD ainda nao é dinamica porque há metodos que devem ser da BD escolhida e outros da BD do utilizador
+        //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
+        public DBInternamentoContext()  : base("name=BDHPTQLD")
         {
             Database.SetInitializer<DBInternamentoContext>(null);
         }
@@ -22,6 +24,7 @@ namespace LusiadasDAL
         public virtual DbSet<VwPisosIntern>     vwPisos         { get; set; }
         public virtual DbSet<TblSDServ>         tblSdServ       { get; set; }
         public virtual DbSet<TblSDPessHosp>     tblSdPessHosp   { get; set; }
+        public virtual DbSet<TblPessHospDet>    tblPessHospDet  { get; set; }
 
 
     }

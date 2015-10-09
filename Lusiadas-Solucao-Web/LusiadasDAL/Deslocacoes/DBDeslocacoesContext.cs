@@ -9,11 +9,12 @@ namespace LusiadasDAL
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
+    using System.Web;
 
     public partial class DBDeslocacoesContext : DbContext
     {
         public DBDeslocacoesContext()
-            : base("name=DBSolucaoWeb")
+            : base("name=" + HttpContext.Current.Session["CONN"])
         {
             Database.SetInitializer<DBDeslocacoesContext>(null);
         }

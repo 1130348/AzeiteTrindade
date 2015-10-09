@@ -20,6 +20,10 @@ namespace LusiadasSolucaoWeb.Models
         [Display(Name = "Password")]
         public string Password { get{ return _password;}  set { _password = GetMyPassword(value); } }
 
+        [Required]
+        [Display(Name = "Unidade")]
+        public string LocalConnection { get; set; }
+
 
         private string _password;
 

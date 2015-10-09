@@ -15,7 +15,7 @@
     <AssemblyName>LusiadasSolucaoWeb</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -156,22 +156,28 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\ATPController.cs" />
-    <Compile Include="Controllers\ConsultaDadorController.cs" />
+    <Compile Include="Controllers\ConsultaDaDorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeslocacoesController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\LDFHelpers\LDFTableController.cs" />
     <Compile Include="Controllers\PIMController.cs" />
+    <Compile Include="CostumFilterAttribute.cs" />
     <Compile Include="Generic.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ATP\ATPModel.cs" />
-    <Compile Include="Models\ConsultaDador\EnfermeirosModel.cs" />
+    <Compile Include="Models\ConsultaDaDor\AnestesistasModel.cs" />
+    <Compile Include="Models\ConsultaDaDor\ConsultaDaDorModel.cs" />
+    <Compile Include="Models\ConsultaDaDor\EnfermeirosModel.cs" />
+    <Compile Include="Models\ConsultaDaDor\FormularioModel.cs" />
+    <Compile Include="Models\ConsultaDaDor\HistoricoDaDorModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocProdModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocHistModel.cs" />
     <Compile Include="Models\Login\LoginModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocacoesModel.cs" />
+    <Compile Include="Models\Objects\Interface1.cs" />
     <Compile Include="Models\Objects\VDeslocProd.cs" />
     <Compile Include="Models\Objects\VDoentesPresentes.cs" />
     <Compile Include="Models\PIM\PIMModel.cs" />
@@ -1076,8 +1082,10 @@
     <Content Include="Views\ATP\Index.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
-    <Content Include="Views\ConsultaDador\Index.cshtml" />
-    <Content Include="Views\ConsultaDador\_formulario.cshtml" />
+    <Content Include="Views\ConsultaDaDor\Index.cshtml" />
+    <Content Include="Views\ConsultaDaDor\_formulario.cshtml" />
+    <Content Include="Views\ConsultaDaDor\_historicoDor.cshtml" />
+    <Content Include="Views\ConsultaDaDor\_formularioEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -1107,8 +1115,6 @@
           <DevelopmentServerPort>2013</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:8098/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:8098/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

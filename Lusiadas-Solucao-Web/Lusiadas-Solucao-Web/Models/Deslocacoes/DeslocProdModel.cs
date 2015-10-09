@@ -16,6 +16,7 @@ namespace LusiadasSolucaoWeb.Models
         public string ncons = "";
         public string tEpis = "";
         public string epis = "";
+        public string serv = "";
 
         #region DeslocProdModel
 
@@ -26,11 +27,12 @@ namespace LusiadasSolucaoWeb.Models
             ncons = (string)HttpContext.Current.Session["DeslocProd_NCONS"];
             tEpis = (string)HttpContext.Current.Session["DeslocProd_TEPIS"];
             epis = (string)HttpContext.Current.Session["DeslocProd_EPIS"];
+            serv = (string)HttpContext.Current.Session["DeslocProd_COD_SERV"];
 
             string query = "T_DOENTE='" + tdoente + "' AND DOENTE='" + doente + "' AND T_EPISODIO='" + tEpis + "' AND EPISODIO='" + epis + "'";
 
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams    = new LDFTableDBParams("DBSolucaoWeb", "MEDICO", "V_DESLOC_PROD", "*", query, "DOENTE", null, null);
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DESLOC_PROD", "*", query, "DOENTE", null, null);
             objType     = typeof(VDeslocProd);
 
 
@@ -39,49 +41,28 @@ namespace LusiadasSolucaoWeb.Models
             callbacks.searchCallBack = helper.Action("LoadLDFTable", "Deslocacoes");
          
             LDFTableHeaders();
-            ReArrangeHeaders();
-        }
-
-        private void ReArrangeHeaders()
-        {
-            list_headers.Add(new LDFTableHeader() { headerID = "LOCAL_ATUAL", headerName = "Local Atual" });
         }
 
 
         public void LDFTableTreatData()
         {
             string tdoente = "", doente = "", tepisodio = "";
-            string selectValencias = "", deslocActive = "";
+            string respMov = "";
 
             ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
             foreach (LDFTableRow item in list_rows)
             {
-                item.rowItems.Add(new LDFTableItem("LOCAL_ATUAL", ""));
 
                 tdoente     = Generic.GetItemValue(item, "T_DOENTE");
                 doente      = Generic.GetItemValue(item, "DOENTE");
                 tepisodio   = Generic.GetItemValue(item, "T_EPISODIO");
 
-                deslocActive = "";
-                if ((Generic.GetItemValue(item, "COD_SERV") != Generic.GetItemValue(item, "COD_SERV_ORIG")) && (!String.IsNullOrEmpty(Generic.GetItemValue(item, "COD_SERV"))))
-                    deslocActive = "active";
+                
+                respMov = "<div class='row'>";
+                respMov += "<div class='col-xs-12'>" + Generic.GetItemValue(item, "TITULO") + " " + Generic.GetItemValue(item, "NOME");
+                respMov += "</div>";
 
-                selectValencias = "<select data-select-row='" + tdoente + "_" + doente + "' class='infaddeslocprod-selected-item " + deslocActive + "' data-previous-elem='" + Generic.GetItemValue(item, "COD_SERV") + "'>";
-                selectValencias += "<option disabled value='0' " + (String.IsNullOrEmpty(Generic.GetItemValue(item, "COD_SERV")) ? "selected" : "") + ">Sem deslocação</option>";
-
-                selectValencias += "<optgroup label='Localização Origem'>";
-                selectValencias += "<option value='" + Generic.GetItemValue(item, "COD_SERV_ORIG") + "' " + ((Generic.GetItemValue(item, "COD_SERV_ORIG") == Generic.GetItemValue(item, "COD_SERV")) ? "selected" : "") + ">" + Generic.GetItemValue(item, "DESCR_SERV") + "</option>";
-                selectValencias += "</optgroup>";
-
-                selectValencias += "<optgroup label='Todas as localizações'>";
-                foreach (Valencia itemVal in valModel.listValencias)
-                {
-                    if (itemVal.COD_SERV != Generic.GetItemValue(item, "COD_SERV_ORIG") && Generic.GetItemValue(item, "COD_SERV") != itemVal.COD_SERV)
-                        selectValencias += "<option value='" + itemVal.COD_SERV + "' " + ((itemVal.COD_SERV == Generic.GetItemValue(item, "COD_SERV")) ? "selected" : "") + ">" + itemVal.DESCR_SERV + "</option>";
-                }
-                selectValencias += "</optgroup>";
-                selectValencias += "</select>";
-                item.rowItems.First(q => q.itemColumnName == "LOCAL_ATUAL").itemValue = selectValencias;
+                item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = respMov;
 
             }
         }

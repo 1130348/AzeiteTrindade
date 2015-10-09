@@ -25,8 +25,14 @@ namespace LusiadasSolucaoWeb.Controllers
         {
             DALDeslocacoes dal = new DALDeslocacoes();
 
+            PisosModel pisos = new PisosModel();
+            pisos.LoadPisos();
+
             ValenciaModel valencias = new ValenciaModel();
             valencias.LoadValencias(uinfo.listCodServ);
+            //Pesquisar como fazer union das duas listas
+            
+
             Session["InfADValencias"] = valencias;
 
             ParameterModel paramProd = new ParameterModel();
@@ -34,7 +40,7 @@ namespace LusiadasSolucaoWeb.Controllers
             Session["InfADDeslocProd"] = paramProd;
 
             DeslocacoesModel    infADTable      = new DeslocacoesModel();
-            Tuple<DeslocacoesModel, ValenciaModel, ParameterModel> tp = new Tuple<DeslocacoesModel, ValenciaModel, ParameterModel>(infADTable, valencias, paramProd);
+            Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel> tp = new Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel>(infADTable, valencias, paramProd, pisos);
 
             return View(tp);
         }
@@ -44,7 +50,7 @@ namespace LusiadasSolucaoWeb.Controllers
         #region Filter Table
 
         [HttpGet]
-        public JsonResult FilterData(string servicoCod, string ultLocalCod, string viewOnlocal)
+        public JsonResult FilterData(string servicoCod, string ultLocalCod, string viewOnlocal, string pisoCod)
         {
             bool onlyOnlocal = (Convert.ToInt32(viewOnlocal) == 1 ? true : false);
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
@@ -52,6 +58,7 @@ namespace LusiadasSolucaoWeb.Controllers
             List<LDFTableField> listFields = new List<LDFTableField>();
             listFields.Add(new LDFTableField("COD_SERV", servicoCod));
             listFields.Add(new LDFTableField("U_LOCAL", ultLocalCod));
+            listFields.Add(new LDFTableField("PISO", pisoCod));
             if (onlyOnlocal)
                 listFields.Add(new LDFTableField("U_LOCAL", "IS NOT NULL"));
 
@@ -98,6 +105,8 @@ namespace LusiadasSolucaoWeb.Controllers
             DeslocProdModel deslocProdTable = new DeslocProdModel();
             deslocProdTable.tdoente = tdoente;
             deslocProdTable.doente = doente;
+            deslocProdTable.serv = curserv;
+
             Session["DeslocProd_NCONS"] = deslocProdTable.ncons = ncons;
             Session["DeslocProd_TEPIS"] = deslocProdTable.tEpis = tEpis;
             Session["DeslocProd_EPIS"] = deslocProdTable.epis = epis;

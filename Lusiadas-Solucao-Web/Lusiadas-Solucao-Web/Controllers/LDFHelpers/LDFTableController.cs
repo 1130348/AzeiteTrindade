@@ -27,7 +27,7 @@ namespace LusiadasSolucaoWeb.Controllers
  
             _model                  = GetSessionModel();
             Type thisType           = _model.GetType();
-            _model.LoadTableData(pageNumber, orderData, filterData);
+             _model.LoadTableData(pageNumber, orderData, filterData);
 
             MethodInfo theMethod = thisType.GetMethod("LDFTableTreatData");
             if (theMethod != null)
@@ -43,9 +43,23 @@ namespace LusiadasSolucaoWeb.Controllers
             bool res                    = false;
             _model                      = GetSessionModel();
             
-            Type thisType               = _model.GetType();
-            MethodInfo theMethod        = thisType.GetMethod("LDFSaveData").MakeGenericMethod(_model.objType);
-            object[] funcParams = new object[] { rowID, fields,  Activator.CreateInstance(_model.objType)};
+
+            //reajustar dados para editar
+            Type thisType = _model.GetType();
+            
+            MethodInfo theMethod = thisType.GetMethod("LDFTableUpdateTreatData");
+            object[] funcParams = new object[] { rowID, fields };
+            if (theMethod != null)
+                if (theMethod.ReturnType==(typeof(string)))         //caso seja retornado a string fields alterada é necessário atribuila de novo à variavel
+                    fields = theMethod.Invoke(_model, funcParams).ToString();
+                else                                                            //caso contrario simplesmente invocamos o método
+                    theMethod.Invoke(_model, funcParams).ToString();
+
+
+            
+            //salvar dados editados
+            theMethod        = thisType.GetMethod("LDFSaveData").MakeGenericMethod(_model.objType);
+            funcParams = new object[] { rowID, fields,  Activator.CreateInstance(_model.objType)};
             res = (bool)theMethod.Invoke(_model, funcParams);
 
             return Json(_model.GetJSON(res));
@@ -63,7 +77,6 @@ namespace LusiadasSolucaoWeb.Controllers
             if (theMethod != null)
                 theMethod.Invoke(_model, null);
             
-            //  new { _model.list_rows, pageCount = _model.pageCount, rowCount = _model.rowCount, filterData = listFilters },
             return Json(_model.GetJSON(),
                 JsonRequestBehavior.AllowGet);
         }

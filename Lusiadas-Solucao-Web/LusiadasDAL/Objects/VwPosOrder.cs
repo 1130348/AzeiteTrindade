@@ -31,6 +31,7 @@ namespace LusiadasDAL
         [LDFTableIsVisible(false)] public DateTime  DT_INT          { get; set; }
         [LDFTableIsVisible(false)] public string    N_INT           { get; set; }
         [LDFTableIsVisible(false)] public string    N_REG_OPER      { get; set; }
+        [LDFTableIsVisible(false)] public string    PAT_ASSOCIADAS      { get; set; }
 
     }
 }

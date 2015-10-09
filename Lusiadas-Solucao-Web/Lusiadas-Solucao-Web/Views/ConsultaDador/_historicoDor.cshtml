@@ -1,0 +1,10 @@
+﻿@using LDFHelper.Helpers
+@using LusiadasSolucaoWeb.Models
+
+@model HistoricoDaDorModel
+
+<div class="box">
+    <div class="box-body">
+        <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "histDorTable", className = "tableInternal", canEditRow=true, canDeleteRow = true })</div>
+    </div>
+</div>

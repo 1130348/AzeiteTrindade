@@ -1,6 +1,6 @@
 ﻿@using LDFHelper.Helpers;
 @using LusiadasSolucaoWeb.Models;
-@model Tuple<DeslocacoesModel, ValenciaModel, ParameterModel>
+@model Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel>
 
 
 <link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
@@ -37,6 +37,16 @@
                         <select class="form-control" id="select-servico">
                             <option value="">Ver todos</option>
                             @foreach (Valencia item in Model.Item2.listValencias)
+                            {
+                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Piso</label>
+                        <select class="form-control" id="select-piso">
+                            <option value="">Ver todos</option>
+                            @foreach (Piso item in Model.Item4.listPisos)
                             {
                                 <option value="@item.COD_SERV">@item.DESCR_SERV</option>
                             }
@@ -116,6 +126,7 @@
 
         var servicoCod  = "";
         var ultLocalCod = "";
+        var pisoCod     = "";
         var viewOnlocal = 0;
 
         var iCheckObj = $('#check-view-mine.minimal').iCheck({
@@ -130,6 +141,11 @@
 
         $("#select-ult-local").on("change", function (el) {
             ultLocalCod = this.value;
+            FilterData();
+        });
+
+        $("#select-piso").on("change", function (el) {
+            pisoCod = this.value;
             FilterData();
         });
 
@@ -248,7 +264,7 @@
         {
             $.ajax({
                 url: '@Url.Action("FilterData", "Deslocacoes")',
-                data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "viewOnlocal": viewOnlocal },
+                data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "pisoCod": pisoCod, "viewOnlocal": viewOnlocal },
                 type: "get",
                 cache: false,
                 success: function (result) {

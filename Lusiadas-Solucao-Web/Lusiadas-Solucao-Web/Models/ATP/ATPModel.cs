@@ -17,7 +17,9 @@ namespace LusiadasSolucaoWeb.Models
         public ATPModel()
         {
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams    = new LDFTableDBParams("DBSolucaoWeb", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
+            //como a tabela dashboard nao existe  nas outras BD a escolha ainda nao é dinamica
+            //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
+            dbParams = new LDFTableDBParams("BDHPTQLD", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
             objType     = typeof(VwDashboardATP);
 
             LDFTableHeaders();

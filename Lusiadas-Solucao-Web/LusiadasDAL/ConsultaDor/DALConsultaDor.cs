@@ -10,13 +10,13 @@ namespace LusiadasDAL
     public class DALConsultaDor
     {
 
-        public bool AddDador(string conn, TblConsultaDor dador)
+        public bool AddDaDor(string conn, TblConsultaDor daDor)
         {
             try
             {
-                DBConsultaDorContext ctxDador = new DBConsultaDorContext(conn);
-                ctxDador.tblConsultaDor.Add(dador);
-                ctxDador.SaveChanges();
+                DBConsultaDorContext ctxDaDor = new DBConsultaDorContext(conn);
+                ctxDaDor.tblConsultaDor.Add(daDor);
+                ctxDaDor.SaveChanges();
                 return true;
             }
             catch (Exception err)

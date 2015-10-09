@@ -16,19 +16,19 @@
             </div>
             <div class="col-sm-4">
                 <label>Origem</label>
-                <select class="form-control" id="select-deslocProd-origem">
-                    @foreach (Valencia val in Model.Item3.listValencias)
-                    {
-                        <option value="@val.COD_SERV">@val.DESCR_SERV</option>
+                    @{
+                        Valencia val = Model.Item3.listValencias.First(q=>q.COD_SERV==Model.Item1.serv);
+                        <div class='row'>
+                            <div class='col-xs-12'> @val.DESCR_SERV </div>
+                        </div>
                     }
-                </select>
             </div>
             <div class="col-md-4">
                 <label>Destino</label>
                 <select class="form-control" id="select-deslocProd-destino">
-                    @foreach (Valencia val in Model.Item3.listValencias)
+                    @foreach (Valencia val2 in Model.Item3.listValencias)
                     {
-                        <option value="@val.COD_SERV">@val.DESCR_SERV</option>
+                        <option value="@val2.COD_SERV">@val2.DESCR_SERV</option>
                     }
                 </select>
             </div>

@@ -30,8 +30,16 @@ namespace LusiadasSolucaoWeb.Controllers
                         ModelState.AddModelError("error", "Utilizador inexistente na listagem de pessoal hospitalar");
                     else
                     {
-                        Session[Constants.SS_USER] = uinfo;
-                        return RedirectToAction("Index", "ATP");
+                        if (String.IsNullOrEmpty(login.LocalConnection))
+                        {
+                            ModelState.AddModelError("error", "Deve escolher a unidade hospitalar que pretende consultar");
+                        }
+                        else
+                        {
+                            Session[Constants.SS_LOCAL_CONN] = "BD" + login.LocalConnection + "QLD";
+                            Session[Constants.SS_USER] = uinfo;
+                            return RedirectToAction("Index", "ATP");
+                        }
                     }
                 }
                 else

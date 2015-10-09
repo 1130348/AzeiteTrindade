@@ -14,7 +14,7 @@ namespace LusiadasSolucaoWeb.Models
         public PIMModel()
         {
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams    = new LDFTableDBParams("DBSolucaoWeb", "MEDICO", "V_INTERNAMENTOS", "*", "DT_ALTA IS NULL", "COD_SERV", null, null);
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_INTERNAMENTOS", "*", "DT_ALTA IS NULL", "COD_SERV", null, null);
             objType     = typeof(VwInternamentos);
 
             LDFTableHeaders();

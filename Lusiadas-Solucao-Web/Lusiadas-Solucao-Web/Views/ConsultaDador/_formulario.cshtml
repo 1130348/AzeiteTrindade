@@ -1,5 +1,8 @@
 ﻿@using LusiadasDAL;
-@model LusiadasSolucaoWeb.Models.EnfermeirosModel
+@using LDFHelper.Helpers;
+@using LusiadasSolucaoWeb.Models;
+
+@model Tuple<EnfermeirosModel,AnestesistasModel>
 
 <style type="text/css">
     .bootstrap-switch-fail {
@@ -33,7 +36,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Balão Infusor</label>
-            <select id="BAL_INFUSOR" name="BALAO_INFUSOR" class="form-control">
+            <select id="BAL_INFUSOR" name="BAL_INFUSOR" class="form-control">
                 <option value="1">EV</option>
                 <option value="2">Epidural</option>
             </select>
@@ -61,7 +64,7 @@
 
         <div class="form-group">
             <label>Cefaleia</label>
-            <input type="checkbox" id="CEFALEIA" name="CEFALEIA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
+            <input type="checkbox" id="CEFALEIA" data-label-width="5" data-off-text="Não" data-off-color="fail" data-on-color="success" data-on-text="Sim" data-size="mini" class="form-control" data-wrapper-class="sliderElementClass" />
         </div>
 
         <div class="form-group">
@@ -75,7 +78,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Balão Infusor Sit</label>
-            <select id="BALAO_INFUSOR_SIT" name="BAL_INFUSOR_SIT" class="form-control">
+            <select id="BAL_INFUSOR_SIT" name="BAL_INFUSOR_SIT" class="form-control">
                 <option value="F">Fechado</option>
                 <option value="C">Em Curso</option>
                 <option value="R">Retirado</option>
@@ -95,7 +98,8 @@
         <div class="form-group">
             <label>Enfermeiros</label>
             <select id="ENF" name="ENF" class="form-control enfSelect select2">
-                @foreach (TblSDPessHosp item in Model.listEnfermeiros)
+                <option value="">Escolher Enfermeiro</option>
+                @foreach (TblSDPessHosp item in Model.Item1.listEnfermeiros)
                 {
                     <option value="@item.N_MECAN">@item.NOME</option>
                 }
@@ -106,9 +110,12 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Anestesista Visita</label>
-            <select id="ANEST_VISITA" name="ANESTESISTA_VISITA" class="form-control">
-                <option value="1">EV</option>
-                <option value="2">Epidural</option>
+            <select id="ANEST_VISITA" name="ANEST_VISITA" class="form-control">
+                <option value="">Escolher Anestesista</option>
+                @foreach (TblPessHospDet item in Model.Item2.listAnestesistas)
+                {
+                    <option value="@item.N_MECAN">@item.NOME</option>
+                }
             </select>
         </div>
     </div>
@@ -130,5 +137,7 @@
     </div>
 </div>
 
-<input type="hidden" id="formDador_tdoente" />
-<input type="hidden" id="formDador_doente" />
+<input type="hidden" id="formDaDor_tdoente" />
+<input type="hidden" id="formDaDor_doente" />
+<input type="hidden" id="formDaDor_nint" />
+<input type="hidden" id="formDaDor_nregoper" />

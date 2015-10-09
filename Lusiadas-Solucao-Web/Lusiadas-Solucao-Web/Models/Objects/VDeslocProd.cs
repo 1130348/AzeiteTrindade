@@ -25,6 +25,12 @@ namespace LusiadasSolucaoWeb.Models
         [Description("Origem")]
         public string DESCR_SERV_ORIG { get; set; }
 
+        [Description("Destino")]
+        public string DESCR_SERV { get; set; }
+
+        [Description("Nome")]
+        public string NOME { get; set; }
+
 
 
         [Key, Column(Order = 0)]
@@ -46,13 +52,9 @@ namespace LusiadasSolucaoWeb.Models
         [LDFTableIsVisible(false)]
         public string COD_SERV { get; set; }
         [LDFTableIsVisible(false)]
-        public string DESCR_SERV { get; set; }
-        [LDFTableIsVisible(false)]
         public string CONTACTO_SERV { get; set; }
-
         [LDFTableIsVisible(false)]
         public string FLG_POS_FINAL { get; set; }
-
         [LDFTableIsVisible(false)]
         public string USER_CRI { get; set; }
         [Key, Column(Order = 3)]
@@ -62,8 +64,6 @@ namespace LusiadasSolucaoWeb.Models
         public string TITULO { get; set; }
         [LDFTableIsVisible(false)]
         public string ABR { get; set; }
-        [LDFTableIsVisible(false)]
-        public string NOME { get; set; }
 
     }
 }

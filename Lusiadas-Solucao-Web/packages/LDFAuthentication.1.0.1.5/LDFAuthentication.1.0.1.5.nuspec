@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>LDFAuthentication</id>
+    <version>1.0.1.5</version>
+    <authors>Diamond By Bold</authors>
+    <owners>Diamond By Bold</owners>
+    <iconUrl>http://www.hanselman.com/images/nugeticon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Implements authentication</description>
+    <releaseNotes>Developed by Diamond By Bold Team</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+</package>

@@ -1,4 +1,5 @@
-﻿using LusiadasSolucaoWeb.Models;
+﻿using LDF.Authentication;
+using LusiadasSolucaoWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

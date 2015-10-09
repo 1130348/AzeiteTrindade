@@ -2,8 +2,16 @@
     string actionDescr      = ViewContext.RouteData.Values["Action"].ToString();
     string controllerDescr  = ViewContext.RouteData.Values["Controller"].ToString();
 
-    string menuAccessPIM    = "", menuAccessConsultaDador = "", menuAccessDesloc = "";
-
+    string menuAccessPIM = "", menuAccessConsultaDaDor = "", menuAccessDesloc = "";
+    //string menuCustomMedico = "false";
+    string cargo = ViewBag.NUM_CEDULA;
+    //switch (cargo)
+    //{
+    //    case "Médico(a)":
+    //        menuCustomMedico = "true";
+    //        break;
+    //}
+    
     switch (actionDescr)
     {
         case "Index":
@@ -14,9 +22,9 @@
             {
                 menuAccessPIM = "active";
             }
-            else if (controllerDescr == "ConsultaDador")
+            else if (controllerDescr == "ConsultaDaDor")
             {
-                menuAccessConsultaDador = "active";
+                menuAccessConsultaDaDor = "active";
             }
             
             break;
@@ -157,13 +165,13 @@
                         </a>
                     </li>
 
-                    <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDador") ? "active" : "")">
+                    <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDaDor") ? "active" : "")">
                         <a href="#">
                             <i class="fa fa-bed"></i> <span>Internamento</span>
                         </a>
                         <ul class="treeview-menu menu-open">
                             <li class="@menuAccessPIM"><a href="@Url.Action("Index", "PIM")"><i class="fa fa-angle-right"></i> Vista Global</a></li>
-                            <li class="@menuAccessConsultaDador"><a href="@Url.Action("Index", "ConsultaDador")"><i class="fa fa-angle-right"></i> Consulta Dador</a></li>
+                            <li class="@menuAccessConsultaDaDor" @*hidden="@menuCustomMedico"*@><a href="@Url.Action("Index", "ConsultaDaDor")"><i class="fa fa-angle-right"></i> Consulta Da Dor</a></li>
                         </ul>
                     </li>
 

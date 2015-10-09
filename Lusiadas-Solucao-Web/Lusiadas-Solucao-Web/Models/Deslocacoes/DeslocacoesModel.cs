@@ -15,7 +15,7 @@ namespace LusiadasSolucaoWeb.Models
         public DeslocacoesModel()
         {
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams    = new LDFTableDBParams("DBSolucaoWeb", "MEDICO", "V_DOENTES_PRESENTES", "*", "", "DESCR_SERV", null, null);
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DOENTES_PRESENTES", "*", "", "DESCR_SERV", null, null);
             objType     = typeof(VDoentesPresentes);
 
             LDFTableHeaders();
@@ -34,6 +34,7 @@ namespace LusiadasSolucaoWeb.Models
             string selectValencias = "", deslocActive = "", modalInfo = "";
             
             ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
+            
             foreach (LDFTableRow item in list_rows)
             {
                 item.rowItems.Add(new LDFTableItem("LOCAL_ATUAL", ""));
@@ -46,12 +47,13 @@ namespace LusiadasSolucaoWeb.Models
                 item.rowItems.First(q => q.itemColumnName == "T_DOENTE").itemValue = tdoente + doente;
                 item.rowItems.First(q => q.itemColumnName == "T_EPISODIO").itemValue = (tepisodio.Contains("Internamento") ? "Internamento" : "Consulta");
 
+                //String deveria receber DateTime e recebe int32
                 dtConsulta = "";
                 if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "HR_CONS")))
                     dtConsulta = String.Format("{0:dd/MM/yyyy}", Convert.ToInt32(Generic.GetItemValue(item, "DT_CONS")));
 
                 item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = String.Format("{0} {1}", dtConsulta, Generic.GetItemValue(item, "HR_CONS"));
-                item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + Generic.GetItemValue(item, "N_CONS") + "' data-tEpis='" + tepisodio + "' data-epis='" + Generic.GetItemValue(item, "EPISODIO") + "' class='fa fa-archive fa-lg infADModalDeslocProd' title='Movimentações de produtos'></a>";
+                item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + Generic.GetItemValue(item, "N_CONS") + "' data-tEpis='" + tepisodio + "' data-epis='" + Generic.GetItemValue(item, "EPISODIO") + "' class='fa fa-flask fa-lg infADModalDeslocProd' title='Movimentações de produtos'></a>";
 
                 deslocActive = "";
                 if ((Generic.GetItemValue(item, "COD_SERV") != Generic.GetItemValue(item, "U_LOCAL")) && (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL"))))

@@ -50,7 +50,7 @@ namespace LusiadasSolucaoWeb.Models
 
                 dtnasc = Generic.GetItemValue(item, "DT_NASC");
                 if (!String.IsNullOrEmpty(dtnasc))
-                    curdate = String.Format("{0:dd/MM/yyyy}", dtnasc);
+                    curdate = String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(dtnasc));
                 nomeDescr = "<div class='row'>";
                 nomeDescr += "<div class='col-xs-12'>" + Generic.GetItemValue(item, "NOME") + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i></div>";
                 nomeDescr += "</div>";
@@ -84,7 +84,11 @@ namespace LusiadasSolucaoWeb.Models
 
                 GetFieldCircle(item, "TRIAGEM", ((triagem == "S") ? green : red));
                 GetFieldCircle(item, "NOTA_MEDICA", ((nota_medica == "S") ? green : red));
-                GetFieldCircle(item, "CADEIRAO_PRESENTE", gray);
+
+                field = gray;
+                if (Generic.GetItemValue(item, "CADEIRAO_PRESENTE") == "S")
+                    field = green;
+                GetFieldCircle(item, "CADEIRAO_PRESENTE", field);
 
                 field = green;
                 if (Generic.GetItemValue(item, "BOX_APLICAVEL") == "N")
@@ -121,6 +125,11 @@ namespace LusiadasSolucaoWeb.Models
                 field = green;
                 if (Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS") == "0")
                     field = gray;
+                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) > Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS")))
+                    field = yellow;
+                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) == Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS")) 
+                            && IsDoenteMoved(Generic.GetItemValue(item, "DOENTE"), Generic.GetItemValue(item, "N_CONS")))
+                    field = red;
                 GetFieldCircle(item, "IMAGIOLOGIA_REQUESITADOS", field);
 
                 field = green;
@@ -165,6 +174,12 @@ namespace LusiadasSolucaoWeb.Models
         private void GetFieldCircle(LDFTableRow item, string rowName, string value)
         {
             item.rowItems.First(q => q.itemColumnName == rowName).itemValue  = "<i class='fa fa-circle lg " + value + "'></i>";
+        }
+
+        private bool IsDoenteMoved(string doente, string ncons)
+        {
+            DeslocacoesModel desloc = new DeslocacoesModel();
+            return desloc.IsDoenteDesloc(doente, ncons);
         }
         
         #endregion

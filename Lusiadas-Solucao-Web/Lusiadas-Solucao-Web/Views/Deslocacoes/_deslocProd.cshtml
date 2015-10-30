@@ -1,6 +1,6 @@
 ﻿@using LDFHelper.Helpers;
 @using LusiadasSolucaoWeb.Models;
-@model Tuple<DeslocProdModel, ParameterModel, ValenciaModel>
+@model Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel>
 
 <div class="box box-success">
     <div class="box-body">
@@ -26,10 +26,24 @@
             <div class="col-md-4">
                 <label>Destino</label>
                 <select class="form-control" id="select-deslocProd-destino">
-                    @foreach (Valencia val2 in Model.Item3.listValencias)
-                    {
-                        <option value="@val2.COD_SERV">@val2.DESCR_SERV</option>
-                    }
+                    <optgroup label="Pisos">
+                        @foreach (Piso itemPiso in Model.Item4.listPisos)
+                        {
+                            <option value="@itemPiso.COD_SERV"> @itemPiso.DESCR_SERV</option>
+                        }
+                    </optgroup>
+                    <optgroup label="Valências Parametrizadas">
+                        @foreach (Valencia valP in Model.Item3.listValencias.Where(q=>Model.Item2.list_destProd.Contains(q.COD_SERV)))
+                        {
+                            <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                        }
+                    </optgroup>
+                    <optgroup label="Valências">
+                        @foreach (Valencia val2 in Model.Item3.listValencias)
+                        {
+                            <option value="@val2.COD_SERV">@val2.DESCR_SERV</option>
+                        }
+                    </optgroup>
                 </select>
             </div>
         </div>

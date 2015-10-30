@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,8 +72,9 @@ namespace LusiadasDAL
         {
             try
             {
+                var codAnestesista = "2101";
                 DBInternamentoContext efInt = new DBInternamentoContext();
-                return efInt.tblPessHospDet.Where(q => q.COD_SERV == "2101").ToList();
+                return efInt.tblPessHospDet.Where(q => q.COD_SERV == codAnestesista).ToList();
             }
             catch (Exception err)
             {

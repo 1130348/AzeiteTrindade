@@ -41,16 +41,22 @@ namespace LusiadasSolucaoWeb.Models
         {
             bool autoLogin = (ConfigurationManager.AppSettings[Constants.GLB_Login_ByPass] == "1" ? true: false);
             bool isAuthed = false;
+
             LDFAuthentication auth = new LDFAuthentication(ConfigurationManager.AppSettings["LDAPServer"], ConfigurationManager.AppSettings["Domain"], "DBGeneral", true);
 
             if (autoLogin && _password == ConfigurationManager.AppSettings[Constants.GLB_Login_Key])
+            {
                 isAuthed = auth.ValidateUser(ConfigurationManager.AppSettings[Constants.GLB_Login_ADUser], ConfigurationManager.AppSettings[Constants.GLB_Login_ADPass], UserName);
+            }
             else
                 isAuthed = auth.ValidateUser(UserName, _password);
 
             if (isAuthed)
+            {
                 HttpContext.Current.Session[Constants.SS_AUTH] = auth;
+            }
 
+           
             return isAuthed;
         }
 
@@ -58,8 +64,14 @@ namespace LusiadasSolucaoWeb.Models
         {
             UserInfo                uinfo       = new UserInfo();
             DALSDServ               dal         = new DALSDServ();
-            List<TblSDPessHosp>     listPess    = dal.GetInfoPessHosp(UserName);
+            DALMenu                 dalMenu     = new DALMenu();
+            uinfo.listOptions                   = new List<TblOptionsMenu>();
             
+            List<TblSDPessHosp>     listPess    = dal.GetInfoPessHosp(UserName);
+            List<TblMenu>           listMenu    = dalMenu.GetMenus(((LDFAuthentication)HttpContext.Current.Session[Constants.SS_AUTH]).listGroups);
+            List<TblMenu>           listMenuD   = listMenu.Distinct().ToList();
+                        
+
             if (listPess != null && listPess.Count > 0)
             {
                 TblSDPessHosp pess = listPess.First();
@@ -74,6 +86,9 @@ namespace LusiadasSolucaoWeb.Models
                 {
                     uinfo.listCodServ.Add(item.COD_SERV);
                 }
+
+                uinfo.listOptions.AddRange(dalMenu.GetListOptions(listMenuD));
+
             }
 
             return uinfo;
@@ -88,6 +103,7 @@ namespace LusiadasSolucaoWeb.Models
         public string nome { get; set; }
         public string userID { get; set; }
         public List<string> listCodServ { get; set; }
+        public List<TblOptionsMenu> listOptions { get; set; }
 
         public string catProfissional { get;  set; }
         public string cedProfissional { get; set; }

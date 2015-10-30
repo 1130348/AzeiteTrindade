@@ -50,6 +50,7 @@ namespace LusiadasSolucaoWeb.Models
             string respMov = "";
 
             ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
+
             foreach (LDFTableRow item in list_rows)
             {
 

@@ -20,5 +20,4 @@ public class Auth
 {
     public const string VER_PAGINA = "VerPagina";
     public const string CONSULTA_DA_DOR = "ConsultaDaDor";
-
 }

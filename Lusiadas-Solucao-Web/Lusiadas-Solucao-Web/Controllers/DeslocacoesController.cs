@@ -8,6 +8,7 @@ using LusiadasSolucaoWeb.Models;
 using System.Configuration;
 using LDFHelper.Helpers;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace LusiadasSolucaoWeb.Controllers
 {
@@ -31,12 +32,22 @@ namespace LusiadasSolucaoWeb.Controllers
             ValenciaModel valencias = new ValenciaModel();
             valencias.LoadValencias(uinfo.listCodServ);
             //Pesquisar como fazer union das duas listas
-            
+
+            //var lista = ((from c in valencias.listValencias
+            //                          select new Valencia(){COD_SERV = c.COD_SERV, DESCR_SERV= c.DESCR_SERV, ISMINE= c.ISMINE}).Union(
+            //                          (from e in pisos.listPisos
+            //                               select new Valencia(){COD_SERV=e.COD_SERV, DESCR_SERV=e.DESCR_SERV, ISMINE=false}))).ToList();
+
+
+            //valencias.listValencias = (List<Valencia>)Convert.ChangeType(lista, typeof(List<Valencia>));
 
             Session["InfADValencias"] = valencias;
+            Session["InfADPisos"] = pisos;
 
             ParameterModel paramProd = new ParameterModel();
             paramProd.FillParameters();
+            paramProd.FillDestDoente();
+            paramProd.FillDestProd();
             Session["InfADDeslocProd"] = paramProd;
 
             DeslocacoesModel    infADTable      = new DeslocacoesModel();
@@ -101,6 +112,7 @@ namespace LusiadasSolucaoWeb.Controllers
 
             ParameterModel paramProd = (ParameterModel)Session["InfADDeslocProd"];
             ValenciaModel valencias = (ValenciaModel)Session["InfADValencias"];
+            PisosModel pisos = (PisosModel)Session["InfADPisos"];
 
             DeslocProdModel deslocProdTable = new DeslocProdModel();
             deslocProdTable.tdoente = tdoente;
@@ -111,12 +123,13 @@ namespace LusiadasSolucaoWeb.Controllers
             Session["DeslocProd_TEPIS"] = deslocProdTable.tEpis = tEpis;
             Session["DeslocProd_EPIS"] = deslocProdTable.epis = epis;
 
-            Tuple<DeslocProdModel, ParameterModel, ValenciaModel> tp
-                = new Tuple<DeslocProdModel, ParameterModel, ValenciaModel>
+            Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel> tp
+                = new Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel>
                     (
                         deslocProdTable,
                         paramProd,
-                        valencias
+                        valencias,
+                        pisos
                     );
 
             return PartialView("_deslocProd", tp);

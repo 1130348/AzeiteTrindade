@@ -34,6 +34,8 @@ namespace LusiadasSolucaoWeb.Models
             string selectValencias = "", deslocActive = "", modalInfo = "";
             
             ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
+            PisosModel pisosModel = (PisosModel)HttpContext.Current.Session["InfADPisos"];
+            ParameterModel destinos = (ParameterModel)HttpContext.Current.Session["InfADDeslocProd"];
             
             foreach (LDFTableRow item in list_rows)
             {
@@ -50,7 +52,7 @@ namespace LusiadasSolucaoWeb.Models
                 //String deveria receber DateTime e recebe int32
                 dtConsulta = "";
                 if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "HR_CONS")))
-                    dtConsulta = String.Format("{0:dd/MM/yyyy}", Convert.ToInt32(Generic.GetItemValue(item, "DT_CONS")));
+                    dtConsulta = String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_CONS")));
 
                 item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = String.Format("{0} {1}", dtConsulta, Generic.GetItemValue(item, "HR_CONS"));
                 item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + Generic.GetItemValue(item, "N_CONS") + "' data-tEpis='" + tepisodio + "' data-epis='" + Generic.GetItemValue(item, "EPISODIO") + "' class='fa fa-flask fa-lg infADModalDeslocProd' title='Movimentações de produtos'></a>";
@@ -68,6 +70,25 @@ namespace LusiadasSolucaoWeb.Models
 
                 selectValencias += "<optgroup label='Localização Origem'>";
                 selectValencias += "<option value='" + Generic.GetItemValue(item, "COD_SERV") + "' " + ((Generic.GetItemValue(item, "COD_SERV") == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + Generic.GetItemValue(item, "DESCR_SERV") + "</option>";
+                selectValencias += "</optgroup>";
+
+                selectValencias += "<optgroup label='Pisos'>";
+
+                foreach (Piso itemPiso in pisosModel.listPisos)
+                {
+                    if (itemPiso.COD_SERV != Generic.GetItemValue(item, "COD_SERV") && Generic.GetItemValue(item, "U_LOCAL") != itemPiso.COD_SERV)
+                        selectValencias += "<option value='" + itemPiso.COD_SERV + "' " + ((itemPiso.COD_SERV == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + itemPiso.DESCR_SERV + "</option>";
+                }
+                selectValencias += "</optgroup>";
+
+                selectValencias += "<optgroup label='Localizações Parametrizadas'>";
+
+
+                foreach (Valencia itemVal in valModel.listValencias.Where(q=>destinos.list_destDoentes.Contains(q.COD_SERV)))
+                {
+                    if (itemVal.COD_SERV != Generic.GetItemValue(item, "COD_SERV") && Generic.GetItemValue(item, "U_LOCAL") != itemVal.COD_SERV)
+                        selectValencias += "<option value='" + itemVal.COD_SERV + "' " + ((itemVal.COD_SERV == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + itemVal.DESCR_SERV + "</option>";
+                }
                 selectValencias += "</optgroup>";
 
                 selectValencias += "<optgroup label='Todas as localizações'>";
@@ -95,6 +116,7 @@ namespace LusiadasSolucaoWeb.Models
             }
         }
 
+
         internal bool UpdateRow(UserInfo uinfo, string itemRow, string deslocCod)
         {
             DALDeslocacoes infDAL = new DALDeslocacoes();
@@ -113,5 +135,23 @@ namespace LusiadasSolucaoWeb.Models
 
             return infDAL.InsertDoenteDesloc(tbl);
         }
+
+
+        public bool IsDoenteDesloc(string doente, string ncons)
+        {
+            DBDeslocacoesContext efInt = new DBDeslocacoesContext();
+            VwDoentesPresentes d = efInt.vwDoentesPresentes.Where(q => q.DOENTE == doente && q.N_CONS == ncons).FirstOrDefault();
+            //TblDesloc desloc = efInt.tblDesloc.Where(q => q.DOENTE == doente ).OrderByDescending(o=>o.DT_DESL).FirstOrDefault();
+
+            if (d != null)
+            {
+                if (!String.IsNullOrEmpty(d.U_LOCAL) && d.U_LOCAL != d.COD_SERV)
+                    return true;
+                else
+                    return false;
+            }else 
+                return false;
+        }
+
     }
 }

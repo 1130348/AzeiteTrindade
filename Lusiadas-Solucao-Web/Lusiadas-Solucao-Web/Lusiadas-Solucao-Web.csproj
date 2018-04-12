@@ -63,6 +63,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\LDF.BL.dll</HintPath>
     </Reference>
+    <Reference Include="LDF.ErrorLogging, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\LDF.ErrorLogging.dll</HintPath>
+    </Reference>
     <Reference Include="LDF.ParameterManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\LDF.ParameterManager.dll</HintPath>

@@ -73,10 +73,6 @@
 
 
 
-    <script src="~/Content/Scripts/main.min.js" type="text/javascript"></script>
-    <link href="~/Content/Scripts/css/select2.min.css" rel="stylesheet" />
-    <script src="~/Content/Scripts/js/select2.min.js"></script>
-
 
     <script type="text/javascript">
 
@@ -91,11 +87,11 @@
         $(document).ajaxError(function (e, jqxhr, settings, exception) {
             $('body').removeClass("loading");
 
-            e.stopPropagation();
-            if (jqxhr != null) {
-                alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
-                window.location = "/";
-            }
+            //e.stopPropagation();
+            //if (jqxhr != null) {
+            //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+            //    window.location = "/";
+            //}
         });
 
     </script>
@@ -307,7 +303,7 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 0.4
+                <b>Version</b> 0.6
             </div>
             <strong>Copyright &copy; 2018 Lusiadas.</strong> All rights reserved.
         </footer>

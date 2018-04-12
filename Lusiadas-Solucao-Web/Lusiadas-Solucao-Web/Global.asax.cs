@@ -1,4 +1,6 @@
 ﻿using LDF.Authentication;
+using LDF.ErrorLogging;
+using LDF.ErrorLogging.ErrorHandling;
 using System;
 using System.Configuration;
 using System.Web;
@@ -22,16 +24,16 @@ namespace LusiadasSolucaoWeb
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            //filters.Add(new LogErrorHandler());
+            filters.Add(new LogErrorHandler());
             filters.Add(new AuthenticationHandler());
-            //filters.Add(new LogActionHandler());
+            filters.Add(new LogActionHandler());
         }
 
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception err = Server.GetLastError();
 
-            /*string app = ConfigurationManager.AppSettings[LDFErrorLoggingKeys.APP];
+            string app = ConfigurationManager.AppSettings[LDFErrorLoggingKeys.APP];
             string user = (Session[LDFErrorLoggingKeys.USER] != null ? (string)Session[LDFErrorLoggingKeys.USER] : "");
             string machine = HttpContext.Current.Request.UserHostAddress;
             string browser = HttpContext.Current.Request.UserAgent;
@@ -56,7 +58,7 @@ namespace LusiadasSolucaoWeb
                 }
                 Context.ClearError();
                 Response.Redirect(page, false);
-            }*/
+            }
         }
 
     }

@@ -247,7 +247,7 @@ namespace LusiadasSolucaoWeb.Models
                                 item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;         
 
                         }
-                        else if (analisesRealizadas>analisesEntregues && analisesEntregues>0)
+                        else if (analisesRealizadas>0)
                         {
                             anal = "<div class='row' style='margin-top:10px;'>";
                             anal += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
@@ -714,7 +714,7 @@ namespace LusiadasSolucaoWeb.Models
                     {
 
                     
-                        if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) && Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")))
+                        if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) && Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_DESLOC")))
                         {
                             nota = "<div class='row'>";
                             nota += "<div class='col-xs-12'>" + "<font color='#00cc00'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
@@ -724,7 +724,7 @@ namespace LusiadasSolucaoWeb.Models
                         else if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")))
                         {
                             nota = "<div class='row'>";
-                            nota += "<div class='col-xs-12'>" + "<font color='yellow'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
+                            nota += "<div class='col-xs-12'>" + "<font color='#e6e600'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
                             nota += "</div>";
                             item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = nota;
 
@@ -793,7 +793,7 @@ namespace LusiadasSolucaoWeb.Models
             }
         }
 
-        private void getDados()
+        public void getDados()
         {
 
             try
@@ -876,7 +876,10 @@ namespace LusiadasSolucaoWeb.Models
             catch (Exception err)
             {
                 //err.InnerException.ToString();
-                
+                Globals.nDoentes = "Sem Dados";
+                Globals.semNota = "Sem Dados";
+                Globals.semTriagem = "Sem Dados";
+
             }
 
             

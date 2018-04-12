@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Lusíadas - Solução Web | Log in</title>
+    <title>DashBoard</title>
 
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
@@ -84,14 +84,15 @@
             $('body').removeClass("loading");
 
         });
+      
         $(document).ajaxError(function (e, jqxhr, settings, exception) {
             $('body').removeClass("loading");
-
-            e.stopPropagation();
-            if (jqxhr != null) {
-                alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
-                window.location = "/";
-            }
+           
+            //e.stopPropagation();
+            //if (jqxhr != null) {
+            //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+            //    window.location = "/";
+            //}
         });
 
     </script>
@@ -212,6 +213,7 @@
                 LDFTableRenderBody(result, 'atpTable');
               
             },
+            timeout: 10000,
             error: function (xhr, ajaxOptions, thrownError) {
                 
                 console.log(xhr);
@@ -229,16 +231,19 @@
     function startRefresh() {
 
         
-        var max = @Globals.nDoentes;
-        var max2 = max / 20;
-        if (count < max2 + 1) {
-            count++;
-        }
-        else {
-            count = 1;
+        var max = "@Globals.nDoentes";
+        if(!max == "Sem Dados"){
+            var max2 = max / 20;
+            if (count < max2 + 1) {
+                count++;
+            }
+            else {
+                count = 1;
+            }
         }
 
         setTimeout(startRefresh, 30000);
+        setTimeout(location.reload, 120000);
         var date = new Date;
 
         var seconds = date.getSeconds();
@@ -258,21 +263,47 @@
 
         $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
 
-
-        $("#numDoentes").empty();
-        $("#numDoentes").append(@Globals.nDoentes);
-
-        $("#semTriagem").empty();
-        $("#semTriagem").append(@Globals.semTriagem);
-
-        $("#semNota").empty();
-        $("#semNota").append(@Globals.semNota);
+        getDados();
 
 
         //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
         RefreshATPTable();
  
+        
 
+    }
+
+
+    function getDados() {
+
+        $.ajax({
+            url: '@Url.Action("GetDados", "ATP")',
+            type: "get",
+            cache: false,
+            success: function (result) {
+
+                var res=result.split(';');
+
+                var ndoentes =res[0];
+                var semTriagem = res[1];
+                var semNota =res[2];
+
+                $("#numDoentes").empty();
+                $("#numDoentes").append(ndoentes);
+
+                $("#semTriagem").empty();
+                $("#semTriagem").append(semTriagem);
+
+                $("#semNota").empty();
+                $("#semNota").append(semNota);
+              
+            },
+            timeout: 10000,
+            error: function (xhr, ajaxOptions, thrownError) {
+                
+                console.log(xhr);
+            }
+        });
 
     }
 

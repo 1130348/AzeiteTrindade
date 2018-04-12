@@ -5,39 +5,42 @@
 {
     var listGrouped = Model.OrderByDescending(q => q.DESCR_SERV).OrderByDescending(q => q.DT_DESLOC).GroupBy(q => q.DT_DESLOC.ToString("dd MMM yyyy")).ToList();
     
-    <div class="wrapper" style="background-color:#ecf0f5;">
+    <div class="box box-success" style="background-color:#ecf0f5;">
+        
         <section class="content">
             <div class="row">
                 <div class="col-md-12">
                     <ul class="timeline">
-    
-    
-                        @foreach(var item in listGrouped)
-                        {
-                            <li class="time-label">
-                                <span class="bg-red">
-                                    @item.Key
-                                </span>
-                            </li>
 
-                             foreach (var childItem in item.ToList())
-                             {
-                                <li>
-                                    <i class="fa bg-blue" style="border-radius:20%;"></i>
-                                    <div class="timeline-item">
-                                        <span class="time"><i class="fa fa-clock-o"></i> @childItem.DT_DESLOC.ToString("HH:mm")</span>
-                                        <h3 class="timeline-header">Deslocado para <b>@childItem.DESCR_SERV</b></h3>
-                                        <div class="timeline-body">
-                                            Responsável : <a href="#">@childItem.NOME_USER</a>
-                                        </div>
-                                        <div class="timeline-footer text-right">
-                                            <a class="btn btn-vk btn-flat btn-xs">@childItem.T_EPISODIO @childItem.EPISODIO</a>
-                                        </div>
-                                    </div>
-                                </li>
 
-                             }
-                        }
+                        @foreach (var item in listGrouped)
+    {
+                    <li class="time-label">
+                        <span class="bg-red">
+                            @item.Key
+                        </span>
+                    </li>
+
+foreach (var childItem in item.ToList())
+{
+
+                    <li>
+                        <img src="~/Content/img/addDesloc.png" alt="Deslocacao" style="background-color:#ecf0f5; width:35px;height:35px;margin-left:16px;">
+                        @*<i class="fa bg-blue" style="border-radius:20%;"></i>*@
+                        @*<img src="~/Content/img/addDesloc.png" alt="Deslocacao" style="background-color:#ecf0f5; width:35px;height:35px;">*@
+                        <div class="timeline-item">
+                            <span class="time"><i class="fa fa-clock-o"></i> @childItem.DT_DESLOC.ToString("HH:mm")</span>
+                            <h3 class="timeline-header">Deslocado para <b>@childItem.DESCR_SERV</b></h3>
+                            <div class="timeline-body">
+                                Responsável : <a href="#">@childItem.NOME_USER</a>
+                                <a class="btn btn-vk btn-flat btn-xs" style="float:right">@childItem.T_EPISODIO @childItem.EPISODIO</a>
+                            </div>
+
+                        </div>
+                    </li>
+
+}
+}
                     </ul>
                 </div>
             </div>

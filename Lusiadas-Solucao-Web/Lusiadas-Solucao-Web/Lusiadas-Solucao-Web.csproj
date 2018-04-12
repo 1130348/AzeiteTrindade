@@ -22,6 +22,8 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\Lusiadas - LDF\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,10 +62,6 @@
     <Reference Include="LDF.BL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\LDF.BL.dll</HintPath>
-    </Reference>
-    <Reference Include="LDF.ErrorLogging, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LDFErrorHandling.1.0.0.9\lib\net40\LDF.ErrorLogging.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="LDF.ParameterManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -167,6 +165,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeslocacoesController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
+    <Compile Include="Controllers\LDFHelpers\JSONHelper.cs" />
     <Compile Include="Controllers\LDFHelpers\LDFTableController.cs" />
     <Compile Include="Controllers\PIMController.cs" />
     <Compile Include="CostumFilterAttribute.cs" />
@@ -204,17 +203,35 @@
     <Content Include="Content\ajaxWait.gif" />
     <Content Include="Content\css\cssLDF.min.css" />
     <Content Include="Content\css\cssPIM.min.css" />
+    <Content Include="Content\css\fa-brands.css" />
+    <Content Include="Content\css\fa-brands.min.css" />
+    <Content Include="Content\css\fa-regular.css" />
+    <Content Include="Content\css\fa-regular.min.css" />
+    <Content Include="Content\css\fa-solid.css" />
+    <Content Include="Content\css\fa-solid.min.css" />
     <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\fontawesome-all.css" />
+    <Content Include="Content\css\fontawesome-all.min.css" />
+    <Content Include="Content\css\fontawesome.css" />
+    <Content Include="Content\css\fontawesome.min.css" />
     <Content Include="Content\css\ionicons.min.css" />
     <Content Include="Content\css\ldfTable.min.css" />
     <Content Include="Content\css\web.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\ionicons.svg" />
+    <Content Include="Content\img\addDesloc.png" />
+    <Content Include="Content\img\cleanFilters.png" />
     <Content Include="Content\img\clinic2.png" />
     <Content Include="Content\img\doctorAvatar.png" />
+    <Content Include="Content\img\logo.jpg" />
     <Content Include="Content\img\logo_Lusiadas.png" />
     <Content Include="Content\img\minilogo_Lusiadas.png" />
     <Content Include="Content\img\pill.png" />
+    <Content Include="Content\img\refreshTable.png" />
+    <Content Include="Content\img\rm.png" />
+    <Content Include="Content\img\ultra.png" />
+    <Content Include="Content\img\xcat.png" />
+    <Content Include="Content\img\xray.png" />
     <Content Include="Content\js\html5shiv.min.js" />
     <Content Include="Content\js\jquery-ui.min.js" />
     <Content Include="Content\js\ldfTable.min.js" />
@@ -282,6 +299,7 @@
     <Content Include="Content\dist\js\pages\dashboard2.js" />
     <Content Include="Content\plugins\bootstrap-switch\bootstrap-switch.min.css" />
     <Content Include="Content\plugins\bootstrap-switch\bootstrap-switch.min.js" />
+    <Content Include="Content\plugins\jQuery\jquery-3.3.1.min.js" />
     <Content Include="Content\plugins\noUISlider\nouislider.min.css" />
     <Content Include="Content\plugins\noUISlider\nouislider.min.js" />
     <Content Include="Content\plugins\select2\i18n\az.js" />
@@ -1083,6 +1101,7 @@
     <Content Include="Views\Deslocacoes\_deslocProd.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\web.css.min.map" />
     <None Include="Properties\PublishProfiles\LusiadasLDF.pubxml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\ATP\Index.cshtml" />
@@ -1092,6 +1111,7 @@
     <Content Include="Views\ConsultaDaDor\_formulario.cshtml" />
     <Content Include="Views\ConsultaDaDor\_historicoDor.cshtml" />
     <Content Include="Views\ConsultaDaDor\_formularioEdit.cshtml" />
+    <Content Include="Views\ATP\Dash.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

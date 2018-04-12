@@ -1,6 +1,7 @@
 using LDFHelper.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -27,11 +28,45 @@ namespace LusiadasSolucaoWeb.Controllers
  
             _model                  = GetSessionModel();
             Type thisType           = _model.GetType();
-             _model.LoadTableData(pageNumber, orderData, filterData);
+            try
+            {
+                _model.LoadTableData(pageNumber, orderData, filterData);
+               
+                    MethodInfo theMethod = thisType.GetMethod("LDFTableTreatData");
+                    if (theMethod != null)
+                        theMethod.Invoke(_model, null);  
+                
+            }catch (Exception err)
+            {
+                err.InnerException.ToString();
+            }
 
-            MethodInfo theMethod = thisType.GetMethod("LDFTableTreatData");
-            if (theMethod != null)
-                theMethod.Invoke(_model, null);
+            return Json(_model.GetJSON(), JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult LoadLDFTableDash(int pageNumber, string[] orderData = null, string filterData = "")
+        {
+
+            _model = GetSessionModel();
+            Type thisType = _model.GetType();
+            try
+            {
+                
+                
+             
+                _model.LoadTableData(pageNumber,orderData, filterData);
+
+                MethodInfo theMethod = thisType.GetMethod("LDFTableTreatData");
+                if (theMethod != null)
+                    theMethod.Invoke(_model, null);
+
+            }
+            catch (Exception err)
+            {
+                err.InnerException.ToString();
+            }
 
             return Json(_model.GetJSON(), JsonRequestBehavior.AllowGet);
 

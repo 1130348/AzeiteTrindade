@@ -24,36 +24,46 @@ namespace LusiadasSolucaoWeb.Controllers
 
         public ActionResult Index()
         {
-            DALDeslocacoes dal = new DALDeslocacoes();
+            if (Session[Constants.SS_USER] != null)
+            {
+                DALDeslocacoes dal = new DALDeslocacoes();
 
-            PisosModel pisos = new PisosModel();
-            pisos.LoadPisos();
+                PisosModel pisos = new PisosModel();
+                pisos.LoadPisos();
 
-            ValenciaModel valencias = new ValenciaModel();
-            valencias.LoadValencias(uinfo.listCodServ);
-            //Pesquisar como fazer union das duas listas
+                ValenciaModel valencias = new ValenciaModel();
+                valencias.LoadValenciasParametrizadas(uinfo.listValenciasParametrizadas);
+                valencias.LoadValenciasParametrizadasProdutos(uinfo.listValenciasParametrizadas);
+                valencias.LoadValencias(uinfo.listCodServ);
+                //Pesquisar como fazer union das duas listas
 
-            //var lista = ((from c in valencias.listValencias
-            //                          select new Valencia(){COD_SERV = c.COD_SERV, DESCR_SERV= c.DESCR_SERV, ISMINE= c.ISMINE}).Union(
-            //                          (from e in pisos.listPisos
-            //                               select new Valencia(){COD_SERV=e.COD_SERV, DESCR_SERV=e.DESCR_SERV, ISMINE=false}))).ToList();
+                //var lista = ((from c in valencias.listValencias
+                //                          select new Valencia(){COD_SERV = c.COD_SERV, DESCR_SERV= c.DESCR_SERV, ISMINE= c.ISMINE}).Union(
+                //                          (from e in pisos.listPisos
+                //                               select new Valencia(){COD_SERV=e.COD_SERV, DESCR_SERV=e.DESCR_SERV, ISMINE=false}))).ToList();
 
 
-            //valencias.listValencias = (List<Valencia>)Convert.ChangeType(lista, typeof(List<Valencia>));
+                //valencias.listValencias = (List<Valencia>)Convert.ChangeType(lista, typeof(List<Valencia>));
 
-            Session["InfADValencias"] = valencias;
-            Session["InfADPisos"] = pisos;
+                Session["InfADValencias"] = valencias;
+                Session["InfADPisos"] = pisos;
 
-            ParameterModel paramProd = new ParameterModel();
-            paramProd.FillParameters();
-            paramProd.FillDestDoente();
-            paramProd.FillDestProd();
-            Session["InfADDeslocProd"] = paramProd;
+                ParameterModel paramProd = new ParameterModel();
+                paramProd.FillParameters();
+                paramProd.FillDestDoente();
+                paramProd.FillDestProd();
+                Session["InfADDeslocProd"] = paramProd;
 
-            DeslocacoesModel    infADTable      = new DeslocacoesModel();
-            Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel> tp = new Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel>(infADTable, valencias, paramProd, pisos);
+                DeslocacoesModel infADTable = new DeslocacoesModel();
+                Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel> tp = new Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel>(infADTable, valencias, paramProd, pisos);
 
-            return View(tp);
+                return View(tp);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         #endregion
@@ -70,6 +80,12 @@ namespace LusiadasSolucaoWeb.Controllers
             listFields.Add(new LDFTableField("COD_SERV", servicoCod));
             listFields.Add(new LDFTableField("U_LOCAL", ultLocalCod));
             listFields.Add(new LDFTableField("PISO", pisoCod));
+
+
+            //Adicionar Filtros CodigoDoente
+            //listFields.Add(new LDFTableField("DOENTE", "563388"));
+
+
             if (onlyOnlocal)
                 listFields.Add(new LDFTableField("U_LOCAL", "IS NOT NULL"));
 
@@ -91,7 +107,7 @@ namespace LusiadasSolucaoWeb.Controllers
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
             DeslocacoesModel infADTable = new DeslocacoesModel();
             bool res = infADTable.UpdateRow(uinfo, itemRow, deslocCod);
-            return Json(false);
+            return Json(res);
         }
 
         [HttpGet]
@@ -99,16 +115,15 @@ namespace LusiadasSolucaoWeb.Controllers
         {
             DeslocHistModel myModal = new DeslocHistModel();
             myModal.LoadHistDesloc(tdoente, doente);
-
-
             return PartialView("_timeLine", myModal.listDesloc);
         }
 
         [HttpGet]
-        public PartialViewResult ShowDeslocProd(string tdoente, string doente, string curserv, string ultlocal, string ncons, string tEpis, string epis)
+        public PartialViewResult ShowDeslocProd(string tdoente, string doente, string nomeDoente, string curserv, string ultlocal, string ncons, string tEpis, string epis)
         {
             Session["DeslocProd_TDOENTE"] = tdoente;
             Session["DeslocProd_DOENTE"] = doente;
+            Session["DeslocProd_NOME_DOENTE"] = nomeDoente;
 
             ParameterModel paramProd = (ParameterModel)Session["InfADDeslocProd"];
             ValenciaModel valencias = (ValenciaModel)Session["InfADValencias"];
@@ -135,6 +150,39 @@ namespace LusiadasSolucaoWeb.Controllers
             return PartialView("_deslocProd", tp);
         }
 
+
+        [HttpGet]
+        public PartialViewResult UpdateDeslocProdTable(string tdoente, string doente, string curserv)
+        {
+           /* Session["DeslocProd_TDOENTE"] = tdoente;
+            Session["DeslocProd_DOENTE"] = doente;*/
+
+            ParameterModel paramProd = (ParameterModel)Session["InfADDeslocProd"];
+            ValenciaModel valencias = (ValenciaModel)Session["InfADValencias"];
+            PisosModel pisos = (PisosModel)Session["InfADPisos"];
+
+            DeslocProdModel deslocProdTable = new DeslocProdModel();
+            deslocProdTable.tdoente = tdoente;
+            deslocProdTable.doente = doente;
+            deslocProdTable.serv = curserv;
+
+            /*Session["DeslocProd_NCONS"] = deslocProdTable.ncons = ncons;
+            Session["DeslocProd_TEPIS"] = deslocProdTable.tEpis = tEpis;
+            Session["DeslocProd_EPIS"] = deslocProdTable.epis = epis;*/
+
+            Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel> tp
+                = new Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel>
+                    (
+                        deslocProdTable,
+                        paramProd,
+                        valencias,
+                        pisos
+                    );
+
+            return PartialView("_deslocProd", tp);
+        }
+
+
         [HttpPost]
         public JsonResult AddDeslocProd(string tdoente, string doente, string ncons, string tEpis, string epis, string selProd, string selOrig, string selDest)
         {
@@ -151,7 +199,7 @@ namespace LusiadasSolucaoWeb.Controllers
             DeslocProdModel prod = new DeslocProdModel();
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
 
-            bool res = prod.UpdateRow(uinfo, itemRow, selDest);
+            bool res = prod.UpdateRow(uinfo, prod.doente,prod.tdoente, selDest);
 
             return Json(res);
         }

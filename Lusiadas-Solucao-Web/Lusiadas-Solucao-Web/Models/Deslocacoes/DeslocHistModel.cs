@@ -24,13 +24,16 @@ namespace LusiadasSolucaoWeb.Models
                               COD_SERV      = vw.COD_SERV,
                               DESCR_SERV    = vw.DESCR_SERV,
                               CONTACTO_SERV = vw.CONTACTO_SERV,
-                              NOME_USER     = String.Format("{0} {1}", vw.TITULO, vw.ABR)
+                              NOME_USER = String.Format("{0} {1}", vw.TITULO, vw.NOME)
+
+                              //NOME_USER     = String.Format("{0} {1}", vw.TITULO, vw.ABR)
+                              //NOME_USER = vw.USER_CRI
 
                           }).ToList();
         }
     }
 
-
+    
     public class Deslocacao
     {
         public string T_EPISODIO { get; set; }

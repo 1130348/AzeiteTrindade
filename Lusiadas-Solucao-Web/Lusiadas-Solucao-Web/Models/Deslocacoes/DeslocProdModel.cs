@@ -31,8 +31,8 @@ namespace LusiadasSolucaoWeb.Models
 
             string query = "T_DOENTE='" + tdoente + "' AND DOENTE='" + doente + "' AND T_EPISODIO='" + tEpis + "' AND EPISODIO='" + epis + "'";
 
-            pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DESLOC_PROD", "*", query, "DOENTE", null, null);
+            pageSize    = 5;
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DESLOC_PROD_V2", "*", query, "DOENTE", null, null);
             objType     = typeof(VDeslocProd);
 
 
@@ -44,38 +44,38 @@ namespace LusiadasSolucaoWeb.Models
         }
 
 
-        public void LDFTableTreatData()
-        {
-            string tdoente = "", doente = "", tepisodio = "";
-            string respMov = "";
+        //public void LDFTableTreatData()
+        //{
+        //    string tdoente = "", doente = "", tepisodio = "";
+        //    string respMov = "";
 
-            ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
+        //    //ValenciaModel valModel = (ValenciaModel)HttpContext.Current.Session["InfADValencias"];
 
-            foreach (LDFTableRow item in list_rows)
-            {
+        //    foreach (LDFTableRow item in list_rows)
+        //    {
 
-                tdoente     = Generic.GetItemValue(item, "T_DOENTE");
-                doente      = Generic.GetItemValue(item, "DOENTE");
-                tepisodio   = Generic.GetItemValue(item, "T_EPISODIO");
+        //        tdoente     = Generic.GetItemValue(item, "T_DOENTE");
+        //        doente      = Generic.GetItemValue(item, "DOENTE");
+        //        tepisodio   = Generic.GetItemValue(item, "T_EPISODIO");
 
                 
-                respMov = "<div class='row'>";
-                respMov += "<div class='col-xs-12'>" + Generic.GetItemValue(item, "TITULO") + " " + Generic.GetItemValue(item, "NOME");
-                respMov += "</div>";
+        //        respMov = "<div class='row'>";
+        //        respMov += "<div class='col-xs-12'>" + Generic.GetItemValue(item, "TITULO") + " " + Generic.GetItemValue(item, "NOME");
+        //        respMov += "</div>";
 
-                item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = respMov;
+        //        item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = respMov;
 
-            }
-        }
+        //    }
+        //}
 
         #endregion
 
         #region Row Methods
 
-        internal bool UpdateRow(UserInfo uinfo, string itemRow, string deslocCod)
+        internal bool UpdateRow(UserInfo uinfo, string doenten,string tdoente, string deslocCod)
         {
             DALDeslocacoes infDAL = new DALDeslocacoes();
-            VwDeslocProd doente = infDAL.GetDeslocProdUser(itemRow.Split('_')[0], itemRow.Split('_')[1]);
+            VwDeslocProd doente = infDAL.GetDeslocProdUser(tdoente, doenten);
 
 
             TblDeslocProd tbl = new TblDeslocProd();

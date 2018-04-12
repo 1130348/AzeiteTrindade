@@ -15,7 +15,7 @@ namespace LusiadasSolucaoWeb.Models
         public DeslocacoesModel()
         {
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DOENTES_PRESENTES", "*", "", "DESCR_SERV", null, null);
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DOENTES_PRESENTES_V2", "*", "", "DESCR_SERV", null, null);
             objType     = typeof(VDoentesPresentes);
 
             LDFTableHeaders();
@@ -72,6 +72,35 @@ namespace LusiadasSolucaoWeb.Models
                 selectValencias += "<option value='" + Generic.GetItemValue(item, "COD_SERV") + "' " + ((Generic.GetItemValue(item, "COD_SERV") == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + Generic.GetItemValue(item, "DESCR_SERV") + "</option>";
                 selectValencias += "</optgroup>";
 
+                selectValencias += "<optgroup label='Localizações Parametrizadas'>";
+
+
+                foreach (String itemVal in destinos.list_destDoentes)
+                {
+
+                    foreach (Valencia valP in valModel.listValencias)
+                    {
+                                       
+                        if (itemVal == valP.COD_SERV)
+                        {
+                            selectValencias += "<option value='" + valP.COD_SERV + "' " + ((valP.COD_SERV == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + valP.DESCR_SERV + "</option>";
+                        }
+
+                    }
+
+                }
+                selectValencias += "</optgroup>";
+
+                selectValencias += "<optgroup label='Localizações + Frequentes'>";
+
+
+                foreach (Valencia itemVal in valModel.listValenciasParametrizadas)
+                {
+                    if (itemVal.COD_SERV != Generic.GetItemValue(item, "COD_SERV") && Generic.GetItemValue(item, "U_LOCAL") != itemVal.COD_SERV)
+                        selectValencias += "<option value='" + itemVal.COD_SERV + "' " + ((itemVal.COD_SERV == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + itemVal.DESCR_SERV + "</option>";
+                }
+                selectValencias += "</optgroup>";
+
                 selectValencias += "<optgroup label='Pisos'>";
 
                 foreach (Piso itemPiso in pisosModel.listPisos)
@@ -81,15 +110,7 @@ namespace LusiadasSolucaoWeb.Models
                 }
                 selectValencias += "</optgroup>";
 
-                selectValencias += "<optgroup label='Localizações Parametrizadas'>";
-
-
-                foreach (Valencia itemVal in valModel.listValencias.Where(q=>destinos.list_destDoentes.Contains(q.COD_SERV)))
-                {
-                    if (itemVal.COD_SERV != Generic.GetItemValue(item, "COD_SERV") && Generic.GetItemValue(item, "U_LOCAL") != itemVal.COD_SERV)
-                        selectValencias += "<option value='" + itemVal.COD_SERV + "' " + ((itemVal.COD_SERV == Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">" + itemVal.DESCR_SERV + "</option>";
-                }
-                selectValencias += "</optgroup>";
+                
 
                 selectValencias += "<optgroup label='Todas as localizações'>";
 
@@ -132,8 +153,19 @@ namespace LusiadasSolucaoWeb.Models
             tbl.USER_CRI = uinfo.userID;
             tbl.DT_DESL = DateTime.Now;
             tbl.DT_CRI = DateTime.Now;
+            
 
-            return infDAL.InsertDoenteDesloc(tbl);
+            //update doente local
+            //doente.COD_SERV = deslocCod;
+
+            // if (infDAL.UpdateDoente(doente))
+
+            bool res=infDAL.InsertDoenteDesloc(tbl);
+            return res;
+            
+
+            //return false;
+           
         }
 
 

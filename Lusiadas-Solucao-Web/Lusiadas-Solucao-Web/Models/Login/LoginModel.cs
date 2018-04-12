@@ -42,22 +42,27 @@ namespace LusiadasSolucaoWeb.Models
             bool autoLogin = (ConfigurationManager.AppSettings[Constants.GLB_Login_ByPass] == "1" ? true: false);
             bool isAuthed = false;
 
-            LDFAuthentication auth = new LDFAuthentication(ConfigurationManager.AppSettings["LDAPServer"], ConfigurationManager.AppSettings["Domain"], "DBGeneral", true);
+            LDFAuthentication auth = new LDFAuthentication(ConfigurationManager.AppSettings["LDAPServer"], ConfigurationManager.AppSettings["Domain"], ConfigurationManager.ConnectionStrings["DBGeneral"].ConnectionString, true);
 
+
+            
             if (autoLogin && _password == ConfigurationManager.AppSettings[Constants.GLB_Login_Key])
             {
                 isAuthed = auth.ValidateUser(ConfigurationManager.AppSettings[Constants.GLB_Login_ADUser], ConfigurationManager.AppSettings[Constants.GLB_Login_ADPass], UserName);
             }
             else
                 isAuthed = auth.ValidateUser(UserName, _password);
+            
 
-            if (isAuthed)
-            {
-                HttpContext.Current.Session[Constants.SS_AUTH] = auth;
-            }
+             if (isAuthed)
+             {
+                 HttpContext.Current.Session[Constants.SS_AUTH] = auth;
+             }
 
-           
-            return isAuthed;
+            HttpContext.Current.Session[Constants.SS_AUTH] = auth;
+            return true;
+
+            //return isAuthed;
         }
 
         public UserInfo GetUserInfo()
@@ -68,24 +73,41 @@ namespace LusiadasSolucaoWeb.Models
             uinfo.listOptions                   = new List<TblOptionsMenu>();
             
             List<TblSDPessHosp>     listPess    = dal.GetInfoPessHosp(UserName);
+           
             List<TblMenu>           listMenu    = dalMenu.GetMenus(((LDFAuthentication)HttpContext.Current.Session[Constants.SS_AUTH]).listGroups);
+            //List<TblMenu> listMenu = dalMenu.GetMenus(listaGrupos);
+
             List<TblMenu>           listMenuD   = listMenu.Distinct().ToList();
-                        
+
+            uinfo.numMecan = "0010001";
+            uinfo.nome = "teste";
+            uinfo.titulo = "TesteTitulo";
+            uinfo.userID = UserName;
+            uinfo.catProfissional = "ENF";
+
 
             if (listPess != null && listPess.Count > 0)
             {
                 TblSDPessHosp pess = listPess.First();
 
-                uinfo.numMecan          = pess.N_MECAN;
-                uinfo.nome              = pess.ABR;
-                uinfo.titulo            = pess.TITULO;
+              /*uinfo.numMecan          = "0010001";
+                uinfo.nome              = "teste";
+                uinfo.titulo            = "TesteTitulo";
                 uinfo.userID            = UserName;
-                uinfo.catProfissional   = pess.T_PESS_HOSP;
+                uinfo.catProfissional   = "ENF";*/
+
+
+                uinfo.numMecan = pess.N_MECAN;
+                uinfo.nome = pess.ABR;
+                uinfo.titulo = pess.TITULO;
+                uinfo.userID = UserName;
+                uinfo.catProfissional = pess.T_PESS_HOSP;
+
                 //uinfo.cedProfissional   = "MED";
-                foreach(TblSDPessHosp item in listPess.Where(q => q.COD_SERV != null).ToList())
-                {
+               foreach (TblSDPessHosp item in listPess.Where(q => q.COD_SERV != null).ToList())
+               {
                     uinfo.listCodServ.Add(item.COD_SERV);
-                }
+               }
 
                 uinfo.listOptions.AddRange(dalMenu.GetListOptions(listMenuD));
 
@@ -103,6 +125,8 @@ namespace LusiadasSolucaoWeb.Models
         public string nome { get; set; }
         public string userID { get; set; }
         public List<string> listCodServ { get; set; }
+        public List<string> listValenciasParametrizadas { get; set; }
+        public List<string> listValenciasParametrizadasProdutos { get; set; }
         public List<TblOptionsMenu> listOptions { get; set; }
 
         public string catProfissional { get;  set; }
@@ -111,10 +135,10 @@ namespace LusiadasSolucaoWeb.Models
 		
 		public string getcedProfissional()
 		{
-			if(this.catProfissional == "MED" || this.catProfissional == "ENF")
+            if (this.catProfissional == "MED" || this.catProfissional == "ENF")
                 return cedProfissional;
-			else
-				return "";
+            else
+                return "";
 		}
 
         public string getcatProfissional()
@@ -132,6 +156,8 @@ namespace LusiadasSolucaoWeb.Models
         public UserInfo()
         {
             listCodServ = new List<string>();
+            listValenciasParametrizadas = new List<string>();
+            listValenciasParametrizadasProdutos = new List<string>();
         }
     }
 

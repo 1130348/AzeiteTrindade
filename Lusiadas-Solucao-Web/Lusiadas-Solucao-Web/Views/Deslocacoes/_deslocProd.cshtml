@@ -2,99 +2,299 @@
 @using LusiadasSolucaoWeb.Models;
 @model Tuple<DeslocProdModel, ParameterModel, ValenciaModel, PisosModel>
 
-<div class="box box-success">
-    <div class="box-body">
-        <div class="row">
-            <div class="col-sm-4">
-                <label>Produto</label>
-                <select class="form-control" id="select-deslocProd-produto">
-                    @foreach (Produtos prod in Model.Item2.list_prods)
-                    {
-                        <option value="@prod.VALOR">@prod.NOME_CAMPO</option>
-                    }
-                </select>
-            </div>
-            <div class="col-sm-4">
-                <label>Origem</label>
+    <div class="box box-success">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label>Produto</label>
+                    <select class="form-control" id="select-deslocProd-produto">
+                         <option value="" value2="">Escolher Produto </option>
+                        @foreach (Produtos prod in Model.Item2.list_prods)
+                        {
+
+
+                             <option value="@prod.VALOR" value2="@prod.CODIGO_PAI" >@prod.NOME_CAMPO </option>
+
+                            //Session["orig"] = "";
+                            //foreach (Valencia val2 in Model.Item3.listValencias)
+                            //{
+
+                            //    if (prod.CODIGO_PAI==val2.COD_SERV)
+                            //    {
+                            //        Session["orig"] = val2.DESCR_SERV;
+                            //        break;
+                            //    }
+
+                            //}
+                            @*if ((string)Session["orig"] == "")
+                            {
+                                <option value="@prod.VALOR" val2="Sem Dados">@prod.NOME_CAMPO </option>
+                            }
+                            else
+                            {
+                                <option value="@prod.VALOR" val2="@Session["orig"]">@prod.NOME_CAMPO </option>
+                            }*@
+
+
+                        }
+                    </select>
+
+                    @*<br />
+                    <label>Origem do Produto : </label>
+
+                    <label id="origemProduto" sigla=""></label>*@  
+                   
+                </div>
+            
+
+
+                
+
+                <div class="col-sm-4">
+                    <label>Origem</label>
+
                     @{
-                        Valencia val = Model.Item3.listValencias.First(q=>q.COD_SERV==Model.Item1.serv);
-                        <div class='row'>
-                            <div class='col-xs-12'> @val.DESCR_SERV </div>
-                        </div>
+
+                        Valencia val = Model.Item3.listValencias.FirstOrDefault(q => q.COD_SERV == Model.Item1.serv);
+                        if (val != null)
+                        {
+                            <div class='row'>
+                                <div class='col-xs-12'>
+                                    <label id="select-deslocProd-origem" sigla=@val.COD_SERV>@val.DESCR_SERV </label>
+                                </div>
+                            </div>
+                        }
                     }
-            </div>
-            <div class="col-md-4">
-                <label>Destino</label>
-                <select class="form-control" id="select-deslocProd-destino">
-                    <optgroup label="Pisos">
-                        @foreach (Piso itemPiso in Model.Item4.listPisos)
-                        {
-                            <option value="@itemPiso.COD_SERV"> @itemPiso.DESCR_SERV</option>
-                        }
-                    </optgroup>
-                    <optgroup label="Valências Parametrizadas">
-                        @foreach (Valencia valP in Model.Item3.listValencias.Where(q=>Model.Item2.list_destProd.Contains(q.COD_SERV)))
-                        {
-                            <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
-                        }
-                    </optgroup>
-                    <optgroup label="Valências">
-                        @foreach (Valencia val2 in Model.Item3.listValencias)
-                        {
-                            <option value="@val2.COD_SERV">@val2.DESCR_SERV</option>
-                        }
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-        <div class="row" style="margin-top:5px;">
-            <div class="col-md-8"></div>
-            <div class="col-md-4 text-right">
-                <button class="btn btn-primary btn-sm btn-flat" id="add-new-event">Adicionar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="box">
-    <div class="box-body">
-        @if (Model.Item1.list_headers.Count > 0)
+                </div>
+                <div class="col-md-4">
+                    <label>Destino</label><br />
+                                          <select style="width: 230px;" class="form-control" id="select-deslocProd-destino">
+
+
+                                              <optgroup label="Valências Parametrizadas">
+                                                  @foreach (String destprod in Model.Item2.list_destProd)
+                                                  {
+                                                      foreach (Valencia valP in Model.Item3.listValencias)
+                                                      {
+                                                          @*<option>@destprod - @valP.COD_SERV</option>*@
+                                                          if (destprod==valP.COD_SERV)
+                                                          {
+                                                              <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                                                          }
+                                              
+}
+}
+                                              </optgroup>
+
+                                              <optgroup label="Valências + Frequentes">
+                                                  @foreach (Valencia valP in Model.Item3.listValenciasParametrizadasProdutos)
         {
-            <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "deslocProdTable", className = "tableInternal"})</div>
-        }
+                                          <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+}
+                                              </optgroup>
+                                              <optgroup label="Pisos">
+                                                  @foreach (Piso itemPiso in Model.Item4.listPisos)
+        {
+                                          <option value="@itemPiso.COD_SERV"> @itemPiso.DESCR_SERV</option>
+}
+                                              </optgroup>
+                                              <optgroup label="Valências">
+                                                  @foreach (Valencia val2 in Model.Item3.listValencias)
+        {
+                                          <option value="@val2.COD_SERV">@val2.DESCR_SERV</option>
+}
+                                              </optgroup>
+                                          </select>
+                </div>
+            </div>
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 text-right">
+                    <button class="btn btn-primary btn-sm btn-flat" id="add-new-event">Adicionar</button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="box">
+        
+        <div class="box-body">
+            @if (Model.Item1.list_headers.Count > 0)
+        {
+            <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "deslocProdTable", className = "tableInternal" })</div>
+    }
+        </div>
+    </div>
+    
+    <div class="loadingModal"></div>
+    <input type="hidden" id="hdnSession" data-value="@Request.RequestContext.HttpContext.Session["DeslocProd_NOME_DOENTE"]" />
+
+    <script type="text/javascript">
+
+        var or = $("#select-deslocProd-produto").find(":selected");
+        var or2 = or.attr("val2");
+        $("#origemProduto").empty();
+        $("#origemProduto").append(or2);
+
+        $("#add-new-event").html("Adicionar");
+        $("#add-new-event").click(function () {
+            AdicionaProduto();
+        });
+
+        //var updateRowIndex = "";
+
+        //$('.js-example-basic-single').select2();
+
+        //$(document).ready(function () {
+        //    $("select-deslocProd-destino").searchable();
+        //});
+
+    //$("#add-new-event").on("click", function () {
+
+    //    AdicionaProduto();
+
+    //    });
+
+        $(document).on("change", "#select-deslocProd-produto", function (el) {
+
+            var or = $("#select-deslocProd-produto").find(":selected");
+            var or2 = or.attr("value2");
+            if (or2.length>0)
+            $("#select-deslocProd-destino").val(or2);
+          
+         
+
+        });
+
+        function AdicionaProduto() {
+
+            var tdoente = "@Model.Item1.tdoente";
+            var doente  = "@Model.Item1.doente";
+            var ncons   = "@Model.Item1.ncons";
+            var tEpis   = "@Model.Item1.tEpis";
+            var epis = "@Model.Item1.epis";
+            var nomeDoente = $("#hdnSession").data('value');
+
+            
+            var selProd = $("#select-deslocProd-produto").val();
+            var selOrig = $("#select-deslocProd-origem").attr('sigla');
+            var selDest = $("#select-deslocProd-destino").val();
+
+            $.ajax({
+                url: '@Url.Action("AddDeslocProd", "Deslocacoes")',
+                data: { "tdoente": tdoente, "doente": doente, "ncons": ncons, "tEpis":tEpis, "epis": epis, "selProd": selProd, "selOrig": selOrig, "selDest": selDest },
+                type: "POST",
+                cache: false,
+                success: function (result) {
+                    //LDFTableRenderBody(result, 'deslocProdTable');
+                    RefreshTable(tdoente, doente, nomeDoente, selOrig);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        }
+
+        @*function UpdateProduto() {
+
+            var tdoente = "@Model.Item1.tdoente";
+            var doente  = "@Model.Item1.doente";
+            var ncons   = "@Model.Item1.ncons";
+            var tEpis   = "@Model.Item1.tEpis";
+            var epis = "@Model.Item1.epis";
+            var nomeDoente = $("#hdnSession").data('value');
+            
+            var selDest = $("#select-deslocProd-destino").val();
+            var selOrig = $("#select-deslocProd-origem").attr('sigla');
+
+            $.ajax({
+                url: '@Url.Action("UpdateDeslocProd", "Deslocacoes")',
+                data: { "itemRow": updateRowIndex, "selDest": selDest },
+                type: "POST",
+                cache: false,
+                success: function (result) {
+                    //LDFTableRenderBody(result, 'deslocProdTable');
+                    RefreshTable(tdoente, doente, nomeDoente, selOrig);
+             
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(xhr);
+                }
+            });
+
+        }*@
 
 
-<script type="text/javascript">
-    $("#add-new-event").on("click", function () {
-        var tdoente = "@Model.Item1.tdoente";
-        var doente  = "@Model.Item1.doente";
-        var ncons   = "@Model.Item1.ncons";
-        var tEpis   = "@Model.Item1.tEpis";
-        var epis    = "@Model.Item1.epis";
-        var selProd = $("#select-deslocProd-produto").val();
-        var selOrig = $("#select-deslocProd-origem").val();
-        var selDest = $("#select-deslocProd-destino").val();
+        //$("#select-deslocProd-produto").on("change", function (el) {
 
+        //    prod = this.value;
+          
+        //    //if (SearchTable(prod)) {
+        //    //    $("#add-new-event").html("Update");
+        //    //    $("#add-new-event").click(function () {
+        //    //        UpdateProduto();
+        //    //    });
+        //    //} else {
+        //        $("#add-new-event").html("Adicionar");
+        //        $("#add-new-event").click(function () {
+        //            AdicionaProduto();
+        //        });
+        //   // }
+
+        //});
+
+
+    function RefreshTable(tdoente, doente,nomeDoente, curServ) {
+      
+        //$("#modal-desloc-prod-body").html("");
         $.ajax({
-            url: '@Url.Action("AddDeslocProd", "Deslocacoes")',
-            data: { "tdoente": tdoente, "doente": doente, "ncons": ncons, "tEpis":tEpis, "epis": epis, "selProd": selProd, "selOrig": selOrig, "selDest": selDest },
-            type: "POST",
+            url: '@Url.Action("UpdateDeslocProdTable", "Deslocacoes")',
+            data: { "tdoente": tdoente, "doente": doente, "curserv": curServ },
+            type: "GET",
             cache: false,
             success: function (result) {
+                if (result != "") {
 
+                    $("#modal-select-prod-title").html("Teste de " + nomeDoente);
+                    $("#modal-desloc-prod-body").html(result);
+                } else {
+                    $("#modal-desloc-prod-body").html("");
+
+                }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log(xhr);
             }
         });
 
+        }
 
-    });
+ 
 
+        //function SearchTable(produto) {
 
-    
+        //    // Declare variables
+        //    var input, filter, table, tr, td, i;
+        //    input = produto;
+        //    filter = input.toUpperCase();
+        //    table = document.getElementById("deslocProdTable");
+        //    tr = table.getElementsByTagName("tr");
 
+        //    // Loop through all table rows, and hide those who don't match the search query
+        //    for (i = 0; i < tr.length; i++) {
+        //        td = tr[i].getElementsByTagName("td")[1];
+        //        if (td) {
+        //            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        //                td = tr[i].getElementsByTagName("td")[3];
+        //                updateRowIndex = i-1;
+        //                return true;
+        //            }
+        //        }
+        //    }
 
-</script>
+        //    return false;
+        //}
+
+    </script>

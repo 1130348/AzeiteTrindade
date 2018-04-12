@@ -21,7 +21,7 @@ namespace LusiadasSolucaoWeb.Controllers
             }
             else
             {
-                filterContext.Result = RedirectToAction("Index", "Home");
+                //filterContext.Result = RedirectToAction("Index", "Home");
             }
         }
 

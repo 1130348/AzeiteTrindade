@@ -1,26 +1,39 @@
 ﻿using LDFHelper.Helpers;
 using LusiadasDAL;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 
 namespace LusiadasSolucaoWeb.Models
 {
     public class ATPModel : LDFTableModel
     {
+      
+
 
         #region ATPModel
 
         public ATPModel()
         {
+
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
+
             //como a tabela dashboard nao existe  nas outras BD a escolha ainda nao é dinamica
             //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
-            dbParams = new LDFTableDBParams("BDHPTQLD", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
+            //dbParams = new LDFTableDBParams("BDHPTQLD", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
+
+
+            //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
+            dbParams = new LDFTableDBParams("BDHLUQLD", "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
             objType     = typeof(VwDashboardATP);
+            getDados();
+
 
             LDFTableHeaders();
             ReArrangeHeaders();
@@ -30,74 +43,706 @@ namespace LusiadasSolucaoWeb.Models
         {
            foreach(LDFTableHeader item in list_headers)
            {
-               if (item.headerID == "TRIAGEM" || item.headerID == "NOTA_MEDICA" || item.headerID == "BOX_APLICAVEL" || item.headerID == "CADEIRAO_PRESENTE" || item.headerID == "PENSO_APLICAVEL" || item.headerID == "ANALISES_OK" || item.headerID == "MEDICACAO_PRESCRITA_PCE" || item.headerID == "IMAGIOLOGIA_REQUESITADOS" || item.headerID == "ECG_REQUESITADOS" || item.headerID == "CEXTERNA_REQUISITADOS")
+               
+               if (item.headerID == "DT_CONS" || item.headerID == "COR_TRIAGEM" || item.headerID == "DT_NOTA_MEDICA" || item.headerID == "LOCALIZACAO" || item.headerID == "MEDICO_NOME" || item.headerID == "DOENTE" || item.headerID == "ANALISES_OK" || item.headerID == "MEDICACAO_PRESCRITA_PCE" || item.headerID == "IMAGIOLOGIA_REQUESITADOS" || item.headerID == "ECG_REQUESITADOS" || item.headerID == "CEXTERNA_REQUISITADOS")
                    item.headerStyle.Add("text-align", "center");
            }
         }
 
+
         public void LDFTableTreatData()
         {
-            string nomeDescr = "", field = "", curdate = "", dtnasc = "", hora = "";
-            string red = "text-red", green = "text-green", yellow = "text-yellow", gray = "text-gray";
-            string triagem, nota_medica, box_aplicavel, penso_aplicavel, analises_ok, medicacao_presc;
+
+            getDados();
+
+
+
+            string nomeDescr = "", curdate = "", dtnasc = "";
+            string medicacao_presc;
             int medAMB, medPCE, medAGL, mEDPGL;
 
-
+            
             foreach (LDFTableRow item in list_rows)
             {
 
-                item.rowItems.First(q => q.itemColumnName == "T_DOENTE").itemValue = Generic.GetItemValue(item, "T_DOENTE") + Generic.GetItemValue(item, "DOENTE");
+                item.rowItems.First(q => q.itemColumnName == "DOENTE").itemValue = Generic.GetItemValue(item, "DOENTE");
+             
+
 
                 dtnasc = Generic.GetItemValue(item, "DT_NASC");
                 if (!String.IsNullOrEmpty(dtnasc))
                     curdate = String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(dtnasc));
                 nomeDescr = "<div class='row'>";
-                nomeDescr += "<div class='col-xs-12'>" + Generic.GetItemValue(item, "NOME") + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i></div>";
+                nomeDescr += "<div class='col-xs-12'>" + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i>" +Generic.GetItemValue(item, "NOME")+ " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")"+" </div>";
+                ///nomeDescr += "<br>"+"<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS");
+                //nomeDescr += "<div class='col-xs-12'>" + "<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS") + "</div>";
                 nomeDescr += "</div>";
+
                 if (!String.IsNullOrEmpty(curdate))
                 {
                     nomeDescr += "<div class='row'>";
-                    nomeDescr += "<div class='col-xs-12'>" + curdate + " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")</div>";
+                    nomeDescr += "<div class='col-xs-12'>" + "<b>Obs: </b>"+" " + Generic.GetItemValue(item, "OBS_CONS") +"</div>";
                     nomeDescr += "</div>";
                 }
+                
                 item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = nomeDescr;
 
                 curdate = "";
-                hora = Generic.GetItemValue(item, "HR_CONS");
+                /*hora = Generic.GetItemValue(item, "HR_CONS");
                 if (!String.IsNullOrEmpty(hora))
                     curdate = String.Format("{0:HH:mm:ss}", Convert.ToDateTime(hora));
 
-                item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = curdate;
+                item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = curdate;*/
 
 
-                triagem         = Generic.GetItemValue(item, "TRIAGEM");
-                nota_medica     = Generic.GetItemValue(item, "NOTA_MEDICA");
-                box_aplicavel   = Generic.GetItemValue(item, "BOX_APLICAVEL");
+                /*triagem = Generic.GetItemValue(item, "TRIAGEM");
+                nota_medica = Generic.GetItemValue(item, "NOTA_MEDICA");
+                box_aplicavel = Generic.GetItemValue(item, "BOX_APLICAVEL");
                 penso_aplicavel = Generic.GetItemValue(item, "PENSO_APLICAVEL");
-                analises_ok     = Generic.GetItemValue(item, "ANALISES_OK");
+                
+                medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
+
+                medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
+                medPCE = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE"));
+                medAGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_GLINTT"));
+                mEDPGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT"));*/
+                //analises_ok = Convert.ToInt32(Generic.GetItemValue(item, "ANALISES_OK"));
+
+                /*GetFieldCircle(item, "TRIAGEM", ((triagem == "S") ? green : red));
+                GetFieldCircle(item, "NOTA_MEDICA", ((nota_medica == "S") ? green : red));*/
+
+                //field = gray;
+                //if (Generic.GetItemValue(item, "CADEIRAO_PRESENTE") == "S")
+                //    field = green;
+                //GetFieldCircle(item, "CADEIRAO_PRESENTE", field);
+
+                //field = green;
+                //if (Generic.GetItemValue(item, "BOX_APLICAVEL") == "N")
+                //    field = gray;
+                //else if (Generic.GetItemValue(item, "BOX_PRESENTE") == "N")
+                //    field = red;
+                //GetFieldCircle(item, "BOX_APLICAVEL", field);
+
+                if (Generic.GetItemValue(item, "MEDICO_NOME")!=null)
+                {
+
+                    item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = Generic.GetItemValue(item, "MEDICO_NOME");
+
+                }
+                else
+                {
+
+                    item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
+
+                }
+
+                string admissao,admissao2;
+                string dataAdm= Generic.GetItemValue(item, "DT_CONS");
+             
+                admissao = String.Format("{0:HH:mm}", Convert.ToDateTime(dataAdm));
+                admissao2 = String.Format("{0:dd/MM}", Convert.ToDateTime(dataAdm));
+                item.rowItems.First(q => q.itemColumnName == "DT_CONS").itemValue = "<b>"+admissao2+" "+admissao +"</b>"+"<br>"+"há " + HowLong(Convert.ToDateTime(dataAdm));
+
+
+                string local = "";
+                string tria = Generic.GetItemValue(item, "COR_TRIAGEM");
+             
+
+                switch (tria)
+                {
+                    case "ESPERA":
+                        local = "<div class='row'>";
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-blue' style='font-size:24px;margin-top:10px;'></i>" + 
+                            "<br>"+ String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM")))+" </div>";
+                        local += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
+                        break;
+                    case "BOX":
+                        local = "<div class='row'>";
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle' style='color:#ffff00;font-size:24px;margin-top:10px;'></i>" +
+                            "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
+                        local += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
+                        break;
+                    case "RS":
+                        local = "<div class='row'>";
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-orange' style='font-size:24px;margin-top:10px;'></i>" +
+                            "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
+                        local += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
+                        break;
+                    case "ESPERAGP":
+                        local = "<div class='row'>";
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-green' style='font-size:24px;margin-top:10px;'></i>" +
+                            "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
+                        local += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
+                        break;
+                    default:
+                        local = "<div class='row'>";
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-grey' aria-hidden='true'></i>" + " </div>";
+                        local += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
+                        break;
+                }
+
+
+
+                if (!Generic.GetItemValue(item, "LOCALIZACAO").IsEmpty())
+                {
+                    item.rowItems.First(q => q.itemColumnName == "LOCALIZACAO").itemValue = Generic.GetItemValue(item, "LOCALIZACAO");
+                }
+                else
+                {
+                    local = "<div class='row'>";
+                    local += "<div class='col-xs-12'>" +"<i class='fa fa-minus text-gray' aria-hidden='true'></i>" +" </div>";
+                    local += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "LOCALIZACAO").itemValue = local;
+                }
+
+                string nota="";
+                string dtnota = Generic.GetItemValue(item, "DT_NOTA_MEDICA");
+                if (!String.IsNullOrEmpty(dtnota))
+                {
+                    string dtnota2 = String.Format("{0:HH:mm}", Convert.ToDateTime(dtnota));
+                    nota = "<div class='row'>";
+                    nota += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>" 
+                    +"<br>"+ dtnota2+ " </div>";
+                    nota += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
+
+                }
+                else
+                {
+                    nota = "<div class='row'>";
+                    nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + " </div>";
+                    nota += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
+                }
+
+                string anal = "";
+                int analisesEntregues = Convert.ToInt32(Generic.GetItemValue(item, "ENTREGUE_LAB"));
+                int analisesRealizadas = Convert.ToInt32(Generic.GetItemValue(item, "ANALISES_OK"));
+               
+                if (!Generic.GetItemValue(item, "ANALISES_SOLICITADAS").Contains('N')) {
+
+                    int analisesPedidas = Convert.ToInt32(Generic.GetItemValue(item, "ANALISES_SOLICITADAS"));
+
+                    if (analisesPedidas == 0)
+                    {
+                        anal = "<div class='row'>";
+                        anal += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                        anal += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
+                    }
+                    else
+                    {
+
+                        if (analisesRealizadas >= analisesPedidas && analisesEntregues>=analisesPedidas)
+                        {
+  
+                                anal = "<div class='row'>";
+                                anal += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
+                                anal += "</div>";
+                                item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;         
+
+                        }
+                        else if (analisesRealizadas>analisesEntregues && analisesEntregues>0)
+                        {
+                            anal = "<div class='row' style='margin-top:10px;'>";
+                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
+                            anal += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
+
+                        }
+                        else
+                        {
+                            anal = "<div class='row'>";
+                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
+                            anal += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
+                        }
+                    }
+
+                }
+                else
+                {
+
+                    anal = "<div class='row'>";
+                    anal += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                    anal += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
+
+                }
+
+
+
+
                 medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
 
                 medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
                 medPCE = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE"));
                 medAGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_GLINTT"));
                 mEDPGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT"));
+                if (medPCE + mEDPGL==0)
+                {
+                    nota = "<div class='row'>";
+                    nota += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                    nota += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "MEDICACAO_PRESCRITA_PCE").itemValue = nota;
 
-                GetFieldCircle(item, "TRIAGEM", ((triagem == "S") ? green : red));
-                GetFieldCircle(item, "NOTA_MEDICA", ((nota_medica == "S") ? green : red));
 
-                field = gray;
-                if (Generic.GetItemValue(item, "CADEIRAO_PRESENTE") == "S")
-                    field = green;
-                GetFieldCircle(item, "CADEIRAO_PRESENTE", field);
+                }
+                else
+                {
 
-                field = green;
-                if (Generic.GetItemValue(item, "BOX_APLICAVEL") == "N")
-                    field = gray;
-                else if (Generic.GetItemValue(item, "BOX_PRESENTE") == "N")
-                    field = red;
-                GetFieldCircle(item, "BOX_APLICAVEL", field);
+                    if (medAMB + medAGL >= medPCE + mEDPGL)
+                    {
 
-                field = green;
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + (medAMB + medAGL) + "/" + (medPCE + mEDPGL) + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "MEDICACAO_PRESCRITA_PCE").itemValue = nota;
+
+                    }
+                    else
+                    {
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (medAMB + medAGL) + "/" + (medPCE + mEDPGL) + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "MEDICACAO_PRESCRITA_PCE").itemValue = nota;
+                    }
+
+                }
+
+             
+
+
+
+                if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS"))<=0)
+                {
+
+                    anal = "<div class='row'>";
+                    anal += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                    anal += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = anal;
+
+                }
+                else
+                {
+
+                    
+                    string loc = Generic.GetItemValue(item, "IMAG_GRUPO_ATO");
+                    int imReal = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS"));
+                    int imPedi = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS"));
+                    int imDesloc = Convert.ToInt32(Generic.GetItemValue(item, "IMAG_DESLOC"));
+                    if (imReal >= imPedi && imDesloc >=imPedi)
+                    {
+                        nota = "<div class='row'>";
+            
+                        if(loc.Contains(';'))
+                        {
+
+                            
+                            List<string> names = loc.Split(';').ToList<string>();
+                            //names.Reverse();
+                            nota += "<div class='col-xs-12'>";
+                            nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+                            foreach (string name in names)
+                            {
+                                if (name.ToUpper().Contains("RADIO"))
+                                {
+                                    
+                                    nota += "<img src='/Content/img/xray.png'>";
+                                   
+                                   
+                                }
+
+                                if (name.ToUpper().Contains("ECO"))
+                                {
+                                   
+                                    nota += "<img src='/Content/img/ultra.png'>";
+                                   
+
+                                }
+
+                                if (name.ToUpper().Contains("AXIAL"))
+                                {
+                                
+                                    nota += "<img src='/Content/img/xcat.png' >";
+                                   
+
+                                }
+
+                                if (name.ToUpper().Contains("MAGNE"))
+                                {
+                                   
+                                    nota += "<img src='/Content/img/rm.png' >";
+                                  
+
+                                }
+
+
+
+                                nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+
+
+                            }
+
+                            nota += "<br><i class='fa fa-check text-green' aria-hidden='true'></i>";
+                            nota += "<br>" + (imReal) + "/" + (imPedi);
+                            nota += "</div></div>";
+
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+
+
+                        }
+                        else
+                        {
+
+                            if (loc.ToUpper().Contains("RADIO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xray.png'><br>";
+                                nota += "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+
+                            }
+
+                            if (loc.ToUpper().Contains("ECO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/ultra.png'><br>";
+                                nota += "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("AXIAL"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xcat.png'><br>";
+                                nota += "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("MAGNE"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/rm.png'><br>";
+                                nota += "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+
+
+
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+                            
+
+                        }
+
+                        
+                    }
+                    else if (imReal>0)
+                    {
+
+                        nota = "<div class='row'>";
+
+                        if (loc.Contains(';'))
+                        {
+
+
+                            List<string> names = loc.Split(';').ToList<string>();
+                            //names.Reverse();
+                            nota += "<div class='col-xs-12'>";
+                            nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+                            foreach (string name in names)
+                            {
+                                if (name.ToUpper().Contains("RADIO"))
+                                {
+
+                                    nota += "<img src='/Content/img/xray.png'>";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("ECO"))
+                                {
+
+                                    nota += "<img src='/Content/img/ultra.png'>";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("AXIAL"))
+                                {
+
+                                    nota += "<img src='/Content/img/xcat.png' >";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("MAGNE"))
+                                {
+
+                                    nota += "<img src='/Content/img/rm.png' >";
+
+
+                                }
+
+
+
+                                nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+
+
+                            }
+
+                     
+                            nota += "<br><i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>";
+                            nota += "<br>" + (imReal) + "/" + (imPedi);
+                            nota += "</div></div>";
+
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+
+
+                        }
+                        else
+                        {
+
+                            nota = "<div class='row'>";
+                            if (loc.ToUpper().Contains("RADIO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xray.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+
+                            }
+
+                            if (loc.ToUpper().Contains("ECO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/ultra.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("AXIAL"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xcat.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("MAGNE"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/rm.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+
+
+                        }
+
+               
+
+                    }
+                    else
+                    {
+
+
+                        nota = "<div class='row'>";
+
+                        if (loc.Contains(';'))
+                        {
+
+
+                            List<string> names = loc.Split(';').ToList<string>();
+                            //names.Reverse();
+                            nota += "<div class='col-xs-12'>";
+                            nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+                            foreach (string name in names)
+                            {
+                                if (name.ToUpper().Contains("RADIO"))
+                                {
+
+                                    nota += "<img src='/Content/img/xray.png'>";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("ECO"))
+                                {
+
+                                    nota += "<img src='/Content/img/ultra.png'>";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("AXIAL"))
+                                {
+
+                                    nota += "<img src='/Content/img/xcat.png' >";
+
+
+                                }
+
+                                if (name.ToUpper().Contains("MAGNE"))
+                                {
+
+                                    nota += "<img src='/Content/img/rm.png' >";
+
+
+                                }
+
+
+
+                                nota += "<span style ='display:inline-block;'>&nbsp;&nbsp;&nbsp;</span>";
+
+
+                            }
+
+
+                            nota += "<br><i class='fa fa-pause text-orange' aria-hidden='true'></i></i>";
+                            nota += "<br>" + (imReal) + "/" + (imPedi);
+                            nota += "</div></div>";
+
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+
+
+                        }
+                        else
+                        {
+
+
+                            nota = "<div class='row'>";
+                            if (loc.ToUpper().Contains("RADIO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xray.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+
+                            }
+
+                            if (loc.ToUpper().Contains("ECO"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/ultra.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("AXIAL"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/xcat.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+                            if (loc.ToUpper().Contains("MAGNE"))
+                            {
+                                nota += "<div class='col-xs-12'>";
+                                nota += "<img src='/Content/img/rm.png'><br>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+
+                            }
+
+
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
+                        }
+
+                    }
+                }
+
+
+
+
+                if (Convert.ToInt32(Generic.GetItemValue(item, "ECG_REQUESITADOS")) <= 0)
+                {
+
+                    anal = "<div class='row'>";
+                    anal += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                    anal += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "ECG_REQUESITADOS").itemValue = anal;
+
+                }
+                else
+                {
+
+                  
+                    if (Convert.ToInt32(Generic.GetItemValue(item, "ECG_REALIZADOS")) >= Convert.ToInt32(Generic.GetItemValue(item, "ECG_REQUESITADOS")))
+                    {
+
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>" + "<br>" + Generic.GetItemValue(item, "ECG_REALIZADOS") + "/" + Generic.GetItemValue(item, "ECG_REQUESITADOS") + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "ECG_REQUESITADOS").itemValue = nota;
+
+                    }
+                    else
+                    {
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + Generic.GetItemValue(item, "ECG_REALIZADOS") + "/" + Generic.GetItemValue(item, "ECG_REQUESITADOS") + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "ECG_REQUESITADOS").itemValue = nota;
+                    }
+
+                }
+
+
+
+                if (String.IsNullOrEmpty(Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS")))
+                    {
+
+                    anal = "<div class='row'>";
+                    anal += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + "</div>";
+                    anal += "</div>";
+                    item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = anal;
+
+                    }
+                    else
+                    {
+
+                    
+                        if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) && Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")))
+                        {
+                            nota = "<div class='row'>";
+                            nota += "<div class='col-xs-12'>" + "<font color='#00cc00'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = nota;
+                        }
+                        else if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")))
+                        {
+                            nota = "<div class='row'>";
+                            nota += "<div class='col-xs-12'>" + "<font color='yellow'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = nota;
+
+                        }
+                        else
+                        {
+
+                            nota = "<div class='row'>";
+                            nota += "<div class='col-xs-12'>" + "<font color='red'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
+                            nota += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = nota;
+
+                        }
+
+                    }
+                
+
+                /*field = green;
                 if (Generic.GetItemValue(item, "PENSO_APLICAVEL") == "N")
                     field = gray;
                 else if (Generic.GetItemValue(item, "PENSO_REGISTO") == "N")
@@ -107,27 +752,27 @@ namespace LusiadasSolucaoWeb.Models
                 field = green;
                 if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "N")
                     field = gray;
-                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "N" && analises_ok == "N")
+                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "N" && analises_ok == 0)
                     field = yellow;
-                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "S" && analises_ok == "N")
+                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "S" && analises_ok == 0)
                     field = red;
-                GetFieldCircle(item, "ANALISES_OK", field);
+                GetFieldCircle(item, "ANALISES_OK", field);*/
 
-                
 
-                field = green;
+
+                /*field = green;
                 if (Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE") == "0" && Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT") == "0")
                     field = gray;
                 else if (medAMB < medPCE || medAGL < mEDPGL)
                     field = red;
                 GetFieldCircle(item, "MEDICACAO_PRESCRITA_PCE", field);
-                
+
                 field = green;
                 if (Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS") == "0")
                     field = gray;
                 else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) > Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS")))
                     field = yellow;
-                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) == Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS")) 
+                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) == Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS"))
                             && IsDoenteMoved(Generic.GetItemValue(item, "DOENTE"), Generic.GetItemValue(item, "N_CONS")))
                     field = red;
                 GetFieldCircle(item, "IMAGIOLOGIA_REQUESITADOS", field);
@@ -144,14 +789,103 @@ namespace LusiadasSolucaoWeb.Models
                     field = gray;
                 else if (Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) < Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS")))
                     field = red;
-                GetFieldCircle(item, "CEXTERNA_REQUISITADOS", field);
+                GetFieldCircle(item, "CEXTERNA_REQUISITADOS", field);*/
             }
+        }
+
+        private void getDados()
+        {
+
+            try
+            {
+
+                //get data 
+                string oradb = "User Id=medico;Password=medico;Data Source=BDHLUQL2";
+                OracleConnection conn = new Oracle.ManagedDataAccess.Client.OracleConnection(oradb);  // C#
+                conn.Open();
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2";
+                cmd.CommandType = CommandType.Text;
+                OracleDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+
+                    while (dr.Read())
+                    {
+                        Globals.nDoentes = dr["COUNT(*)"].ToString();
+
+                    }
+
+                }
+                else
+                {
+                    Globals.nDoentes = "Sem Dados";
+                }
+
+                OracleCommand cmd2 = new OracleCommand();
+                cmd2.Connection = conn;
+                cmd2.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2 where COR_TRIAGEM IS NULL";
+                cmd2.CommandType = CommandType.Text;
+                OracleDataReader dr2 = cmd2.ExecuteReader();
+
+                if (dr2.HasRows)
+                {
+
+                    while (dr2.Read())
+                    {
+                        Globals.semTriagem = dr2["COUNT(*)"].ToString();
+
+                    }
+
+                }
+                else
+                {
+                    Globals.semTriagem = "Sem Dados";
+                }
+
+                OracleCommand cmd3 = new OracleCommand();
+                cmd3.Connection = conn;
+                cmd3.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2 where DT_NOTA_MEDICA IS NULL";
+                cmd3.CommandType = CommandType.Text;
+                OracleDataReader dr3 = cmd3.ExecuteReader();
+
+                if (dr3.HasRows)
+                {
+
+                    while (dr3.Read())
+                    {
+                        Globals.semNota = dr3["COUNT(*)"].ToString();
+
+                    }
+
+                }
+                else
+                {
+                    Globals.semNota = "Sem Dados";
+                }
+
+
+
+
+
+                conn.Dispose();
+
+            }
+            catch (Exception err)
+            {
+                //err.InnerException.ToString();
+                
+            }
+
+            
         }
 
         #endregion
 
         #region Aux Methods
-        
+
         private string GetBirthDate(Nullable<DateTime> dt)
         {
             string res = "";
@@ -171,6 +905,16 @@ namespace LusiadasSolucaoWeb.Models
             return res;
         }
 
+        private string HowLong(DateTime data)
+        {
+
+            DateTime now = DateTime.Now;
+            TimeSpan span = now.Subtract(data);   
+          
+            return (int)span.TotalHours+"h "+span.Minutes+"m";
+
+        }
+
         private void GetFieldCircle(LDFTableRow item, string rowName, string value)
         {
             item.rowItems.First(q => q.itemColumnName == rowName).itemValue  = "<i class='fa fa-circle lg " + value + "'></i>";
@@ -185,4 +929,13 @@ namespace LusiadasSolucaoWeb.Models
         #endregion
 
     }
+}
+
+public static class Globals
+{
+
+    public static string nDoentes;
+    public static string semTriagem;
+    public static string semNota;
+    public static int count=0;
 }

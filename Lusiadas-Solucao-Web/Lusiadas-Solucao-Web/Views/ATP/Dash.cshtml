@@ -1,0 +1,286 @@
+﻿@using LDFHelper.Helpers;
+@using LusiadasSolucaoWeb.Models;
+
+@model ATPModel
+
+@{
+    Layout = null;
+    ViewBag.Title = "Dash";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Lusíadas - Solução Web | Log in</title>
+
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    <script src="~/Content/plugins/jQuery/jquery-3.3.1.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="~/Content/img/logo.jpg" />
+
+    <!-- Bootstrap 3.3.4 -->
+    <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome Icons -->
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="~/Content/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/css/ldfTable.min.css" rel="stylesheet" />
+    <script src="~/Content/js/ldfTable.min.js"></script>
+
+    <link rel="shortcut icon" type="image/png" href="~/Content/img/logo.jpg" />
+
+
+    <script src="~/Content/plugins/jQuery/jquery-3.3.1.min.js"></script>
+    <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="~/Content/css/ionicons.min.css" rel="stylesheet" />
+
+    <link href="~/Content/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/css/cssLDF.min.css" rel="stylesheet" />
+
+
+    <!-- iCheck -->
+    <link href="~/Content/plugins/iCheck/all.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/iCheck/minimal/_all.css" rel="stylesheet" />
+    <link href="~/Content/plugins/iCheck/minimal/blue.css" rel="stylesheet" />
+    <link href="~/Content/plugins/bootstrap-switch/bootstrap-switch.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/noUISlider/nouislider.min.css" rel="stylesheet" />
+
+    <link href="~/Content/plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
+
+
+
+    <script src="~/Content/Scripts/main.min.js" type="text/javascript"></script>
+    <link href="~/Content/Scripts/css/select2.min.css" rel="stylesheet" />
+    <script src="~/Content/Scripts/js/select2.min.js"></script>
+
+
+    <link href="/Content/css/cssLDF.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <script type="text/javascript">
+
+        $(document).ajaxStart(function () {
+            $('body').addClass("loading");
+
+        });
+        $(document).ajaxStop(function () {
+            $('body').removeClass("loading");
+
+        });
+        $(document).ajaxError(function (e, jqxhr, settings, exception) {
+            $('body').removeClass("loading");
+
+            e.stopPropagation();
+            if (jqxhr != null) {
+                alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+                window.location = "/";
+            }
+        });
+
+    </script>
+
+    <style>
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+        }
+
+        #actualizaATP {
+            width: 35px;
+            height: 35px;
+            background-image: url(/Content/img/refreshTable.png);
+            background-repeat: no-repeat;
+            padding: 0;
+            border: none;
+        }
+    </style>
+
+</head>
+
+<body class="login-page noselect" style="background-color:white;">
+
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header" style="background-color:white;">
+        <h1>
+            Atendimento Permanente
+            <small>Listagem de doentes</small>
+        </h1>
+     
+    </section>
+
+
+    <!-- Main content -->
+    <section class="content" style="background-color:white;">
+        <div class="row">
+            <div class="col-lg-4 col-xs-8">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3 id="numDoentes">Sem Dados</h3>
+                        <p>Doentes Presentes</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                </div>
+            </div><!-- ./col -->
+            <div class="col-lg-4 col-xs-8">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3 id="semTriagem">Sem Dados</h3>
+                        <p>Sem Triagem</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                </div>
+            </div><!-- ./col -->
+            <div class="col-lg-4 col-xs-8">
+                <!-- small box -->
+                <div class="small-box bg-orange">
+                    <div class="inner">
+                        <h3 id="semNota">Sem Dados</h3>
+                        <p>Sem Nota Médica</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-user-md"></i>
+                    </div>
+                </div>
+            </div><!-- ./col -->
+
+        </div>
+
+        <div class="row">
+            <form action="#" method="post">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="form-group">
+
+                            @{ DateTime localDate = DateTime.Now; string data = localDate.Hour + ":" + localDate.Minute + ":" + localDate.Second;}
+                            <label id="lastupdate">
+                                Última Actualização: @data
+                            </label>
+
+                        </div>
+                        <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal"})</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <div class="loadingModal"></div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var count = 0;
+
+    function RefreshData()
+    {
+       
+        $.ajax({
+            url: '@Url.Action("LoadTableDash", "ATP")',
+            type: "get",
+            data: { "pagen": count },
+            cache: false,
+            success: function (result) {
+                LDFTableRenderBody(result, 'atpTable');
+              
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                
+                console.log(xhr);
+            }
+        });
+             
+
+    }
+
+    $(function () {
+        
+        startRefresh();
+    });
+
+    function startRefresh() {
+
+        
+        var max = @Globals.nDoentes;
+        var max2 = max / 20;
+        if (count < max2 + 1) {
+            count++;
+        }
+        else {
+            count = 1;
+        }
+
+        setTimeout(startRefresh, 30000);
+        var date = new Date;
+
+        var seconds = date.getSeconds();
+        var minutes = date.getMinutes();
+        var hour = date.getHours();
+        $("#lastupdate").empty();
+
+        if (hour < 10) {
+            hour = "0" + hour;
+        }
+        if (minutes<10) {
+            minutes = "0" + minutes;
+        }
+        if (seconds < 10) {
+            seconds = "0" + seconds;
+        }
+
+        $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
+
+
+        $("#numDoentes").empty();
+        $("#numDoentes").append(@Globals.nDoentes);
+
+        $("#semTriagem").empty();
+        $("#semTriagem").append(@Globals.semTriagem);
+
+        $("#semNota").empty();
+        $("#semNota").append(@Globals.semNota);
+
+
+        //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
+        RefreshATPTable();
+ 
+
+
+    }
+
+
+    function RefreshATPTable() {
+        LDFTableResetCounter("atpTable");
+        RefreshData();
+
+    }
+</script>
+

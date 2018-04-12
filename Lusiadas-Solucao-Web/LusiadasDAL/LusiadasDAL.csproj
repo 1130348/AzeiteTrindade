@@ -40,8 +40,9 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LDF.Authentication">
-      <HintPath>..\packages\LDFAuthentication.1.0.1.6\lib\net45\LDF.Authentication.dll</HintPath>
+    <Reference Include="LDF.Authentication, Version=1.0.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LDFAuthentication.1.0.1.5\lib\net40\LDF.Authentication.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LDFTable.Package, Version=1.1.3.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -91,6 +92,8 @@
     <Compile Include="Objects\TblOptionsMenu.cs" />
     <Compile Include="Objects\TblConsultaDor.cs" />
     <Compile Include="Objects\TblPessHospDet.cs" />
+    <Compile Include="Objects\VwValenciasProdFreq.cs" />
+    <Compile Include="Objects\VwValenciasFreq.cs" />
     <Compile Include="Objects\VwPosOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\TblDeslocProd.cs" />
@@ -105,7 +108,9 @@
     <Compile Include="Objects\VwInternamentos.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

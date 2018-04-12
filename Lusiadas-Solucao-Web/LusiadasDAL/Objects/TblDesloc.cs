@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LusiadasDAL
 {
-    [Table("DESLOC", Schema = "MEDICO")]
+    [Table("DESLOC_V2", Schema = "MEDICO")]
     public class TblDesloc
     {
         [Key, Column(Order=0)]

@@ -36,10 +36,33 @@
                         <label>Serviço</label>
                         <select class="form-control" id="select-servico">
                             <option value="">Ver todos</option>
-                            @foreach (Valencia item in Model.Item2.listValencias)
-                            {
-                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-                            }
+
+                            <optgroup label="Valências Parametrizadas">
+                                @foreach (String dest in Model.Item3.list_destDoentes)
+                    {
+                        foreach (Valencia valP in Model.Item2.listValencias)
+                        {
+                            @*<option>@destprod - @valP.COD_SERV</option>*@
+                if (dest == valP.COD_SERV)
+                {
+                    <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+    }
+
+}
+}
+                            </optgroup>
+                            <optgroup label="Valências + Frequentes">
+                                @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
+                    {
+                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+        }
+                            </optgroup>
+                            <optgroup label="Locais">
+                                @foreach (Valencia item in Model.Item2.listValencias)
+                    {
+                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+        }
+                            </optgroup>
                         </select>
                     </div>
                     <div class="col-sm-4">
@@ -47,36 +70,81 @@
                         <select class="form-control" id="select-piso">
                             <option value="">Ver todos</option>
                             @foreach (Piso item in Model.Item4.listPisos)
-                            {
-                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-                            }
+                {
+                    <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+    }
                         </select>
                     </div>
                     <div class="col-sm-4">
                         <label>Localização Atual</label>
                         <select class="form-control" id="select-ult-local">
                             <option value="">Ver todos</option>
-                            @foreach (Valencia item in Model.Item2.listValencias)
-                            {
-                                <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-                            }
+                            <optgroup label="Valências Parametrizadas">
+                                @foreach (String dest in Model.Item3.list_destDoentes)
+                    {
+                        foreach (Valencia valP in Model.Item2.listValencias)
+                        {
+                            @*<option>@destprod - @valP.COD_SERV</option>*@
+                if (dest == valP.COD_SERV)
+                {
+                    <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+    }
+
+}
+}
+                            </optgroup>
+                            <optgroup label="Valências + Frequentes">
+                                @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
+                    {
+                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+        }
+                            </optgroup>
+                            <optgroup label="Locais">
+
+                                @foreach (Valencia item in Model.Item2.listValencias)
+                    {
+                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+        }
+                            </optgroup>
+
+
+
+
                         </select>
                     </div>
-                    <div class="col-md-4">
+
+                </div>
+
+                <div class="row">
+                    
+                   
+                    <div class="col-sm-4" style="margin-top: 10px;">
                         <label>Utentes</label>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="check-view-mine" class="minimal" />
-                                <span style="font-weight:normal;">Ver apenas utentes deslocados</span>
-                            </label>
-                        </div>
+                        <br />
+                        <label>
+                            <input type="checkbox" id="check-view-mine" class="minimal" />
+                            <span style="font-weight:normal;">Ver apenas utentes deslocados</span>
+                        </label>
+
+
+
+                        @*<button id="actualiza" value="Actualizar Tabela" />
+        <button id="limpaF" value="Limpar Filtros"  />*@
+
+                    </div>
+                    <div class="col-sm-8">
+                        <br />
+                        <input type="button" style="float:right" onclick="FilterData()" id="actualiza" />
+                        <input type="button" style="float:right; margin-right:2%" onclick="LimparFiltros()" id="limpaF" />
                     </div>
                 </div>
+
             </div>
         </div>
 
 
         <div class="box">
+            @*<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">*@
             <div class="box-body">
                 <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "infADTable", className = "tableInternal" })</div>
             </div>
@@ -86,7 +154,7 @@
 
 
 <div class="modal fade" id="modal-desloc-timeline" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:60%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -103,8 +171,8 @@
 </div>
 
 
-<div class="modal fade" id="modal-desloc-prod" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" style="width:800px;">
+<div class="modal fade" id="modal-desloc-prod" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:60%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -124,6 +192,9 @@
 {
     <script type="text/javascript">
 
+        $('#actualiza').tooltip({ 'trigger': 'hover', 'title': 'Actualiza Tabela' });
+        $('#limpaF').tooltip({ 'trigger': 'hover', 'title': 'Limpa os Filtros' });
+
         var servicoCod  = "";
         var ultLocalCod = "";
         var pisoCod     = "";
@@ -137,7 +208,6 @@
             viewOnlocal = (($("#check-view-mine").is(":checked") == true) ? 1 : 0);
             FilterData();
         });
-
 
         $("#select-ult-local").on("change", function (el) {
             ultLocalCod = this.value;
@@ -175,11 +245,12 @@
                 type: "post",
                 cache: false,
                 success: function (result) {
-                    if (result.res == true) {
+                    if (result == true) {
                         $.data(curobj, 'current', $(curobj).val());
                         $(curobj).attr("data-previous-elem", $(curobj).val());
                     }
                     else {
+                        alert("Ocorreu um erro a deslocar o doente");
                         RevertSelection(this, selItem);
                         return false;
                     }
@@ -206,10 +277,13 @@
                 success: function (result) {
                     if (result != "")
                     {
+                        
                         $("#modal-select-tl-title").html("Deslocações de " + nomeDoente);
                         $("#modal-desloc-tl-body").html(result);
                     } else {
                         $("#modal-desloc-tl-body").html("");
+                       
+
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -222,7 +296,8 @@
         $(document).on("click", ".infADModalDeslocProd", function () {
             var tDoente     = $(this).attr("data-tdoente");
             var doente      = $(this).attr("data-doente");
-            var nomeDoente  = $(this).attr("data-nome");
+            var nomeDoente = $(this).attr("data-nome");
+           
             var curServ     = $(this).attr("data-codserv");
             var ultLoc      = $(this).attr("data-ultloc");
             var ncons       = $(this).attr("data-ncons");
@@ -231,15 +306,17 @@
 
             $.ajax({
                 url: '@Url.Action("ShowDeslocProd", "Deslocacoes")',
-                data: { "tdoente": tDoente, "doente": doente, "curserv": curServ, "ultlocal": ultLoc, "ncons": ncons, "tEpis": tEpis, "epis": epis },
+                data: { "tdoente": tDoente, "doente": doente, "nomeDoente": nomeDoente, "curserv": curServ, "ultlocal": ultLoc, "ncons": ncons, "tEpis": tEpis, "epis": epis },
                 type: "GET",
                 cache: false,
                 success: function (result) {
                     if (result != "") {
+
                         $("#modal-select-prod-title").html("Teste de " + nomeDoente);
                         $("#modal-desloc-prod-body").html(result);
                     } else {
                         $("#modal-desloc-prod-body").html("");
+                        
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -249,7 +326,28 @@
 
         });
 
-        
+
+        function LimparFiltros() {
+            //document.getElementById("check-view-mine").prop('checked', false);
+
+            //Change checkbox to unchecked
+            //document.getElementById("check-view-mine").checked = false;
+            //viewOnlocal = (($("#check-view-mine").is(":checked") == true) ? 1 : 0);
+            $("#check-view-mine").iCheck('uncheck');
+            $("#check-view-mine").change();
+            /*$('#check-view-mine').prop('checked', false);
+            $('#check-view-mine').change();*/
+
+            $('#select-ult-local')[0].selectedIndex = 0;
+            $('#select-ult-local').change();
+            $('#select-piso')[0].selectedIndex = 0;
+            $('#select-piso').change();
+            $('#select-servico')[0].selectedIndex = 0;
+            $('#select-servico').change();
+
+            FilterData();
+
+        }
 
         function RevertSelection(curobj, selItem)
         {
@@ -262,6 +360,9 @@
 
         function FilterData()
         {
+
+            //
+
             $.ajax({
                 url: '@Url.Action("FilterData", "Deslocacoes")',
                 data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "pisoCod": pisoCod, "viewOnlocal": viewOnlocal },
@@ -277,9 +378,34 @@
 
         }
 
+        //function myFunction() {
+        //    //deslocProdTable
+
+        //    // Declare variables
+        //    var input, filter, table, tr, td, i;
+        //    input = document.getElementById("myInput");
+        //    filter = input.value.toUpperCase();
+        //    table = document.getElementById("infADTable");
+        //    tr = table.getElementsByTagName("tr");
+
+        //    // Loop through all table rows, and hide those who don't match the search query
+        //    for (i = 0; i < tr.length; i++) {
+        //        td = tr[i].getElementsByTagName("td")[1];
+        //        if (td) {
+        //            if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        //                tr[i].style.display = "";
+        //            } else {
+        //                tr[i].style.display = "none";
+        //            }
+        //        }
+        //    }
 
 
-        $(document).on("change", ".infaddeslocprod-selected-item", function (el) {
+        //}
+
+
+
+        @*$(document).on("change", ".infaddeslocprod-selected-item", function (el) {
             var isConfirmed = confirm("Tem a certeza que pretende alterar a localização atual do produto?");
             var selItem = $(this).attr("data-previous-elem");
 
@@ -292,6 +418,8 @@
             var itemRow = $(this).attr("data-select-row");
             var curobj = this;
 
+
+            //Update deslocação do produto -> NAO FUNCIONA
             $.ajax({
                 url: '@Url.Action("UpdateDeslocProd", "Deslocacoes")',
                 data: { "itemRow": itemRow, "selDest": $(this).val() },
@@ -310,8 +438,8 @@
                     console.log(xhr);
                 }
             });
-
-        });
+            
+        });*@
 
 
 </script>

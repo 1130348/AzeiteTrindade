@@ -24,61 +24,61 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-4 col-xs-8">
             <!-- small box -->
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h3>150</h3>
-                    <p>Triagem</p>
+                    <h3 id="numDoentes">@Globals.nDoentes</h3>
+                    <p>Doentes Presentes</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-clipboard"></i>
+                    <i class="fa fa-user"></i>
                 </div>
             </div>
         </div><!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-green">
-                <div class="inner">
-                    <h3>53</h3>
-                    <p>Análises</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-ios-pulse"></i>
-                </div>
-            </div>
-        </div><!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-4 col-xs-8">
             <!-- small box -->
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3>44</h3>
-                    <p>Imagiologia</p>
+                    <h3 id="semTriagem">@Globals.semTriagem</h3>
+                    <p>Sem Triagem</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-easel"></i>
+                    <i class="fa fa-clock-o"></i>
                 </div>
             </div>
         </div><!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
+        <div class="col-lg-4 col-xs-8">
             <!-- small box -->
-            <div class="small-box bg-red">
+            <div class="small-box bg-orange">
                 <div class="inner">
-                    <h3>65<sup style="font-size: 20px">%</sup></h3>
-                    <p>Consultas Ext. Realizadas</p>
+                    <h3 id="semNota">@Globals.semNota</h3>
+                    <p>Sem Nota Médica</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
+                    <i class="fa fa-user-md"></i>
                 </div>
             </div>
         </div><!-- ./col -->
+        
     </div>
 
     <div class="row">
         <form action="#" method="post">
             <div class="box box-default">
                 <div class="box-body">
-                    <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal", autoRefreshTime = 30000 })</div>
+                    <div class="form-group">
+                        <label>
+                            <input type="button" onclick="startRefresh()" id="actualizaATP" />
+
+                        </label>
+                        @{ DateTime localDate = DateTime.Now; string data = localDate.Hour + ":" + localDate.Minute + ":" + localDate.Second;}
+                        <label id="lastupdate">
+                            Última Actualização: @data
+                        </label>
+
+                    </div>
+                    <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal" })</div>
                 </div>
             </div>
         </form>
@@ -92,14 +92,13 @@
 
         function RefreshData()
         {
-
-            $.ajax({
+            
+             $.ajax({
                 url: '@Url.Action("LoadTable", "ATP")',
-                type: "POST",
+                type: "get",
                 cache: false,
                 success: function (result) {
                     LDFTableRenderBody(result, 'atpTable');
-                    LDFTableRestartCounter("atpTable");
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
@@ -108,9 +107,43 @@
 
         }
 
+       /* $(function () {
+            startRefresh();
+        });*/
+
+        function startRefresh() {
+
+            setTimeout(startRefresh, 30000);
+            var date = new Date;
+        
+            var seconds = date.getSeconds();
+            var minutes = date.getMinutes();
+            var hour = date.getHours();
+            $("#lastupdate").empty();
+            $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
+
+            
+            $("#numDoentes").empty();
+            $("#numDoentes").append(@Globals.nDoentes);
+
+            $("#semTriagem").empty();
+            $("#semTriagem").append(@Globals.semTriagem);
+
+            $("#semNota").empty();
+            $("#semNota").append(@Globals.semNota);
+
+
+            //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
+            RefreshATPTable();
+            
+            
+        }
+
+
         function RefreshATPTable() {
             LDFTableResetCounter("atpTable");
             RefreshData();
+            
         }
     </script>
 }

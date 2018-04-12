@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +24,35 @@ namespace LusiadasDAL
                 throw err;
             }
         }
+
+        public List<VwValenciasFreq> GetValenciaParametrizadas()
+        {
+            try
+            {
+                DBInternamentoContext efInt = new DBInternamentoContext();
+
+                return efInt.VwValenciasFreq.ToList();
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+        }
+
+        public List<VwValenciasProdFreq> GetValenciaParametrizadasProdutos()
+        {
+            try
+            {
+                DBInternamentoContext efInt = new DBInternamentoContext();
+
+                return efInt.VwValenciasProdFreq.ToList();
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+        }
+
 
         public List<TblSDPessHosp> GetInfoPessHosp(string user)
         {

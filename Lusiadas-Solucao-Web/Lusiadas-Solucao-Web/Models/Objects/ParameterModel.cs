@@ -18,7 +18,7 @@ namespace LusiadasSolucaoWeb.Models
 
         public void FillParameters()
         {
-            list_prods = ParameterManager.GetParametersFrom<Produtos>("name="+(string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "TAB_CAMPODEF", "CODIGO, NOME_CAMPO, VALOR", "CODIGO='PRODUTO_DESLOC'", "");
+            list_prods = ParameterManager.GetParametersFrom<Produtos>("name="+(string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "TAB_CAMPODEF", "CODIGO, NOME_CAMPO, VALOR, CODIGO_PAI", "CODIGO='PRODUTO_DESLOC'", "");
         }
 
         public void FillDefinitions()

@@ -113,6 +113,21 @@
 
         function startRefresh() {
 
+            //var max = "@Globals.nDoentes";
+            var max = $("#numDoentes").text();
+            var sem = "Sem Dados";
+       
+            if (sem.localeCompare(max)) {
+                var max2 = max / 20;
+           
+                if (count < max2 + 1) {
+                    count++;
+                }
+                else {
+                    count = 1;
+                }
+            }
+
             setTimeout(startRefresh, 30000);
             var date = new Date;
         
@@ -120,24 +135,61 @@
             var minutes = date.getMinutes();
             var hour = date.getHours();
             $("#lastupdate").empty();
+
+            if (hour < 10) {
+                hour = "0" + hour;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+
             $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
-
-            
-            $("#numDoentes").empty();
-            $("#numDoentes").append(@Globals.nDoentes);
-
-            $("#semTriagem").empty();
-            $("#semTriagem").append(@Globals.semTriagem);
-
-            $("#semNota").empty();
-            $("#semNota").append(@Globals.semNota);
-
+           
+            getDados();
 
             //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
             RefreshATPTable();
             
             
         }
+
+        
+    function getDados() {
+
+        $.ajax({
+            url: '@Url.Action("GetDados", "ATP")',
+            type: "get",
+            cache: false,
+            success: function (result) {
+
+                var res=result.split(';');
+
+                var ndoentes =res[0];
+                var semTriagem = res[1];
+                var semNota =res[2];
+
+                $("#numDoentes").empty();
+                $("#numDoentes").append(ndoentes);
+
+                $("#semTriagem").empty();
+                $("#semTriagem").append(semTriagem);
+
+                $("#semNota").empty();
+                $("#semNota").append(semNota);
+              
+            },
+            timeout: 10000,
+            error: function (xhr, ajaxOptions, thrownError) {
+                
+                console.log(xhr);
+            }
+        });
+
+    }
+
 
 
         function RefreshATPTable() {

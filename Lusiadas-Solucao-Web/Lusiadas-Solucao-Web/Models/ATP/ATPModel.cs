@@ -32,7 +32,7 @@ namespace LusiadasSolucaoWeb.Models
             //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
             dbParams = new LDFTableDBParams("BDHLUQLD", "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
             objType     = typeof(VwDashboardATP);
-            getDados();
+           // getDados();
 
 
             LDFTableHeaders();
@@ -53,7 +53,7 @@ namespace LusiadasSolucaoWeb.Models
         public void LDFTableTreatData()
         {
 
-            getDados();
+            //getDados();
 
 
 
@@ -721,7 +721,7 @@ namespace LusiadasSolucaoWeb.Models
                             nota += "</div>";
                             item.rowItems.First(q => q.itemColumnName == "CEXTERNA_REQUISITADOS").itemValue = nota;
                         }
-                        else if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")))
+                        else if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_DESLOC")))
                         {
                             nota = "<div class='row'>";
                             nota += "<div class='col-xs-12'>" + "<font color='#e6e600'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";
@@ -793,97 +793,7 @@ namespace LusiadasSolucaoWeb.Models
             }
         }
 
-        public void getDados()
-        {
-
-            try
-            {
-
-                //get data 
-                string oradb = "User Id=medico;Password=medico;Data Source=BDHLUQL2";
-                OracleConnection conn = new Oracle.ManagedDataAccess.Client.OracleConnection(oradb);  // C#
-                conn.Open();
-                OracleCommand cmd = new OracleCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2";
-                cmd.CommandType = CommandType.Text;
-                OracleDataReader dr = cmd.ExecuteReader();
-
-                if (dr.HasRows)
-                {
-
-                    while (dr.Read())
-                    {
-                        Globals.nDoentes = dr["COUNT(*)"].ToString();
-
-                    }
-
-                }
-                else
-                {
-                    Globals.nDoentes = "Sem Dados";
-                }
-
-                OracleCommand cmd2 = new OracleCommand();
-                cmd2.Connection = conn;
-                cmd2.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2 where COR_TRIAGEM IS NULL";
-                cmd2.CommandType = CommandType.Text;
-                OracleDataReader dr2 = cmd2.ExecuteReader();
-
-                if (dr2.HasRows)
-                {
-
-                    while (dr2.Read())
-                    {
-                        Globals.semTriagem = dr2["COUNT(*)"].ToString();
-
-                    }
-
-                }
-                else
-                {
-                    Globals.semTriagem = "Sem Dados";
-                }
-
-                OracleCommand cmd3 = new OracleCommand();
-                cmd3.Connection = conn;
-                cmd3.CommandText = "select count(*) from MEDICO.V_DASH_DESLOC_ATP_V2 where DT_NOTA_MEDICA IS NULL";
-                cmd3.CommandType = CommandType.Text;
-                OracleDataReader dr3 = cmd3.ExecuteReader();
-
-                if (dr3.HasRows)
-                {
-
-                    while (dr3.Read())
-                    {
-                        Globals.semNota = dr3["COUNT(*)"].ToString();
-
-                    }
-
-                }
-                else
-                {
-                    Globals.semNota = "Sem Dados";
-                }
-
-
-
-
-
-                conn.Dispose();
-
-            }
-            catch (Exception err)
-            {
-                //err.InnerException.ToString();
-                Globals.nDoentes = "Sem Dados";
-                Globals.semNota = "Sem Dados";
-                Globals.semTriagem = "Sem Dados";
-
-            }
-
-            
-        }
+        
 
         #endregion
 
@@ -918,10 +828,10 @@ namespace LusiadasSolucaoWeb.Models
 
         }
 
-        private void GetFieldCircle(LDFTableRow item, string rowName, string value)
+        /*private void GetFieldCircle(LDFTableRow item, string rowName, string value)
         {
             item.rowItems.First(q => q.itemColumnName == rowName).itemValue  = "<i class='fa fa-circle lg " + value + "'></i>";
-        }
+        }*/
 
         private bool IsDoenteMoved(string doente, string ncons)
         {

@@ -59,10 +59,10 @@ namespace LusiadasSolucaoWeb.Models
                  HttpContext.Current.Session[Constants.SS_AUTH] = auth;
              }
 
-            HttpContext.Current.Session[Constants.SS_AUTH] = auth;
-            return true;
+            //HttpContext.Current.Session[Constants.SS_AUTH] = auth;
+            //return true;
 
-            //return isAuthed;
+            return isAuthed;
         }
 
         public UserInfo GetUserInfo()
@@ -79,11 +79,11 @@ namespace LusiadasSolucaoWeb.Models
 
             List<TblMenu>           listMenuD   = listMenu.Distinct().ToList();
 
-            uinfo.numMecan = "0010001";
-            uinfo.nome = "teste";
-            uinfo.titulo = "TesteTitulo";
-            uinfo.userID = UserName;
-            uinfo.catProfissional = "ENF";
+            //uinfo.numMecan = "0010001";
+            //uinfo.nome = "teste";
+            //uinfo.titulo = "TesteTitulo";
+            //uinfo.userID = UserName;
+            //uinfo.catProfissional = "ENF";
 
 
             if (listPess != null && listPess.Count > 0)

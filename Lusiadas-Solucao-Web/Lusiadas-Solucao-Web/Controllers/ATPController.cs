@@ -208,7 +208,7 @@ namespace LusiadasSolucaoWeb.Controllers
             }
             catch (Exception err)
             {
-                //err.InnerException.ToString();
+                string var=err.InnerException.ToString();
                 Globals.nDoentes = "Sem Dados";
                 Globals.semNota = "Sem Dados";
                 Globals.semTriagem = "Sem Dados";

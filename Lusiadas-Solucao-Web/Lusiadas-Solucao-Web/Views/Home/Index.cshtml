@@ -9,6 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="theme-color" content="#4169E1"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Lusíadas - Solução Web | Log in</title>
 
@@ -44,18 +45,23 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
         }
+
+        .pull-right {
+            float: right !important;
+        }
+
     </style>
 
 </head>
 
 <body class="login-page noselect">
-    <div class="login-box">
+    <div class="login-box" style="max-width:400px">
         <div class="login-logo">
             <b>Lusíadas Saúde</b>
             <br>
             <small>Solução WEB</small>
         </div>
-        <div class="login-box-body">
+        <div class="login-box-body" >
             <p class="login-box-msg">Login para iniciar a sessão</p>
             <form action="@Url.Action("Index", "Home")" method="post">
                 <div class="form-group has-feedback">
@@ -145,14 +151,15 @@
             </form>
         </div>
         <div class="row" style="margin-top:10px;">
-            <div class="col-md-6 vertical">
-                <small>© 2018 Lusíadas Saúde</small>
+            <div class="col-md-6 vertical" style="max-width:200px;float:left;">
+                <h5>© 2018 Lusíadas Saúde</h5>
             </div>
-            <div class="col-md-6 text-right">
-                <button class="bg-light-red btn btn-circle btn-sm btn-success" data-toggle="modal" data-target="#model_ajuda">
+            <div class="col-md-6 " style="max-width:200px;float:right;">
+                <button class="bg-light-red btn btn-circle btn-sm btn-success pull-right" data-toggle="modal" data-target="#model_ajuda">
                     <i class="fa fa-fw fa-question-circle"></i>Ajuda
                 </button>
             </div>
+            
         </div>
     </div>
 

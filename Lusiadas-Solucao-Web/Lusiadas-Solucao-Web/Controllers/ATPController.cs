@@ -32,6 +32,7 @@ namespace LusiadasSolucaoWeb.Controllers
             
         }
 
+        [Route("/Dash", Name = "DashBoard")]
         public ActionResult Dash()
         {
             ATPModel atpTable = new ATPModel();

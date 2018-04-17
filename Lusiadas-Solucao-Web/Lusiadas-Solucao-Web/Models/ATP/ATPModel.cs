@@ -247,18 +247,20 @@ namespace LusiadasSolucaoWeb.Models
                                 item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;         
 
                         }
-                        else if (analisesRealizadas>0)
+                        else if (analisesEntregues == 0)
+                        {
+
+                            anal = "<div class='row'>";
+                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
+                            anal += "</div>";
+                            item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
+                           
+
+                        }
+                        else 
                         {
                             anal = "<div class='row' style='margin-top:10px;'>";
                             anal += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
-                            anal += "</div>";
-                            item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
-
-                        }
-                        else
-                        {
-                            anal = "<div class='row'>";
-                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
                             anal += "</div>";
                             item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
                         }
@@ -444,7 +446,7 @@ namespace LusiadasSolucaoWeb.Models
 
                         
                     }
-                    else if (imReal>0)
+                    else if (imDesloc==0)
                     {
 
                         nota = "<div class='row'>";
@@ -498,8 +500,8 @@ namespace LusiadasSolucaoWeb.Models
 
                             }
 
-                     
-                            nota += "<br><i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>";
+                            nota += "<br><i class='fa fa-pause text-orange' aria-hidden='true' ></i>";
+                            
                             nota += "<br>" + (imReal) + "/" + (imPedi);
                             nota += "</div></div>";
 
@@ -515,7 +517,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xray.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true' ></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
 
                             }
@@ -524,7 +526,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/ultra.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true' ></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -532,7 +534,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xcat.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -540,8 +542,8 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
-
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true' ></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                
                             }
 
 
@@ -610,7 +612,7 @@ namespace LusiadasSolucaoWeb.Models
                             }
 
 
-                            nota += "<br><i class='fa fa-pause text-orange' aria-hidden='true'></i></i>";
+                            nota += "<br><i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>";
                             nota += "<br>" + (imReal) + "/" + (imPedi);
                             nota += "</div></div>";
 
@@ -627,7 +629,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xray.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
 
                             }
@@ -636,7 +638,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/ultra.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -644,7 +646,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xcat.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -652,7 +654,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -838,7 +840,13 @@ namespace LusiadasSolucaoWeb.Models
             DeslocacoesModel desloc = new DeslocacoesModel();
             return desloc.IsDoenteDesloc(doente, ncons);
         }
-        
+
+        private bool DoenteHasProduct(string doente, string episodio)
+        {
+            DeslocacoesModel desloc = new DeslocacoesModel();
+            return desloc.HasProduct(doente, episodio);
+        }
+
         #endregion
 
     }

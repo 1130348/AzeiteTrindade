@@ -3,194 +3,232 @@
 @model Tuple<DeslocacoesModel, ValenciaModel, ParameterModel, PisosModel>
 
 
-<link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
-<script src="/Content/js/ldfTable.min.js"></script>
-
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>
-        Gestão Administrativa
-        <small>Deslocações</small>
-    </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Início</a></li>
-        <li class="active">Gestão Administrativa</li>
-        <li class="active">Deslocações</li>
-    </ol>
-</section>
+    <link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
+    <script src="/Content/js/ldfTable.min.js"></script>
 
 
-<!-- Main content -->
-<section class="content">
-    <form action="#" method="post">
-        <div class="box box-primary box-solid">
-            <div class="box-header" style="padding:6px;">
-                <h3 class="box-title" style="font-size:16px;">Filtro</h3>
-                <div class="box-tools pull-right">
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label>Serviço</label>
-                        <select class="form-control" id="select-servico">
-                            <option value="">Ver todos</option>
-
-                            <optgroup label="Valências Parametrizadas">
-                                @foreach (String dest in Model.Item3.list_destDoentes)
-                    {
-                        foreach (Valencia valP in Model.Item2.listValencias)
-                        {
-                            @*<option>@destprod - @valP.COD_SERV</option>*@
-                if (dest == valP.COD_SERV)
-                {
-                    <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
-    }
-
-}
-}
-                            </optgroup>
-                            <optgroup label="Valências + Frequentes">
-                                @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
-                    {
-                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
-        }
-                            </optgroup>
-                            <optgroup label="Locais">
-                                @foreach (Valencia item in Model.Item2.listValencias)
-                    {
-                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-        }
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label>Piso</label>
-                        <select class="form-control" id="select-piso">
-                            <option value="">Ver todos</option>
-                            @foreach (Piso item in Model.Item4.listPisos)
-                {
-                    <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-    }
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label>Localização Atual</label>
-                        <select class="form-control" id="select-ult-local">
-                            <option value="">Ver todos</option>
-                            <optgroup label="Valências Parametrizadas">
-                                @foreach (String dest in Model.Item3.list_destDoentes)
-                    {
-                        foreach (Valencia valP in Model.Item2.listValencias)
-                        {
-                            @*<option>@destprod - @valP.COD_SERV</option>*@
-                if (dest == valP.COD_SERV)
-                {
-                    <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
-    }
-
-}
-}
-                            </optgroup>
-                            <optgroup label="Valências + Frequentes">
-                                @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
-                    {
-                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
-        }
-                            </optgroup>
-                            <optgroup label="Locais">
-
-                                @foreach (Valencia item in Model.Item2.listValencias)
-                    {
-                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
-        }
-                            </optgroup>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Gestão Administrativa
+            <small>Deslocações</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Início</a></li>
+            <li class="active">Gestão Administrativa</li>
+            <li class="active">Deslocações</li>
+        </ol>
+    </section>
 
 
-
-
-                        </select>
-                    </div>
-
-                </div>
-
-                <div class="row">
-                    
-                   
-                    <div class="col-sm-4" style="margin-top: 10px;">
-                        <label>Utentes</label>
-                        <br />
-                        <label>
-                            <input type="checkbox" id="check-view-mine" class="minimal" />
-                            <span style="font-weight:normal;">Ver apenas utentes deslocados</span>
-                        </label>
-
-
-
-                        @*<button id="actualiza" value="Actualizar Tabela" />
-        <button id="limpaF" value="Limpar Filtros"  />*@
-
-                    </div>
-                    <div class="col-sm-8">
-                        <br />
-                        <input type="button" style="float:right" onclick="FilterData()" id="actualiza" />
-                        <input type="button" style="float:right; margin-right:2%" onclick="LimparFiltros()" id="limpaF" />
+    <!-- Main content -->
+    <section class="content">
+        <form action="#" method="post">
+            <div class="box box-primary box-solid">
+                <div class="box-header" style="padding:6px;">
+                    <h3 class="box-title" style="font-size:16px;">Filtro</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Serviço</label>
+                            <select class="form-control" id="select-servico">
+                                <option value="">Ver todos</option>
 
+                                <optgroup label="Valências Parametrizadas">
+                                    @foreach (String dest in Model.Item3.list_destDoentes)
+                                    {
+                                        foreach (Valencia valP in Model.Item2.listValencias)
+                                        {
+                                            @*<option>@destprod - @valP.COD_SERV</option>*@
+                                            if (dest == valP.COD_SERV)
+                                            {
+                                                <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                                            }
+
+                                        }
+                                    }
+                                </optgroup>
+                                <optgroup label="Valências + Frequentes">
+                                    @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
+                                    {
+                                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Locais">
+                                    @foreach (Valencia item in Model.Item2.listValencias)
+                                    {
+                                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Piso</label>
+                            <select class="form-control" id="select-piso">
+                                <option value="">Ver todos</option>
+                                @foreach (Piso item in Model.Item4.listPisos)
+                                {
+                                    <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label>Localização Atual</label>
+                            <select class="form-control" id="select-ult-local">
+                                <option value="">Ver todos</option>
+                                <optgroup label="Valências Parametrizadas">
+                                    @foreach (String dest in Model.Item3.list_destDoentes)
+                                    {
+                                        foreach (Valencia valP in Model.Item2.listValencias)
+                                        {
+                                            @*<option>@destprod - @valP.COD_SERV</option>*@
+                                            if (dest == valP.COD_SERV)
+                                            {
+                                                <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                                            }
+
+                                        }
+                                    }
+                                </optgroup>
+                                <optgroup label="Valências + Frequentes">
+                                    @foreach (Valencia valP in Model.Item2.listValenciasParametrizadas)
+                                    {
+                                        <option value="@valP.COD_SERV">@valP.DESCR_SERV</option>
+                                    }
+                                </optgroup>
+                                <optgroup label="Locais">
+
+                                    @foreach (Valencia item in Model.Item2.listValencias)
+                                    {
+                                        <option value="@item.COD_SERV">@item.DESCR_SERV</option>
+                                    }
+                                </optgroup>
+
+
+
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+
+                        <div class="col-sm-4" style="margin-top: 10px;">
+                            <label>Utentes</label>
+                            <br />
+                            <label>
+                                <input type="checkbox" id="check-view-mine" class="minimal" />
+                                <span style="font-weight:normal;">Ver apenas utentes deslocados</span>
+                            </label>
+                            <br />
+                            <label>
+                                <input type="checkbox" id="check-view-mine2" class="minimal" />
+                                <span style="font-weight:normal;">Ver apenas utentes com Produtos</span>
+                            </label>
+                            <br />
+                            <br />
+                            <input type="text" id="pesquisaDoente" placeholder="Pesquisa Por Doente" class="minimal" />
+                            <input type="button" onclick="FilterData()" id="pesquisa" />
+
+
+
+                            @*<button id="actualiza" value="Actualizar Tabela" />
+                                <button id="limpaF" value="Limpar Filtros"  />*@
+
+                        </div>
+                        <div class="col-sm-8" style="margin-top:100px;">
+
+                            <input type="button" style="float:right" onclick="FilterData()" id="actualiza" />
+                            <input type="button" style="float:right; margin-right:2%" onclick="LimparFiltros()" id="limpaF" />
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
 
 
-        <div class="box">
-            @*<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">*@
-            <div class="box-body">
-                <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "infADTable", className = "tableInternal" })</div>
+            <div class="box">
+                @*<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">*@
+                <div class="box-body">
+                    <div class="row listwrapper no-border">@Html.TableRender(Model.Item1, new LDFTableAttributes() { ID = "infADTable", className = "tableInternal" })</div>
+                </div>
             </div>
-        </div>
-    </form>
-</section>
+        </form>
+    </section>
+
+    <div class="loadingModal"></div>
 
 
-<div class="modal fade" id="modal-desloc-timeline" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" style="width:60%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="modal-select-tl-title"></h4>
-            </div>
-            <div class="modal-body" id="modal-desloc-tl-body">
-          
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-default" data-dismiss="modal">Fechar</a>
+    <div class="modal fade" id="modal-desloc-timeline" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" style="width:60%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="modal-select-tl-title"></h4>
+                </div>
+                <div class="modal-body" id="modal-desloc-tl-body">
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Fechar</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<div class="modal fade" id="modal-desloc-prod" role="dialog" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" style="width:60%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="modal-select-prod-title"></h4>
-            </div>
-            <div class="modal-body" id="modal-desloc-prod-body">
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-default" data-dismiss="modal">Fechar</a>
+    <div class="modal fade" id="modal-desloc-prod" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" style="width:60%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" >×</button>
+                    <h4 class="modal-title" id="modal-select-prod-title"></h4>
+                </div>
+                <div class="modal-body" id="modal-desloc-prod-body">
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" >Fechar</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-@section customJS
+    @section customJS
 {
     <script type="text/javascript">
+
+        $('#modal-desloc-prod').on('hidden.bs.modal', function () {
+            FilterData();
+        })
+  
+
+        $(document).ajaxStart(function () {
+            $('body').addClass("loading");
+
+        });
+        $(document).ajaxStop(function () {
+            $('body').removeClass("loading");
+
+        });
+
+        $(document).ajaxError(function (e, jqxhr, settings, exception) {
+            $('body').removeClass("loading");
+
+            //e.stopPropagation();
+            //if (jqxhr != null) {
+            //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+            //    window.location = "/";
+            //}
+        });
+
+
 
         $('#actualiza').tooltip({ 'trigger': 'hover', 'title': 'Actualiza Tabela' });
         $('#limpaF').tooltip({ 'trigger': 'hover', 'title': 'Limpa os Filtros' });
@@ -199,6 +237,7 @@
         var ultLocalCod = "";
         var pisoCod     = "";
         var viewOnlocal = 0;
+        var viewOnlocal2 = 0;
 
         var iCheckObj = $('#check-view-mine.minimal').iCheck({
             checkboxClass: 'icheckbox_minimal-blue'
@@ -206,6 +245,15 @@
 
         iCheckObj.on('ifChanged', function (e) {
             viewOnlocal = (($("#check-view-mine").is(":checked") == true) ? 1 : 0);
+            FilterData();
+        });
+
+        var iCheckObj = $('#check-view-mine2.minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue'
+        });
+
+        iCheckObj.on('ifChanged', function (e) {
+            viewOnlocal2 = (($("#check-view-mine2").is(":checked") == true) ? 1 : 0);
             FilterData();
         });
 
@@ -227,7 +275,7 @@
 
 
         $(document).on("change", ".infad-selected-item", function (el) {
-            
+
             var isConfirmed = confirm("Tem a certeza que pretende alterar a localização atual do doente?");
             var selItem     = $(this).attr("data-previous-elem");
             if (!isConfirmed)
@@ -248,6 +296,7 @@
                     if (result == true) {
                         $.data(curobj, 'current', $(curobj).val());
                         $(curobj).attr("data-previous-elem", $(curobj).val());
+                        FilterData();
                     }
                     else {
                         alert("Ocorreu um erro a deslocar o doente");
@@ -277,12 +326,12 @@
                 success: function (result) {
                     if (result != "")
                     {
-                        
+
                         $("#modal-select-tl-title").html("Deslocações de " + nomeDoente);
                         $("#modal-desloc-tl-body").html(result);
                     } else {
                         $("#modal-desloc-tl-body").html("");
-                       
+
 
                     }
                 },
@@ -297,7 +346,7 @@
             var tDoente     = $(this).attr("data-tdoente");
             var doente      = $(this).attr("data-doente");
             var nomeDoente = $(this).attr("data-nome");
-           
+
             var curServ     = $(this).attr("data-codserv");
             var ultLoc      = $(this).attr("data-ultloc");
             var ncons       = $(this).attr("data-ncons");
@@ -316,7 +365,7 @@
                         $("#modal-desloc-prod-body").html(result);
                     } else {
                         $("#modal-desloc-prod-body").html("");
-                        
+
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -335,6 +384,12 @@
             //viewOnlocal = (($("#check-view-mine").is(":checked") == true) ? 1 : 0);
             $("#check-view-mine").iCheck('uncheck');
             $("#check-view-mine").change();
+
+            $("#check-view-mine2").iCheck('uncheck');
+            $("#check-view-mine2").change();
+
+            $("#pesquisaDoente").val("");
+            $("#pesquisaDoente").change();
             /*$('#check-view-mine').prop('checked', false);
             $('#check-view-mine').change();*/
 
@@ -361,14 +416,15 @@
         function FilterData()
         {
 
-            //
+            var numDoente = $("#pesquisaDoente").val();
 
             $.ajax({
                 url: '@Url.Action("FilterData", "Deslocacoes")',
-                data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "pisoCod": pisoCod, "viewOnlocal": viewOnlocal },
+                data: { "servicoCod": servicoCod, "ultLocalCod": ultLocalCod, "pisoCod": pisoCod, "viewOnlocal": viewOnlocal, "viewOnlocal2": viewOnlocal2,"doente":numDoente },
                 type: "get",
                 cache: false,
                 success: function (result) {
+                   
                     LDFTableRenderBody(result, 'infADTable');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -438,9 +494,9 @@
                     console.log(xhr);
                 }
             });
-            
+
         });*@
 
 
-</script>
-}
+        </script>
+    }

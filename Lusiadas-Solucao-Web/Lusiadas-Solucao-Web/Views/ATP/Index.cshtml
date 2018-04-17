@@ -24,7 +24,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
-        <div class="col-lg-4 col-xs-8">
+        <div class="col-lg-4 col-xs-4">
             <!-- small box -->
             <div class="small-box bg-aqua">
                 <div class="inner">
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div><!-- ./col -->
-        <div class="col-lg-4 col-xs-8">
+        <div class="col-lg-4 col-xs-4">
             <!-- small box -->
             <div class="small-box bg-yellow">
                 <div class="inner">
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div><!-- ./col -->
-        <div class="col-lg-4 col-xs-8">
+        <div class="col-lg-4 col-xs-4">
             <!-- small box -->
             <div class="small-box bg-orange">
                 <div class="inner">
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div><!-- ./col -->
-        
+
     </div>
 
     <div class="row">
@@ -84,21 +84,47 @@
         </form>
     </div>
 </section>
+<div class="loadingModal"></div>
 
 
 @section customJS
 {
     <script type="text/javascript">
 
+
+
+        $(document).ajaxStart(function () {
+            $('body').addClass("loading");
+
+        });
+        $(document).ajaxStop(function () {
+            $('body').removeClass("loading");
+
+        });
+
+        $(document).ajaxError(function (e, jqxhr, settings, exception) {
+            $('body').removeClass("loading");
+
+            //e.stopPropagation();
+            //if (jqxhr != null) {
+            //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+            //    window.location = "/";
+            //}
+        });
+
+        //getDados();
+
         function RefreshData()
         {
-            
+
              $.ajax({
                 url: '@Url.Action("LoadTable", "ATP")',
                 type: "get",
                 cache: false,
-                success: function (result) {
-                    LDFTableRenderBody(result, 'atpTable');
+                 success: function (result) {
+                  
+                     LDFTableRenderBody(result, 'atpTable');
+                     
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
@@ -107,30 +133,17 @@
 
         }
 
-       /* $(function () {
+        $(function () {
             startRefresh();
-        });*/
+        });
 
         function startRefresh() {
 
-            //var max = "@Globals.nDoentes";
-            var max = $("#numDoentes").text();
-            var sem = "Sem Dados";
        
-            if (sem.localeCompare(max)) {
-                var max2 = max / 20;
-           
-                if (count < max2 + 1) {
-                    count++;
-                }
-                else {
-                    count = 1;
-                }
-            }
 
-            setTimeout(startRefresh, 30000);
+           // setTimeout(startRefresh, 30000);
             var date = new Date;
-        
+
             var seconds = date.getSeconds();
             var minutes = date.getMinutes();
             var hour = date.getHours();
@@ -147,16 +160,16 @@
             }
 
             $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
-           
+
             getDados();
 
             //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
             RefreshATPTable();
-            
-            
+
+
         }
 
-        
+
     function getDados() {
 
         $.ajax({
@@ -179,11 +192,11 @@
 
                 $("#semNota").empty();
                 $("#semNota").append(semNota);
-              
+
             },
             timeout: 10000,
             error: function (xhr, ajaxOptions, thrownError) {
-                
+
                 console.log(xhr);
             }
         });
@@ -195,7 +208,7 @@
         function RefreshATPTable() {
             LDFTableResetCounter("atpTable");
             RefreshData();
-            
+
         }
     </script>
 }

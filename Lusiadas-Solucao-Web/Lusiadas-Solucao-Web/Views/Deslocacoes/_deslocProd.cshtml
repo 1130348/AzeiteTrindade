@@ -8,7 +8,7 @@
                 <div class="col-sm-4">
                     <label>Produto</label>
                     <select class="form-control" id="select-deslocProd-produto">
-                         <option value="" value2="">Escolher Produto </option>
+                         <option value="" value2="" disabled selected>Escolher Produto </option>
                         @foreach (Produtos prod in Model.Item2.list_prods)
                         {
 
@@ -142,6 +142,8 @@
             AdicionaProduto();
         });
 
+        TesteProd();
+
         //var updateRowIndex = "";
 
         //$('.js-example-basic-single').select2();
@@ -158,14 +160,24 @@
 
         $(document).on("change", "#select-deslocProd-produto", function (el) {
 
-            var or = $("#select-deslocProd-produto").find(":selected");
-            var or2 = or.attr("value2");
-            if (or2.length>0)
-            $("#select-deslocProd-destino").val(or2);
-          
-         
+            TesteProd();              
 
         });
+
+
+        function TesteProd() {
+
+            var or = $("#select-deslocProd-produto").find(":selected");
+            var or2 = or.attr("value2");
+
+            if (or2.length > 0) {
+                $("#select-deslocProd-destino").val(or2);
+                $("#add-new-event").prop("disabled", false);
+            } else {
+                $("#add-new-event").prop('disabled', true);
+
+            }
+        }
 
         function AdicionaProduto() {
 

@@ -19,6 +19,10 @@ namespace LusiadasSolucaoWeb.Models
         [Description("Episódio")] public string T_EPISODIO { get; set; }
         [Description("Data Consulta")] public string HR_CONS { get; set; }
         [Description("Local Origem")] public string DESCR_SERV { get; set; }
+        [LDFTableIsVisible(false)] public int? PROD { get; set; }
+
+        [LDFTableIsVisible(false)] public int? TPROD { get; set; }
+
 
 
         [LDFTableIsVisible(false)] public string COD_SERV { get; set; }
@@ -29,6 +33,9 @@ namespace LusiadasSolucaoWeb.Models
         [Key, Column(Order = 1)] [LDFTableIsVisible(false)] public string EPISODIO { get; set; }
         [LDFTableIsVisible(false)] public string U_LOCAL { get; set; }
         [LDFTableIsVisible(false)] public string U_LOCAL_DESCR { get; set; }
+
+        
+
 
     }
 }

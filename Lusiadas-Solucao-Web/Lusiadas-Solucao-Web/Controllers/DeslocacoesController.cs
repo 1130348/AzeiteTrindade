@@ -71,19 +71,29 @@ namespace LusiadasSolucaoWeb.Controllers
         #region Filter Table
 
         [HttpGet]
-        public JsonResult FilterData(string servicoCod, string ultLocalCod, string viewOnlocal, string pisoCod)
+        public JsonResult FilterData(string servicoCod, string ultLocalCod, string viewOnlocal, string pisoCod,string viewOnlocal2,string doente)
         {
             bool onlyOnlocal = (Convert.ToInt32(viewOnlocal) == 1 ? true : false);
+            bool onlyOnlocal2 = (Convert.ToInt32(viewOnlocal2) == 1 ? true : false);
+
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
 
             List<LDFTableField> listFields = new List<LDFTableField>();
             listFields.Add(new LDFTableField("COD_SERV", servicoCod));
             listFields.Add(new LDFTableField("U_LOCAL", ultLocalCod));
             listFields.Add(new LDFTableField("PISO", pisoCod));
+            listFields.Add(new LDFTableField("DOENTE", doente));
 
 
             //Adicionar Filtros CodigoDoente
             //listFields.Add(new LDFTableField("DOENTE", "563388"));
+            if (onlyOnlocal2)
+            {
+
+                listFields.Add(new LDFTableField("TPROD","1"));
+           
+
+            }
 
 
             if (onlyOnlocal)

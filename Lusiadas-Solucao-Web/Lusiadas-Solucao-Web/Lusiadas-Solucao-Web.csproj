@@ -230,6 +230,7 @@
     <Content Include="Content\img\logo.jpg" />
     <Content Include="Content\img\logo_Lusiadas.png" />
     <Content Include="Content\img\minilogo_Lusiadas.png" />
+    <Content Include="Content\img\pesq.png" />
     <Content Include="Content\img\pill.png" />
     <Content Include="Content\img\refreshTable.png" />
     <Content Include="Content\img\rm.png" />

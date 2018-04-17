@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LusiadasDAL
 {
-    [Table("V_DOENTES_PRESENTES_V2", Schema = "MEDICO")]
+    [Table("V_DOENTES_PRESENTES_V3", Schema = "MEDICO")]
     public class VwDoentesPresentes
     {
         public string T_DOENTE { get; set; }
@@ -28,5 +28,9 @@ namespace LusiadasDAL
         public string T_EPISODIO { get; set; }
         public string U_LOCAL { get; set; }
         public string U_LOCAL_DESCR { get; set; }
+
+        public int? PROD { get; set; }
+
+        public int? TPROD { get; set; }
     }
 }

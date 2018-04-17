@@ -1,0 +1,92 @@
+
+  CREATE OR REPLACE FORCE VIEW "MEDICO"."V_DOENTES_PRESENTES_V3" ("T_DOENTE", "DOENTE", "NOME", "DT_CONS", "HR_CONS", "COD_SERV", "DESCR_SERV", "MEDICO", "FLAG_ESTADO", "FLAG_URGENTE", "N_CONS", "EPISODIO", "T_EPISODIO", "U_LOCAL", "U_LOCAL_DESCR", "PISO", "PROD", "TPROD") AS 
+  SELECT   T.T_DOENTE,
+            T.DOENTE,
+            T.NOME,
+            T.DT_CONS,
+            T.HR_CONS,
+            T.COD_SERV,
+            T.SERVICO DESCR_SERV,
+            T.MEDICO,
+            T.FLAG_ESTADO,
+            T.FLAG_URGENTE,
+            T.N_CONS,
+            T.EPISODIO_PAI,
+            T.T_EPISODIO_PAI,
+            D.COD_SERV AS U_LOCAL,
+            S.DESCR_SERV AS U_LOCAL_DESCR,
+            NULL PISO,
+            (SELECT   COUNT ( * )
+                 FROM   V_DESLOC_PROD_V2 a
+                WHERE       T.DOENTE = a.DOENTE
+                        AND T.EPISODIO_PAI = a.EPISODIO
+                       )
+                 PROD,
+                  (SELECT CASE WHEN count(*)=0 THEN 0 ELSE 1 END 
+                  FROM V_DESLOC_PROD_V2 a
+                  WHERE T.DOENTE=a.DOENTE
+                  AND T.EPISODIO_PAI=a.EPISODIO
+                  )
+                 TPROD
+
+     FROM         V_CONSULTAS T
+               LEFT JOIN
+                  MEDICO.DESLOC_V2 D
+               ON     T.T_DOENTE = D.T_DOENTE
+                  AND T.DOENTE = D.DOENTE
+                  --AND D.N_CONS IS NULL
+                  AND T.EPISODIO_PAI = d.EPISODIO
+                  AND T.T_EPISODIO_PAI = D.T_EPISODIO
+                  AND D.FLG_POS_FINAL = 'S'
+            LEFT JOIN
+               GH.SD_SERV S
+            ON S.COD_SERV = D.COD_SERV
+    WHERE                                        --T.DT_CONS > SYSDATE - 1 AND
+         T  .DT_CONS <= (SYSDATE) AND T.FLAG_ESTADO = 'P'
+   UNION
+
+   SELECT   T.T_DOENTE,
+            T.DOENTE,
+            T.NOME,
+            NULL,
+            NULL,
+            T.COD_SERv_VALENCIA,
+            T.DESCR_SERV,
+            T.N_MECAN MEDICO,
+            NULL,
+            NULL,
+            NULL,
+            T.EPISODIO,
+            T.T_EPISODIO,
+            D.COD_SERV AS U_LOCAL,
+
+            S.DESCR_SERV AS U_LOCAL_DESCR,
+            T.COD_SERV,
+            (SELECT   COUNT ( * )
+                 FROM   V_DESLOC_PROD_V2 a
+                WHERE       T.DOENTE = a.DOENTE
+                       /* AND T.EPISODIO_PAI = a.EPISODIO*/
+                       )
+                 PROD,
+                  (SELECT CASE WHEN count(*)=0 THEN 0 ELSE 1 END 
+                  FROM V_DESLOC_PROD_V2 a
+                  WHERE T.DOENTE=a.DOENTE
+                  AND T.EPISODIO_PAI=a.EPISODIO
+                  )
+                 TPROD
+
+
+     FROM         MEDICO.V_CONS_INTERN T
+               LEFT JOIN
+                  MEDICO.DESLOC_V2 D
+               ON     T.T_DOENTE = D.T_DOENTE
+                  AND T.DOENTE = D.DOENTE
+                  AND D.N_CONS IS NULL
+                  AND T.EPISODIO = d.EPISODIO
+                  AND T.T_EPISODIO = D.T_EPISODIO
+                  AND D.FLG_POS_FINAL = 'S'
+            LEFT JOIN
+               GH.SD_SERV S
+            ON S.COD_SERV = D.COD_SERV;
+
+   COMMENT ON TABLE "MEDICO"."V_DOENTES_PRESENTES_V3"  IS 'RETORNA A LISTAGEM DE DOENTES QUE SE ENCONTRAM PRESENTES ';

@@ -32,7 +32,7 @@ namespace LusiadasSolucaoWeb.Models
             //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
             dbParams = new LDFTableDBParams("BDHLUQLD", "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
             objType     = typeof(VwDashboardATP);
-           // getDados();
+            //getDados();
 
 
             LDFTableHeaders();
@@ -64,7 +64,7 @@ namespace LusiadasSolucaoWeb.Models
             
             foreach (LDFTableRow item in list_rows)
             {
-
+                
                 item.rowItems.First(q => q.itemColumnName == "DOENTE").itemValue = Generic.GetItemValue(item, "DOENTE");
              
 

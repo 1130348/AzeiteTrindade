@@ -1,0 +1,405 @@
+
+  CREATE OR REPLACE FORCE VIEW "MEDICO"."V_DASH_DESLOC_ATP_V3" ("T_DOENTE", "DOENTE", "NOME", "DT_NASC", "SEXO", "DT_CONS", "N_CONS", "OBS_CONS", "COD_SERV", "MEDICO_ID", "MEDICO_NOME", "COR_TRIAGEM", "FAST_TRACK", "DT_TRIAGEM", "DT_NOTA_MEDICA", "LOCALIZACAO", "PENSO_APLICAVEL", "PENSO_REGISTO", "ANALISES_SOLICITADAS", "ENTREGUE_LAB", "ANALISES_OK", "MEDICACAO_PRESCRITA_PCE", "MEDICACAO_PRESCRITA_GLINTT", "MEDICACAO_ADMINISTRADA_AMB", "MEDICACAO_ADMINISTRADA_GLINTT", "IMAGIOLOGIA_REQUESITADOS", "IMAGIOLOGIA_REALIZADOS", "IMAG_DESLOC", "IMAG_GRUPO_ATO", "ECG_REQUESITADOS", "ECG_REALIZADOS", "CEXTERNA_REQUISITADOS", "CEXTERNA_REALIZADOS", "CEXTERNA_DESLOC") AS 
+  SELECT   M.T_DOENTE,
+              M.DOENTE,
+              D.NOME,
+              D.DT_NASC,
+              D.SEXO,
+              TO_DATE (
+                 TO_CHAR (M.DT_CONS, 'yyyy/mm/dd ')
+                 || TO_CHAR (M.HR_CONS, 'HH24:MI:SS'),
+                 'yyyy/mm/dd HH24:MI:SS'
+              )
+                 DT_CONS,
+              M.N_CONS,
+              M.OBSERV_CONS AS OBS_CONS,
+              M.COD_SERV,
+              P.N_MECAN MEDICO_ID,
+              CASE
+                 WHEN P.ABR IS NOT NULL THEN INITCAP (P.TITULO || ' ' || P.ABR)
+                 ELSE P.NOME
+              END
+                 MEDICO_NOME,
+              CASE
+                 WHEN M.COD_SERV = '1199' OR M.COD_SERV = '2199'
+                 THEN
+                    (SELECT   RESULTADO_TRIAG
+                       FROM   HPP.HPP_TRIAGEM_ADULTO
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS
+                              AND ROWNUM <= 1)
+                 ELSE
+                    (SELECT   RESULTADO_TRIAG
+                       FROM   HPP.HPP_TRIAGEM_PEDIATRIA
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS
+                              AND ROWNUM <= 1)
+              END
+                 AS COR_TRIAGEM,
+              CASE
+                 WHEN M.COD_SERV = '1199' OR M.COD_SERV = '2199'
+                 THEN
+                    (SELECT   prot_manchester
+                       FROM   HPP.HPP_TRIAGEM_ADULTO
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS
+                              AND ROWNUM <= 1)
+                 ELSE
+                    (SELECT   prot_manchester
+                       FROM   HPP.HPP_TRIAGEM_PEDIATRIA
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS
+                              AND ROWNUM <= 1)
+              END
+                 AS FAST_TRACK,
+              CASE
+                 WHEN M.COD_SERV = '1199' OR M.COD_SERV = '2199'
+                 THEN
+                    (SELECT   MAX (HR_TRIAG)
+                       FROM   HPP.HPP_TRIAGEM_ADULTO
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS)
+                 ELSE
+                    (SELECT   MAX (HR_TRIAG)
+                       FROM   HPP.HPP_TRIAGEM_PEDIATRIA
+                      WHERE       t_doente = M.T_DOENTE
+                              AND doente = M.DOENTE
+                              AND t_episodio = 'Consultas'
+                              AND episodio = M.N_CONS)
+              END
+                 AS DT_TRIAGEM,
+              (SELECT   MAX(TO_DATE (
+                               TO_CHAR (DIAMED_DATA, 'yyyy/mm/dd ')
+                               || DIAMED_HORA,
+                               'yyyy/mm/dd HH24:MI:SS'
+                            ))
+                 FROM   MEDICO.diario_medico
+                WHERE   (    diamed_t_doente = M.T_DOENTE
+                         AND diamed_numero_doente = M.DOENTE
+                         AND diamed_t_episod = 'Consultas'
+                         AND diamed_data >= M.DT_CONS
+                         AND diamed_cod_serv = M.COD_SERV
+                         AND DIAMED_FLAG_ESTADO IS NULL)
+                        OR (n_cons = M.N_CONS AND DIAMED_FLAG_ESTADO IS NULL)
+                          AND ROWNUM = 1)
+                 DT_NOTA_MEDICA,
+                   /* (SELECT   SALA||' - '||CAMA
+                          FROM   medico.v_cons_intern b
+                         WHERE       b.dt_int >= M.DT_CONS
+                                 AND m.t_doente = b.t_doente
+                                 AND m.doente = b.doente
+                                 AND b.cod_serv IN (SELECT   valor
+                                                      FROM   medico.tab_campodef
+                                                     WHERE   codigo = 'OBS_COD_SERV')
+                                 and b.enfermaria in (SELECT   valor
+                                                      FROM   tab_campodef
+                                                     WHERE   codigo = 'OBS_COD_SERV'))*/
+                medico.get_local_URG(m.t_doente,m.doente, M.DT_CONS,m.n_cons)
+              LOCALIZACAO,--BOX_APLICAVEL,--transformar isto em local onde o doente está
+              /*Decode(
+                   (select COUNT ( * )
+                   from Medico.V_Doentes_Presentes_v2 p
+                   Where p.N_CONS = M.N_CONS
+                       AND p.T_DOENTE = M.T_DOENTE
+                       AND p.DOENTE = M.DOENTE
+                       AND p.U_LOCAL IS NOT NULL
+                       AND p.U_LOCAL != p.COD_SERV),
+                   0,
+                   'N',
+                   'S'
+               )
+                BOX_PRESENTE,--se o doente ñ foi a outro serviço
+              /*Decode(
+                 (select COUNT ( * )
+                 from Medico.V_Doentes_Presentes_v2 p
+                 Where p.N_CONS = M.N_CONS
+                            AND p.T_DOENTE = M.T_DOENTE
+                            AND p.DOENTE = M.DOENTE
+                            AND p.U_LOCAL IS NOT NULL
+                            AND p.U_LOCAL != p.COD_SERV),
+                    0,
+                    'N',
+                    'S'
+                )
+              '' CADEIRAO_PRESENTE,*/
+              /*   DECODE (
+                    (SELECT   COUNT ( * )
+                       FROM   GH.sd_cons_marc a
+                      WHERE   a.t_doente = M.T_DOENTE AND a.doente = M.DOENTE
+                              AND a.cod_serv IN
+                                       (SELECT   valor
+                                          FROM   tab_campodef
+                                         WHERE   codigo = 'SERV_ENF_ATP_SAU')
+                              AND a.t_act_med = '23020004'
+                              AND flag_estado IN ('MC', 'OK', 'P', 'EF')
+                              AND TRUNC (a.dt_cons) >= M.DT_CONS),
+                    0,
+                    'N',
+                    'S'
+                 )*/
+              '' PENSO_APLICAVEL,
+              /* DECODE (
+                  (SELECT   COUNT ( * )
+                     FROM   hpp.HPP_FERIDA a
+                    WHERE       a.doente = M.DOENTE
+                            AND a.t_doente = M.T_DOENTE
+                            AND a.t_episodio = 'Consultas'
+                            AND a.episodio = M.N_CONS
+                            AND flg_estado IS NULL),
+                  0,
+                  'N',
+                  'S'
+               ) */
+              '' PENSO_REGISTO,
+              /*DECODE (
+                 (SELECT   COUNT ( * )
+                    FROM   MEDICO.EXAMES_ANALISE
+                   WHERE       n_cons = M.N_CONS
+                           AND USER_ANUL IS NULL
+                           AND DT_ANUL IS NULL),
+                 0,
+                 'N',
+                 'S'
+              )*/
+              (SELECT   DECODE (COUNT ( * ), 0, 'N', COUNT ( * ))
+                 FROM   MEDICO.EXAMES_ANALISE
+                WHERE       n_cons = M.N_CONS
+                        AND USER_ANUL IS NULL
+                        AND DT_ANUL IS NULL)
+                 ANALISES_SOLICITADAS,
+              (SELECT   COUNT ( * )
+                 FROM   DESLOC_PROD_V2
+                WHERE   T_DOENTE = M.T_DOENTE
+                        AND DOENTE = M.DOENTE
+                        AND N_CONS = M.N_CONS
+                        AND COD_SERV = '1120'
+                        AND COD_SERV_ORIG=M.COD_SERV
+                        AND DT_DESL > (SELECT   MAX(TIPO_PEDIDO_HORA)
+                             FROM   MEDICO.EXAMES_ANALISE
+                            WHERE       n_cons =M.N_CONS
+                                    AND USER_ANUL IS NULL
+                                    AND DT_ANUL IS NULL))
+                        ENTREGUE_LAB,
+              (SELECT   COUNT ( * )
+                 FROM   v_pedidos_realizados
+                WHERE       TIPO_EAD = 'A'
+                        AND T_DOENTE = M.T_DOENTE
+                        AND DOENTE = M.DOENTE
+                        AND DT_ACT_MED >= M.DT_CONS
+                        AND TIPO_DOC = 'ANALISES')
+                 ANALISES_OK,
+              ( (SELECT   COUNT ( * )
+                   FROM   MEDICACAO a, MEDICACAO_DET b
+                  WHERE       a.med_num = b.med_num
+                          AND a.med_t_doente = M.T_DOENTE
+                          AND a.med_numero_doente = M.DOENTE
+                          AND a.med_cod_serv = M.COD_SERV
+                          AND a.med_flag_estado IS NULL
+                          AND a.med_data >= M.DT_CONS)
+               + (SELECT   COUNT ( * )
+                    FROM   v_prescricao_amb
+                   WHERE       flag_cancelada IS NULL
+                           AND t_doente = M.T_DOENTE
+                           AND doente = M.DOENTE
+                           AND TIPO_FARM = 'FARM_INTERNA'
+                           AND data_presc >= M.DT_CONS))
+                 MEDICACAO_PRESCRITA_PCE,
+              ( (SELECT   COUNT ( * )
+                   FROM   v_prescricao
+                  WHERE       flag_cancelada IS NULL
+                          AND t_doente = M.T_DOENTE
+                          AND doente = M.DOENTE
+                          AND data_presc >= M.DT_CONS)
+               + (SELECT   COUNT ( * )
+                    FROM   V_ENF_MEDICACAO
+                   WHERE       flag_cancelada IS NULL
+                           AND FLAG_ANULADA IS NULL
+                           AND t_doente = M.T_DOENTE
+                           AND doente = M.DOENTE
+                           AND TIPO_FARM = 'FARM_INTERNA'
+                           AND data_presc >= M.DT_CONS))
+                 MEDICACAO_PRESCRITA_GLINTT,
+              (SELECT   COUNT ( * )
+                 FROM   hpp.hpp_enf_med a
+                WHERE       t_doente = M.T_DOENTE
+                        AND doente = M.DOENTE
+                        AND a.admin = 'S'
+                        AND (prescricao, medicamento) IN
+                                 (SELECT   prescricao, medicamento
+                                    FROM   V_ENF_MEDICACAO
+                                   WHERE       flag_cancelada IS NULL
+                                           AND FLAG_ANULADA IS NULL
+                                           AND t_doente = M.T_DOENTE
+                                           AND doente = M.DOENTE
+                                           AND TIPO_FARM = 'FARM_INTERNA'
+                                           AND data_presc >= M.DT_CONS))
+                 MEDICACAO_ADMINISTRADA_AMB,
+              (                 --Só está a validar a Presc e admins da Glintt
+                (SELECT   COUNT (DISTINCT cod_item)
+                   FROM   enf.SDV_ENF_RESUMO_ENFERMAGEM enf,
+                          (SELECT   doente,
+                                    medicamento,
+                                    n_int,
+                                    dt_inicio
+                             FROM   v_prescricao
+                            WHERE   flag_cancelada IS NULL
+                                    AND data_presc >= TRUNC (SYSDATE) - 2) b
+                  WHERE       enf.t_doente = M.T_DOENTE
+                          AND enf.doente = M.DOENTE
+                          AND estado = 'Administrado'
+                          AND flag_info = 'TERAP'
+                          AND enf.doente = b.doente
+                          AND cod_item = B.MEDICAMENTO
+                          AND episodio = b.n_int
+                          AND enf.dt_cri > b.dt_inicio)
+               + (SELECT   COUNT ( * )
+                    FROM   hpp.hpp_enf_med a
+                   WHERE       t_doente = M.T_DOENTE
+                           AND doente = M.DOENTE
+                           AND a.admin = 'S'
+                           AND (prescricao, medicamento) IN
+                                    (SELECT   prescricao, medicamento
+                                       FROM   V_ENF_MEDICACAO
+                                      WHERE       flag_cancelada IS NULL
+                                              AND FLAG_ANULADA IS NULL
+                                              AND t_doente = M.T_DOENTE
+                                              AND doente = M.DOENTE
+                                              AND TIPO_FARM = 'FARM_INTERNA'
+                                              AND data_presc >= M.DT_CONS)))
+                 MEDICACAO_ADMINISTRADA_GLINTT,
+              ( /*SELECT   COUNT ( * )
+                  FROM   EXAMES_IMAG
+                 WHERE   N_CONS = M.N_CONS AND FLAG_ESTADO IS NULL */
+               SELECT   COUNT ( * )
+                 FROM   EXAMES_IMAG a, EXAMES_IMAG_LIN b
+                WHERE       a.ead_num = B.EAD_NUM
+                        AND a.FLAG_ESTADO IS NULL
+                        AND B.COD_RUBR NOT IN ('09000003')
+                        AND a.N_CONS = M.N_CONS)
+                 IMAGIOLOGIA_REQUESITADOS,
+              (SELECT   COUNT (DISTINCT (id_actual))
+                 FROM   cpc_bd.mcdt_actividade_det a,
+                        cpc_bd.mcdt_actividade b,
+                        v_pedidos_realizados v,
+                        hpp.fa_rubr c
+                WHERE       b.doente = v.doente
+                        AND b.t_doente = v.t_doente
+                        AND b.t_episodio = v.tepisodio_actmed
+                        AND b.episodio = v.episodio_actmed
+                        AND a.id_actividade = b.id_actividade
+                        AND a.cod_exame_clin = v.cod_grupo
+                        AND v.dt_act_med >= M.DT_CONS
+                        AND v.t_doente = M.T_DOENTE
+                        AND v.doente = M.DOENTE
+                        AND v.tipo_ead = 'E'                      --valor fixo
+                        AND c.cod_rubr = v.cod_grupo
+                        AND c.cod_grupo IN
+                                 (SELECT   valor
+                                    FROM   tab_campodef
+                                   WHERE   CODIGO = 'EAD_GRUP_REALIZ'
+                                           AND flag_estado IS NULL) --valor fixo
+                        AND estado = 'R')
+                 IMAGIOLOGIA_REALIZADOS,             
+                 (SELECT   COUNT ( * )
+                 FROM   DESLOC_V2
+                WHERE   T_DOENTE = M.T_DOENTE
+                        AND DOENTE = M.DOENTE
+                        AND N_CONS = M.N_CONS
+                        AND COD_SERV = '1119'
+                        AND FLG_POS_FINAL='S')
+                      IMAG_DESLOC,
+                 (medico.concatena_valores_campo_char('medico.EXAMES_IMAG a, medico.EXAMES_IMAG_LIN b,fa_rubr c,fa_grup_rubr d','distinct D.DESCR_GRUPO','a.ead_num = B.EAD_NUM
+                        AND a.FLAG_ESTADO IS NULL
+                        AND B.COD_RUBR NOT IN (''09000003'')
+                        and c.COD_RUBR = b.COD_RUBR
+                        and c.COD_GRUPO = d.COD_GRUPO
+                        AND a.N_CONS = '''||M.N_CONS||'''',';')                    
+                 )                 
+                  IMAG_GRUPO_ATO, --cod_grupo_acto medico
+              (SELECT   COUNT ( * )
+                 FROM   EXAMES_IMAG a, EXAMES_IMAG_LIN b
+                WHERE       a.ead_num = B.EAD_NUM
+                        AND a.FLAG_ESTADO IS NULL
+                        AND B.COD_RUBR = '09000003'
+                        AND N_CONS = M.N_CONS)
+              + (SELECT   COUNT ( * )
+                   FROM   EXAMES_ESPECIALIDADE a, EXAMES_ESP_LIN b
+                  WHERE       a.esp_num = B.esp_num
+                          AND a.FLAG_ESTADO IS NULL
+                          AND B.COD_RUBR = '09000003'
+                          AND N_CONS = M.N_CONS)
+                 ECG_REQUESITADOS,
+              (SELECT   COUNT (flag_estado)
+                 FROM   v_consultas
+                WHERE       t_doente = M.T_DOENTE
+                        AND doente = M.DOENTE
+                        AND t_act_med = '9000003'
+                        AND dt_cons >= M.DT_CONS
+                        AND flag_estado IN ('OK', 'EF'))
+                 ECG_REALIZADOS,
+              /*(SELECT   descr_serv
+                 FROM   sd_cons_marc a, sd_serv b
+                WHERE       t_episodio_pai = 'Consultas'
+                        AND episodio_pai = m.n_cons
+                        AND doente = m.doente
+                        AND t_doente = m.t_doente
+                        AND FLAG_TIPO = 'C'
+                        and a.cod_serv = b.cod_serv
+                        AND dt_cons BETWEEN M.DT_CONS AND M.DT_CONS + 1)*/
+                 medico.concatena_valores_campo_char('sd_cons_marc a, sd_serv b','b.descr_serv','t_episodio_pai = ''Consultas''
+                        AND episodio_pai = '''||m.n_cons||'''
+                        AND doente = '''||m.doente||'''
+                        AND t_doente = '''||m.t_doente||'''
+                        AND FLAG_TIPO = ''C''
+                        and a.cod_serv = b.cod_serv
+                        AND dt_cons BETWEEN '''||M.DT_CONS||''' AND '''||(M.DT_CONS+1)||'''',';') --AND dt_cons BETWEEN to_date('''||M.DT_CONS||''',''dd-mon-yyyy'') AND to_date('''||M.DT_CONS||''',''dd-mon-yyyy'') + 1
+                 CEXTERNA_REQUISITADOS,
+              /*(SELECT   b.descr_serv
+                 FROM   sd_cons_marc a, sd_serv b
+                WHERE       t_episodio_pai = 'Consultas'
+                        AND episodio_pai = m.n_cons
+                        AND doente = m.doente
+                        AND t_doente = m.t_doente
+                        AND FLAG_TIPO = 'C'
+                        and a.cod_serv = b.cod_serv
+                        AND FLAG_ESTADO IN ('EF', 'OK')
+                        AND dt_cons BETWEEN M.DT_CONS AND M.DT_CONS + 1)*/
+                    medico.concatena_valores_campo_char('sd_cons_marc a, sd_serv b','b.descr_serv','t_episodio_pai = ''Consultas''
+                        AND episodio_pai = '''||m.n_cons||'''
+                        AND doente = '''||m.doente||'''
+                        AND t_doente = '''||m.t_doente||'''
+                        AND FLAG_TIPO = ''C''
+                        and a.cod_serv = b.cod_serv
+                        AND FLAG_ESTADO IN (''EF'', ''OK'')
+                        AND dt_cons BETWEEN '''||M.DT_CONS||''' AND '''||(M.DT_CONS+1)||'''',';')
+                 CEXTERNA_REALIZADOS,
+                 (SELECT  b.DESCR_SERV
+                 FROM   DESLOC_V2 a, sd_serv b
+                WHERE   a.T_DOENTE = M.T_DOENTE
+                        AND a.DOENTE = M.DOENTE
+                        AND a.COD_SERV = b.COD_SERV
+                        AND a.N_CONS = M.N_CONS
+                         AND FLG_POS_FINAL='S')
+                        CEXTERNA_DESLOC
+       FROM   GH.SD_CONS_MARC M, SD_DOENTE D, SD_PESS_HOSP_DEF P
+      WHERE       M.cod_serv IN ('1198', '1199', '2198', '2199')
+              AND M.flAG_estado IN ('P', 'MC', 'EF')
+              AND M.T_ACT_MED NOT IN ('810')
+              AND M.DT_CONS = to_date('11-04-2016','dd-mm-yyyy')-->= TRUNC (SYSDATE - 5)
+              AND M.T_DOENTE = D.T_DOENTE
+              AND M.DOENTE = D.DOENTE
+              AND M.MEDICO = P.N_MECAN(+)
+              AND m.n_cons NOT IN (SELECT   n_cons
+                                     FROM   ALTA_DE_ATP
+                                    WHERE   doente = m.doente)
+   ORDER BY   M.DT_CONS ASC, M.HR_CONS ASC;

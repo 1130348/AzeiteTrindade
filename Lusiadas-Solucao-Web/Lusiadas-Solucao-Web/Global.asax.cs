@@ -47,18 +47,18 @@ namespace LusiadasSolucaoWeb
             }
             else
             {
-                string page = "~/Views/Error/General.cshtml";
+                string page = "General";
 
                 //ErrorHandler.ProcessError(Server.GetLastError(), machine, app, user, browser);
                 if (err is HttpException)
                 {
                     HttpException httpEx = (HttpException)err;
                     if (httpEx.GetHttpCode() == 404)
-                        page = "Error404";
+                        page = "~/Views/Error/Error404.cshtml";
                 }
                 Context.ClearError();
                 
-                Response.Redirect(page, true);
+               Response.Redirect(page, true);
             }
         }
 

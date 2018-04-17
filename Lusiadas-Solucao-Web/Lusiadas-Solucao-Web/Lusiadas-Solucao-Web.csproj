@@ -166,6 +166,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\ATPController.cs" />
     <Compile Include="Controllers\ConsultaDaDorController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeslocacoesController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Models\ConsultaDaDor\HistoricoDaDorModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocProdModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocHistModel.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\Login\LoginModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocacoesModel.cs" />
     <Compile Include="Models\Objects\VDeslocProd.cs" />

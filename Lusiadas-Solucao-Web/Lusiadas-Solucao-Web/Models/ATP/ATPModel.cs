@@ -159,7 +159,7 @@ namespace LusiadasSolucaoWeb.Models
                         break;
                     case "BOX":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle' style='color:#ffff00;font-size:24px;margin-top:10px;'></i>" +
+                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle' style='color:#cccc00;font-size:24px;margin-top:10px;'></i>" +
                             "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
@@ -259,8 +259,8 @@ namespace LusiadasSolucaoWeb.Models
                         }
                         else 
                         {
-                            anal = "<div class='row' style='margin-top:10px;'>";
-                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
+                            anal = "<div class='row'>";
+                            anal += "<div class='col-xs-12'>" + "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>" + "<br>" + analisesRealizadas + "/" + analisesPedidas + "</div>";
                             anal += "</div>";
                             item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;
                         }
@@ -612,7 +612,7 @@ namespace LusiadasSolucaoWeb.Models
                             }
 
 
-                            nota += "<br><i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>";
+                            nota += "<br><i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>";
                             nota += "<br>" + (imReal) + "/" + (imPedi);
                             nota += "</div></div>";
 
@@ -629,7 +629,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xray.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
 
                             }
@@ -638,7 +638,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/ultra.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -646,7 +646,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/xcat.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 
@@ -654,7 +654,7 @@ namespace LusiadasSolucaoWeb.Models
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";
-                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play-circle' aria-hidden='true' style='color:#ffff00;font-size:24px;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
+                                nota += "<div class='col-xs-12'>" + "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;;'></i>" + "<br>" + (imReal) + "/" + (imPedi) + " </div>";
 
                             }
 

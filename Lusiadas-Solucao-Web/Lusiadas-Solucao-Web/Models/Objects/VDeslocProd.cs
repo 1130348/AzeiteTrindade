@@ -23,12 +23,15 @@ namespace LusiadasSolucaoWeb.Models
         public string PRODUTO_DESCR { get; set; }
 
         [Description("Origem")]
+        [LDFTableOrder]
         public string DESCR_SERV_ORIG { get; set; }
 
         [Description("Destino")]
+        [LDFTableOrder]
         public string DESCR_SERV { get; set; }
 
         [Description("Nome")]
+        [LDFTableOrder]
         public string NOME { get; set; }
 
 

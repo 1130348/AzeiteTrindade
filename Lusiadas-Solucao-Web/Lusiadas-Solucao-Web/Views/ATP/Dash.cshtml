@@ -181,7 +181,7 @@
                                
                                 
                                 }
-                            <label id="lastupdate">
+                            <label id="lastupdate" style="margin-left:1.5%;">
                                 Última Actualização: @data
                             </label>
 
@@ -209,6 +209,20 @@
             cache: false,
             success: function (result) {
                 LDFTableRenderBody(result, 'atpTable');
+
+                $('li').each(function (i, ele) {
+
+                    if (ele.className.localeCompare("active")) {
+                        $(ele).removeClass('active');
+                    }
+                    console.log(i + " teste " + count - 1);
+                    if (i == count - 1) {
+                        $(ele).addClass('active');
+                    }
+
+                    console.log(i + ': ' + ele.className);
+
+                });
               
             },
             timeout: 10000,
@@ -236,7 +250,7 @@
         if (sem.localeCompare(max)) {
             var max2 = max / 20;
            
-            if (count < max2 + 1) {
+            if (count < max2) {
                 count++;
             }
             else {
@@ -270,7 +284,7 @@
 
         //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
         RefreshATPTable();
- 
+
         
 
     }
@@ -311,8 +325,19 @@
 
 
     function RefreshATPTable() {
+
         LDFTableResetCounter("atpTable");
         RefreshData();
+
+
+        //var childs = $("li");
+        //var i;
+        //alert(childs.length);
+        //for (i = 0; i < childs.length; i++) {
+        //    console.log("li numero ->" + i + " com info: " + childs[i].className);
+        //}
+
+       
 
     }
 </script>

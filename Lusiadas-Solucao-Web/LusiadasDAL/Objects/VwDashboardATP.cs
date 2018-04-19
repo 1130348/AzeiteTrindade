@@ -18,7 +18,7 @@ namespace LusiadasDAL
         //[Description("Hora")] public DateTime HR_CONS                       { get; set; }
         //[Description("Triagem")] public string TRIAGEM                      { get; set; }
         //[Description("Nota Méd.")] public string NOTA_MEDICA              { get; set; }
-      
+    
         [LDFTableIsVisible(false)] [Description("Cadeirão")] public string CADEIRAO_PRESENTE           { get; set; }
         [LDFTableOrder] [Description("Medico")] public string MEDICO_NOME { get; set; }
         [LDFTableOrder] [Description("Dt. Admissao")] public DateTime DT_CONS { get; set; }

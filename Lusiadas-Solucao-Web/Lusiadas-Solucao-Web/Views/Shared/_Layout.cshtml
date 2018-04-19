@@ -47,6 +47,7 @@
 
 
     <script src="~/Content/plugins/jQuery/jquery-3.3.1.min.js"></script>
+
     <link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/Content/css/fontawesome.min.css" rel="stylesheet" />
@@ -94,6 +95,8 @@
             //}
         });
 
+
+
     </script>
 
     <style>
@@ -105,8 +108,10 @@
             -moz-user-select: none; /* Firefox */
             -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+                                          supported by Chrome and Opera */
         }
+
+
 
         #actualiza {
             width: 35px;
@@ -127,9 +132,9 @@
         }
 
         #actualizaATP {
-            width: 35px;
-            height: 35px;
-            background-image: url(/Content/img/refreshTable.png);
+            width: 25px;
+            height: 25px;
+            background-image: url(/Content/img/refreshTable2.png);
             background-repeat: no-repeat;
             padding: 0;
             border: none;
@@ -155,9 +160,6 @@
             border: 1px solid #ddd; /* Add a grey border */
             margin-bottom: 12px; /* Add some space below the input */
         }
-
-   
-
     </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -196,7 +198,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/Content/img/doctorAvatar.png" class="user-image" alt="Imagem do utilizador" />
                                 <span class="hidden-xs">@ViewBag.UserName</span>
-                               
+
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header">
@@ -234,70 +236,70 @@
                 <ul class="sidebar-menu" id="ulSideBar">
                     <li class="header">MENU</li>
 
-                    @*{  
-                        foreach (var item in listOptionsMenu.Where(q => q.PARENT == 0))
-                        {
-                            if (parent == item.OPTION_ID)
+                    @*{
+                            foreach (var item in listOptionsMenu.Where(q => q.PARENT == 0))
                             {
-                                menuParentActive = "active";
-                            }  
-                            @:<li class="@menuParentActive">
-
-                            var href="#";
-                            if (item.ACCAO != null && item.CONTROLLER != null)
-                            {
-                                href = @Url.Action(item.ACCAO, item.CONTROLLER);
-                            }
-                            @:<a href="@href">
-
-                               @: <i class="fa fa-@item.ICON"></i> <span>@item.DESCR</span>
-                            @:</a>
-                            if (listOptionsMenu.Count(q => q.PARENT == item.OPTION_ID) > 0)
-                            {
-                                @:<ul class="treeview-menu menu-open">
-                                foreach (var itemChild in listOptionsMenu.Where(q => q.PARENT == item.OPTION_ID))
+                                if (parent == item.OPTION_ID)
                                 {
-                                    if(controllerDescr == itemChild.CONTROLLER || actionDescr == itemChild.ACCAO)
-                                    { 
-                                       menuActive= "active";
-                                       parent = itemChild.PARENT; 
-                                    }else{
-                                        menuActive="";
-                                    }   
-                                    <li class="@menuActive"><a href="@Url.Action(itemChild.ACCAO, itemChild.CONTROLLER)"><i class="fa fa-@itemChild.ICON"></i> @itemChild.DESCR</a></li>
+                                    menuParentActive = "active";
                                 }
-                                @:</ul>
+                                @:<li class="@menuParentActive">
+
+                                var href="#";
+                                if (item.ACCAO != null && item.CONTROLLER != null)
+                                {
+                                    href = @Url.Action(item.ACCAO, item.CONTROLLER);
+                                }
+                                @:<a href="@href">
+
+                                   @: <i class="fa fa-@item.ICON"></i> <span>@item.DESCR</span>
+                                @:</a>
+                                if (listOptionsMenu.Count(q => q.PARENT == item.OPTION_ID) > 0)
+                                {
+                                    @:<ul class="treeview-menu menu-open">
+                                    foreach (var itemChild in listOptionsMenu.Where(q => q.PARENT == item.OPTION_ID))
+                                    {
+                                        if(controllerDescr == itemChild.CONTROLLER || actionDescr == itemChild.ACCAO)
+                                        {
+                                           menuActive= "active";
+                                           parent = itemChild.PARENT;
+                                        }else{
+                                            menuActive="";
+                                        }
+                                        <li class="@menuActive"><a href="@Url.Action(itemChild.ACCAO, itemChild.CONTROLLER)"><i class="fa fa-@itemChild.ICON"></i> @itemChild.DESCR</a></li>
+                                    }
+                                    @:</ul>
+                                }
+                                @:</li>
                             }
-                            @:</li>
                         }
-                    }
                     *@
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "ATP" ? "active" : "")">
-        <a href="@Url.Action("Index", "ATP")">
-            <i class="fa fa-ambulance"></i> <span>Atendimento Permanente</span>
-        </a>
-    </li>
+                        <a href="@Url.Action("Index", "ATP")">
+                            <i class="fa fa-ambulance"></i> <span>Atendimento Permanente</span>
+                        </a>
+                    </li>
 
-@*
-    <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDaDor") ? "active" : "")">
-        <a href="#">
-            <i class="fa fa-bed"></i> <span>Internamento</span>
-        </a>
-        <ul class="treeview-menu menu-open">
-            <li class="@menuAccessPIM"><a href="@Url.Action("Index", "PIM")"><i class="fa fa-angle-right"></i> Vista Global</a></li>
-            <li class="@menuAccessConsultaDaDor" hidden="@menuCustomMedico"><a href="@Url.Action("Index", "ConsultaDaDor")"><i class="fa fa-angle-right"></i> Consulta Da Dor</a></li>
-        </ul>
-    </li>
-*@
+                    @*
+                        <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDaDor") ? "active" : "")">
+                            <a href="#">
+                                <i class="fa fa-bed"></i> <span>Internamento</span>
+                            </a>
+                            <ul class="treeview-menu menu-open">
+                                <li class="@menuAccessPIM"><a href="@Url.Action("Index", "PIM")"><i class="fa fa-angle-right"></i> Vista Global</a></li>
+                                <li class="@menuAccessConsultaDaDor" hidden="@menuCustomMedico"><a href="@Url.Action("Index", "ConsultaDaDor")"><i class="fa fa-angle-right"></i> Consulta Da Dor</a></li>
+                            </ul>
+                        </li>
+                    *@
 
-    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
-        <a href=" #">
-            <i class="fa fa-briefcase"></i> <span>Gestão Administrativa</span>
-        </a>
-        <ul class="treeview-menu menu-open">
-            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-angle-right"></i> Deslocações</a></li>
-        </ul>
-    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
+                        <a href=" #">
+                            <i class="fa fa-briefcase"></i> <span>Gestão Administrativa</span>
+                        </a>
+                        <ul class="treeview-menu menu-open">
+                            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-angle-right"></i> Deslocações</a></li>
+                        </ul>
+                    </li>
 
                     <li>
                         <a href="http://help" target="_blank" style="color: #E77B1F;">
@@ -315,7 +317,7 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 0.7
+                <b>Version</b> 0.8
             </div>
             <strong>Copyright &copy; 2018 Lusiadas.</strong> All rights reserved.
         </footer>
@@ -360,9 +362,9 @@
     <script src="~/Content/plugins/noUISlider/nouislider.min.js"></script>
     <!-- Select 2 -->
     <script src="~/Content/plugins/select2/select2.full.min.js"></script>
-
+    <script src="~/Content/css/bootbox.min.js"></script>
     @RenderSection("customJS", false)
-    <div class="loadingModal" ></div>
+    <div class="loadingModal" style="background-color:#5c5c3d;opacity:0.3;"></div>
 
     <!-- AdminLTE App -->
     <script src="~/Content/dist/js/app.min.js" type="text/javascript"></script>

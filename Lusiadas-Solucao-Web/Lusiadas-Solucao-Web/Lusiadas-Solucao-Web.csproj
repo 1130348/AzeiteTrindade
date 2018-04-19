@@ -193,6 +193,8 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Content Include="Content\bootstrap-waitingfor.js" />
+    <Content Include="Content\bootstrap-waitingfor.min.js" />
     <Content Include="Content\bootstrap\css\bootstrap.css" />
     <Content Include="Content\bootstrap\css\bootstrap.min.css" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
@@ -200,6 +202,7 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\bootstrap\js\npm.js" />
     <Content Include="Content\ajaxWait.gif" />
+    <Content Include="Content\css\bootbox.min.js" />
     <Content Include="Content\css\cssLDF.min.css" />
     <Content Include="Content\css\cssPIM.min.css" />
     <Content Include="Content\css\fa-brands.css" />
@@ -228,6 +231,7 @@
     <Content Include="Content\img\pesq.png" />
     <Content Include="Content\img\pill.png" />
     <Content Include="Content\img\refreshTable.png" />
+    <Content Include="Content\img\refreshTable2.png" />
     <Content Include="Content\img\rm.png" />
     <Content Include="Content\img\ultra.png" />
     <Content Include="Content\img\xcat.png" />
@@ -349,6 +353,7 @@
     <Content Include="Content\plugins\select2\select2.js" />
     <Content Include="Content\plugins\select2\select2.min.css" />
     <Content Include="Content\plugins\select2\select2.min.js" />
+    <Content Include="Content\waitingfor.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\plugins\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="Content\plugins\bootstrap-slider\slider.css" />

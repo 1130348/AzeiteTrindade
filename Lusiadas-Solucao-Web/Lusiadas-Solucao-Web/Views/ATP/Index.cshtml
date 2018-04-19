@@ -7,6 +7,29 @@
 <link href="/Content/css/ldfTable.min.css" rel="stylesheet" />
 <script src="/Content/js/ldfTable.min.js"></script>
 
+<script type="text/javascript">
+
+    $(document).ajaxStart(function () {
+        $('body').addClass("loading");
+
+    });
+    $(document).ajaxStop(function () {
+        $('body').removeClass("loading");
+
+    });
+
+    $(document).ajaxError(function (e, jqxhr, settings, exception) {
+        $('body').removeClass("loading");
+
+        //e.stopPropagation();
+        //if (jqxhr != null) {
+        //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
+        //    window.location = "/";
+        //}
+    });
+
+</script>
+
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -28,7 +51,7 @@
             <!-- small box -->
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h3 id="numDoentes">@Globals.nDoentes</h3>
+                    <h3 id="numDoentes">Sem Dados</h3>
                     <p>Doentes Presentes</p>
                 </div>
                 <div class="icon">
@@ -40,7 +63,7 @@
             <!-- small box -->
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3 id="semTriagem">@Globals.semTriagem</h3>
+                    <h3 id="semTriagem">Sem Dados</h3>
                     <p>Sem Triagem</p>
                 </div>
                 <div class="icon">
@@ -52,7 +75,7 @@
             <!-- small box -->
             <div class="small-box bg-orange">
                 <div class="inner">
-                    <h3 id="semNota">@Globals.semNota</h3>
+                    <h3 id="semNota">Sem Dados</h3>
                     <p>Sem Nota Médica</p>
                 </div>
                 <div class="icon">
@@ -67,17 +90,22 @@
         <form action="#" method="post">
             <div class="box box-default">
                 <div class="box-body">
-                    <div class="form-group">
-                        <label>
-                            <input type="button" onclick="startRefresh()" id="actualizaATP" />
+                    <div style="max-width:300px;max-height:40px;margin-left:2.5%;">
+                        <div style="float:left;">
+                            <label>
+                                <input type="button" onclick="startRefresh()" id="actualizaATP" />
 
-                        </label>
-                        @{ DateTime localDate = DateTime.Now; string data = localDate.Hour + ":" + localDate.Minute + ":" + localDate.Second;}
-                        <label id="lastupdate">
-                            Última Actualização: @data
-                        </label>
+                            </label>
+                        </div>
+                        <div style="float:left;margin-left:4%;">
+                            @{ DateTime localDate = DateTime.Now; string data = localDate.Hour + ":" + localDate.Minute + ":" + localDate.Second;}
+                            <label id="lastupdate">
+                                Última Actualização: @data
+                            </label>
 
+                        </div>
                     </div>
+
                     <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal" })</div>
                 </div>
             </div>
@@ -85,6 +113,7 @@
     </div>
 </section>
 <div class="loadingModal"></div>
+
 
 
 @section customJS
@@ -122,9 +151,10 @@
                 type: "get",
                 cache: false,
                  success: function (result) {
-                  
+
                      LDFTableRenderBody(result, 'atpTable');
-                     
+
+
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log(xhr);
@@ -139,7 +169,7 @@
 
         function startRefresh() {
 
-       
+
 
            // setTimeout(startRefresh, 30000);
             var date = new Date;
@@ -162,9 +192,10 @@
             $("#lastupdate").append("Última Actualização: " + hour + ":" + minutes + ":" + seconds);
 
             getDados();
+         
 
             //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
-            RefreshATPTable();
+            
 
 
         }
@@ -192,6 +223,8 @@
 
                 $("#semNota").empty();
                 $("#semNota").append(semNota);
+
+                RefreshATPTable();
 
             },
             timeout: 10000,

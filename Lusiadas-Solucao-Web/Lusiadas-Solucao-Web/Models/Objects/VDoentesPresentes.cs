@@ -15,10 +15,10 @@ namespace LusiadasSolucaoWeb.Models
         [Description("Doente")] [LDFTableJoin("DOENTE")] [LDFTableOrder] [LDFTableKey] public string T_DOENTE { get; set; }
         [Key, Column(Order = 0)] [LDFTableIsVisible(false)] public string DOENTE        { get; set; }
         [Description("Nome")] [LDFTableOrder] public string NOME    { get; set; }
-        [LDFTableIsVisible(false)] public Nullable<System.DateTime> DT_CONS { get; set; }
-        [Description("Episódio")] public string T_EPISODIO { get; set; }
-        [Description("Data Consulta")] public string HR_CONS { get; set; }
-        [Description("Local Origem")] public string DESCR_SERV { get; set; }
+        [LDFTableOrder] [LDFTableIsVisible(false)] public Nullable<System.DateTime> DT_CONS { get; set; }
+        [LDFTableOrder] [Description("Episódio")] public string T_EPISODIO { get; set; }
+        [LDFTableOrder] [Description("Data Consulta")] public string HR_CONS { get; set; }
+        [LDFTableOrder] [Description("Local Origem")] public string DESCR_SERV { get; set; }
         [LDFTableIsVisible(false)] public int? PROD { get; set; }
 
         [LDFTableIsVisible(false)] public int? TPROD { get; set; }

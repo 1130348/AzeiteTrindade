@@ -237,59 +237,59 @@
                     <li class="header">MENU</li>
 
                     @*{
-                            foreach (var item in listOptionsMenu.Where(q => q.PARENT == 0))
-                            {
-                                if (parent == item.OPTION_ID)
-                                {
-                                    menuParentActive = "active";
-                                }
-                                @:<li class="@menuParentActive">
+            foreach (var item in listOptionsMenu.Where(q => q.PARENT == 0))
+            {
+                if (parent == item.OPTION_ID)
+                {
+                    menuParentActive = "active";
+                }
+                @:<li class="@menuParentActive">
 
-                                var href="#";
-                                if (item.ACCAO != null && item.CONTROLLER != null)
-                                {
-                                    href = @Url.Action(item.ACCAO, item.CONTROLLER);
-                                }
-                                @:<a href="@href">
+                var href="#";
+                if (item.ACCAO != null && item.CONTROLLER != null)
+                {
+                    href = @Url.Action(item.ACCAO, item.CONTROLLER);
+                }
+                @:<a href="@href">
 
-                                   @: <i class="fa fa-@item.ICON"></i> <span>@item.DESCR</span>
-                                @:</a>
-                                if (listOptionsMenu.Count(q => q.PARENT == item.OPTION_ID) > 0)
-                                {
-                                    @:<ul class="treeview-menu menu-open">
-                                    foreach (var itemChild in listOptionsMenu.Where(q => q.PARENT == item.OPTION_ID))
-                                    {
-                                        if(controllerDescr == itemChild.CONTROLLER || actionDescr == itemChild.ACCAO)
-                                        {
-                                           menuActive= "active";
-                                           parent = itemChild.PARENT;
-                                        }else{
-                                            menuActive="";
-                                        }
-                                        <li class="@menuActive"><a href="@Url.Action(itemChild.ACCAO, itemChild.CONTROLLER)"><i class="fa fa-@itemChild.ICON"></i> @itemChild.DESCR</a></li>
-                                    }
-                                    @:</ul>
-                                }
-                                @:</li>
-                            }
+                   @: <i class="fa fa-@item.ICON"></i> <span>@item.DESCR</span>
+                @:</a>
+                if (listOptionsMenu.Count(q => q.PARENT == item.OPTION_ID) > 0)
+                {
+                    @:<ul class="treeview-menu menu-open">
+                    foreach (var itemChild in listOptionsMenu.Where(q => q.PARENT == item.OPTION_ID))
+                    {
+                        if(controllerDescr == itemChild.CONTROLLER || actionDescr == itemChild.ACCAO)
+                        {
+                           menuActive= "active";
+                           parent = itemChild.PARENT;
+                        }else{
+                            menuActive="";
                         }
+                        <li class="@menuActive"><a href="@Url.Action(itemChild.ACCAO, itemChild.CONTROLLER)"><i class="fa fa-@itemChild.ICON"></i> @itemChild.DESCR</a></li>
+                    }
+                    @:</ul>
+                }
+                @:</li>
+            }
+        }
                     *@
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "ATP" ? "active" : "")">
                         <a href="@Url.Action("Index", "ATP")">
-                            <i class="fa fa-ambulance"></i> <span>Atendimento Permanente</span>
+                            <i class="fa fa-ambulance"></i> <span style="width:200px;">Atendimento Permanente </span>
                         </a>
                     </li>
 
                     @*
-                        <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDaDor") ? "active" : "")">
-                            <a href="#">
-                                <i class="fa fa-bed"></i> <span>Internamento</span>
-                            </a>
-                            <ul class="treeview-menu menu-open">
-                                <li class="@menuAccessPIM"><a href="@Url.Action("Index", "PIM")"><i class="fa fa-angle-right"></i> Vista Global</a></li>
-                                <li class="@menuAccessConsultaDaDor" hidden="@menuCustomMedico"><a href="@Url.Action("Index", "ConsultaDaDor")"><i class="fa fa-angle-right"></i> Consulta Da Dor</a></li>
-                            </ul>
-                        </li>
+        <li class="@((ViewContext.RouteData.Values["Controller"].ToString() == "PIM" || ViewContext.RouteData.Values["Controller"].ToString() == "ConsultaDaDor") ? "active" : "")">
+            <a href="#">
+                <i class="fa fa-bed"></i> <span>Internamento</span>
+            </a>
+            <ul class="treeview-menu menu-open">
+                <li class="@menuAccessPIM"><a href="@Url.Action("Index", "PIM")"><i class="fa fa-angle-right"></i> Vista Global</a></li>
+                <li class="@menuAccessConsultaDaDor" hidden="@menuCustomMedico"><a href="@Url.Action("Index", "ConsultaDaDor")"><i class="fa fa-angle-right"></i> Consulta Da Dor</a></li>
+            </ul>
+        </li>
                     *@
 
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
@@ -297,8 +297,18 @@
                             <i class="fa fa-briefcase"></i> <span>Gestão Administrativa</span>
                         </a>
                         <ul class="treeview-menu menu-open">
-                            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-angle-right"></i> Deslocações</a></li>
+                            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-plane"></i> Deslocações</a></li>
+                            @*<li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-coffee"></i> Teste</a></li>*@
                         </ul>
+                      
+                    </li>
+
+                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
+                        <a href="/Dash" target="_blank">
+                            <i class="fa fa-line-chart"></i> <span>Live Dashboard</span>
+                        </a>
+                
+                       
                     </li>
 
                     <li>

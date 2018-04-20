@@ -73,7 +73,7 @@ namespace LusiadasSolucaoWeb.Models
                 }
                 deslocActive = "";
 
-                if ((Generic.GetItemValue(item, "COD_SERV") != Generic.GetItemValue(item, "U_LOCAL")) && (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL"))))
+                if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")))
                     deslocActive = "active";
 
                 selectValencias = "<select data-select-row='" + tdoente + "_" + doente + "' class='infad-selected-item " + deslocActive + "' data-previous-elem='0'>";
@@ -140,10 +140,13 @@ namespace LusiadasSolucaoWeb.Models
 
                 modalInfo = "";
                 if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")))
+                {
                     modalInfo = "data-toggle='modal' data-target='#modal-desloc-timeline' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "'";
-                if (deslocActive=="active") {
-                    string infoValue = "<a " + modalInfo + " class='fa fa-info-circle fa-lg " + (String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")) ? "text-muted" : "text-primary") + " infADModalDesloc' title='Histórico de movimentações' style='padding-left:7px;'></a>";
-                    selectValencias += infoValue;
+                    if (deslocActive == "active")
+                    {
+                        string infoValue = "<a " + modalInfo + " class='fa fa-info-circle fa-lg " + (String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")) ? "text-muted" : "text-primary") + " infADModalDesloc' title='Histórico de movimentações' style='padding-left:7px;'></a>";
+                        selectValencias += infoValue;
+                    }
                 }
                 item.rowItems.First(q => q.itemColumnName == "LOCAL_ATUAL").itemValue = selectValencias;
 

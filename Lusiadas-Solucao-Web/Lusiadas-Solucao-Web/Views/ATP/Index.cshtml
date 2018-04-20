@@ -153,6 +153,7 @@
                  success: function (result) {
 
                      LDFTableRenderBody(result, 'atpTable');
+                    
 
 
                 },
@@ -239,9 +240,13 @@
 
 
         function RefreshATPTable() {
+
             LDFTableResetCounter("atpTable");
             RefreshData();
 
+            //$("#sortDesc").removeClass("active");
+
         }
+
     </script>
 }

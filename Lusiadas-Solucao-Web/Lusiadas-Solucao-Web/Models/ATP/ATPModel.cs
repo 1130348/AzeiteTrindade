@@ -238,7 +238,7 @@ namespace LusiadasSolucaoWeb.Models
                     else
                     {
 
-                        if (analisesRealizadas >= analisesPedidas && analisesEntregues>=analisesPedidas)
+                        if (analisesRealizadas >= analisesPedidas)
                         {
   
                                 anal = "<div class='row'>";
@@ -247,7 +247,7 @@ namespace LusiadasSolucaoWeb.Models
                                 item.rowItems.First(q => q.itemColumnName == "ANALISES_OK").itemValue = anal;         
 
                         }
-                        else if (analisesEntregues == 0)
+                        else if (analisesEntregues < analisesPedidas)
                         {
 
                             anal = "<div class='row'>";
@@ -338,7 +338,7 @@ namespace LusiadasSolucaoWeb.Models
                     int imReal = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS"));
                     int imPedi = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS"));
                     int imDesloc = Convert.ToInt32(Generic.GetItemValue(item, "IMAG_DESLOC"));
-                    if (imReal >= imPedi && imDesloc >=imPedi)
+                    if (imReal >= imPedi )
                     {
                         nota = "<div class='row'>";
             
@@ -446,7 +446,7 @@ namespace LusiadasSolucaoWeb.Models
 
                         
                     }
-                    else if (imDesloc==0)
+                    else if (imDesloc<imPedi)
                     {
 
                         nota = "<div class='row'>";
@@ -716,7 +716,7 @@ namespace LusiadasSolucaoWeb.Models
                     {
 
                     
-                        if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) && Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_DESLOC")))
+                        if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS").Equals(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) )
                         {
                             nota = "<div class='row'>";
                             nota += "<div class='col-xs-12'>" + "<font color='#00cc00'>" + Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") + "</font>" + " </div>";

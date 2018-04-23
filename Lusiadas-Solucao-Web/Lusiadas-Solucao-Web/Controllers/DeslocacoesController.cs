@@ -112,19 +112,19 @@ namespace LusiadasSolucaoWeb.Controllers
         #region Ajax Methods
 
         [HttpPost]
-        public JsonResult UpdateDeslocRow(string itemRow, string deslocCod)
+        public JsonResult UpdateDeslocRow(string itemRow, string deslocCod, string numCons)
         {
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
             DeslocacoesModel infADTable = new DeslocacoesModel();
-            bool res = infADTable.UpdateRow(uinfo, itemRow, deslocCod);
+            bool res = infADTable.UpdateRow(uinfo, itemRow, deslocCod,numCons);
             return Json(res);
         }
 
         [HttpGet]
-        public PartialViewResult ShowDeslocTimeLine(string tdoente, string doente)
+        public PartialViewResult ShowDeslocTimeLine(string tdoente, string doente,string numCons)
         {
             DeslocHistModel myModal = new DeslocHistModel();
-            myModal.LoadHistDesloc(tdoente, doente);
+            myModal.LoadHistDesloc(tdoente, doente,numCons);
             return PartialView("_timeLine", myModal.listDesloc);
         }
 
@@ -204,12 +204,12 @@ namespace LusiadasSolucaoWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateDeslocProd(string itemRow, string selDest)
+        public JsonResult UpdateDeslocProd(string itemRow, string selDest,string numCons)
         {
             DeslocProdModel prod = new DeslocProdModel();
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
 
-            bool res = prod.UpdateRow(uinfo, prod.doente,prod.tdoente, selDest);
+            bool res = prod.UpdateRow(uinfo, prod.doente,prod.tdoente, selDest,numCons);
 
             return Json(res);
         }

@@ -388,10 +388,12 @@
 
             var selItem = $(this).attr("data-previous-elem");
             var itemRow = $(this).attr("data-select-row");
+            var pacNcons = $(this).attr("value");
             var curobj = this;
             var valor = $(this).val();
      
             var isto = this;
+
             
 
             var isConfirmed = bootbox.confirm({
@@ -412,7 +414,7 @@
 
                             $.ajax({
                                 url: '@Url.Action("UpdateDeslocRow", "Deslocacoes")',
-                                data: { "itemRow": itemRow, "deslocCod": valor},
+                                data: { "itemRow": itemRow, "deslocCod": valor, "numCons": pacNcons },   //ir buscar ncons a algures
                                 type: "post",
                                 cache: false,
                                 success: function (result) {
@@ -448,11 +450,12 @@
 
             var tDoente = $(this).attr("data-tdoente");
             var doente = $(this).attr("data-doente");
+            var pacNcons = $(this).attr("value");
             var nomeDoente = $(this).attr("data-nome");
 
             $.ajax({
                 url: '@Url.Action("ShowDeslocTimeLine", "Deslocacoes")',
-                data: { "tdoente": tDoente, "doente": doente },
+                data: { "tdoente": tDoente, "doente": doente, "numCons": pacNcons },
                 type: "GET",
                 cache: false,
                 success: function (result) {

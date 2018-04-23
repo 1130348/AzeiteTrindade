@@ -62,21 +62,21 @@ namespace LusiadasSolucaoWeb.Models
 
                 item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = String.Format("{0} {1}", dtConsulta, Generic.GetItemValue(item, "HR_CONS"));
                 if (nProd>0) {
-                    item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + Generic.GetItemValue(item, "N_CONS")
-                        + "' data-tEpis='" + tepisodio + "' data-epis='" + Generic.GetItemValue(item, "EPISODIO") + "' class='fa fa-flask fa-lg infADModalDeslocProd' title='Movimentações de produtos'></a>";
+                    item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + n_cons
+                        + "' data-tEpis='" + tepisodio + "' data-epis='" + episodio + "' class='fa fa-flask fa-lg infADModalDeslocProd' title='Movimentações de produtos'></a>";
                 }
                 else
                 {
                     //item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = null;
-                    item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a id='show' data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + Generic.GetItemValue(item, "N_CONS")
-                    + "' data-tEpis='" + tepisodio + "' data-epis='" + Generic.GetItemValue(item, "EPISODIO") + "' class='fa fa-plus fa-lg text-gray infADModalDeslocProd' title='Movimentações de produtos'></a>";
+                    item.rowItems.First(q => q.itemColumnName == "COL_CLICKABLE").itemValue = "<a id='show' data-toggle='modal' data-target='#modal-desloc-prod' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' data-codserv='" + Generic.GetItemValue(item, "COD_SERV") + "' data-ultloc='" + Generic.GetItemValue(item, "U_LOCAL") + "' data-ncons='" + n_cons
+                    + "' data-tEpis='" + tepisodio + "' data-epis='" + episodio + "' class='fa fa-plus fa-lg text-gray infADModalDeslocProd' title='Movimentações de produtos'></a>";
                 }
                 deslocActive = "";
 
                 if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")))
                     deslocActive = "active";
 
-                selectValencias = "<select data-select-row='" + tdoente + "_" + doente + "' class='infad-selected-item " + deslocActive + "' data-previous-elem='0'>";
+                selectValencias = "<select data-select-row='" + tdoente + "_" + doente + "' value='"+n_cons+"'" +" class='infad-selected-item " + deslocActive + "' data-previous-elem='0'>";
                 if (String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")))
                     selectValencias += "<option disabled value='0' " + (String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")) ? "selected" : "") + ">Sem deslocação</option>";
                 else
@@ -141,7 +141,7 @@ namespace LusiadasSolucaoWeb.Models
                 modalInfo = "";
                 if (!String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")))
                 {
-                    modalInfo = "data-toggle='modal' data-target='#modal-desloc-timeline' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "'";
+                    modalInfo = "data-toggle='modal' data-target='#modal-desloc-timeline' data-tdoente='" + tdoente + "' data-doente='" + doente + "' data-nome='" + Generic.GetItemValue(item, "NOME") + "' value='" + n_cons+ "'" ;
                     if (deslocActive == "active")
                     {
                         string infoValue = "<a " + modalInfo + " class='fa fa-info-circle fa-lg " + (String.IsNullOrEmpty(Generic.GetItemValue(item, "U_LOCAL")) ? "text-muted" : "text-primary") + " infADModalDesloc' title='Histórico de movimentações' style='padding-left:7px;'></a>";
@@ -272,10 +272,19 @@ namespace LusiadasSolucaoWeb.Models
 
 
 
-        internal bool UpdateRow(UserInfo uinfo, string itemRow, string deslocCod)
+        internal bool UpdateRow(UserInfo uinfo, string itemRow, string deslocCod, string numCons)
         {
             DALDeslocacoes infDAL = new DALDeslocacoes();
-            VwDoentesPresentes doente = infDAL.GetDeslocUser(itemRow.Split('_')[0], itemRow.Split('_')[1]);
+            VwDoentesPresentes doente;
+            if (!String.IsNullOrEmpty(numCons))
+            {
+               doente = infDAL.GetDeslocUserComNcons(itemRow.Split('_')[0], itemRow.Split('_')[1],numCons); //add ncons
+            }
+            else
+            {
+                doente = infDAL.GetDeslocUser(itemRow.Split('_')[0], itemRow.Split('_')[1]); //add ncons
+            }
+            
 
             TblDesloc tbl = new TblDesloc();
             tbl.T_DOENTE = doente.T_DOENTE;

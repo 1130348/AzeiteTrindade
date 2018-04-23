@@ -29,7 +29,18 @@ namespace LusiadasSolucaoWeb.Models
             epis = (string)HttpContext.Current.Session["DeslocProd_EPIS"];
             serv = (string)HttpContext.Current.Session["DeslocProd_COD_SERV"];
 
-            string query = "T_DOENTE='" + tdoente + "' AND DOENTE='" + doente + "' AND T_EPISODIO='" + tEpis + "' AND EPISODIO='" + epis + "'";
+
+            string query="";
+            if (!String.IsNullOrEmpty(ncons))
+            {
+                query = "T_DOENTE='" + tdoente + "' AND DOENTE='" + doente + "' AND N_CONS='" + ncons + "' AND T_EPISODIO='" + tEpis + "' AND EPISODIO='" + epis + "'";
+            }
+            else
+            {
+                query = "T_DOENTE='" + tdoente + "' AND DOENTE='" + doente + "' AND T_EPISODIO='" + tEpis + "' AND EPISODIO='" + epis + "'";
+            }
+
+            
 
             pageSize    = 5;
             dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], "MEDICO", "V_DESLOC_PROD_V2", "*", query, "DOENTE", null, null);
@@ -72,10 +83,10 @@ namespace LusiadasSolucaoWeb.Models
 
         #region Row Methods
 
-        internal bool UpdateRow(UserInfo uinfo, string doenten,string tdoente, string deslocCod)
+        internal bool UpdateRow(UserInfo uinfo, string doenten,string tdoente, string deslocCod,string numCons)
         {
             DALDeslocacoes infDAL = new DALDeslocacoes();
-            VwDeslocProd doente = infDAL.GetDeslocProdUser(tdoente, doenten);
+            VwDeslocProd doente = infDAL.GetDeslocProdUser(tdoente, doenten,numCons);
 
 
             TblDeslocProd tbl = new TblDeslocProd();

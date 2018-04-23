@@ -14,12 +14,16 @@ namespace LusiadasSolucaoWeb.Models
         {
             DALPiso dal = new DALPiso();
             List<VwPisosIntern> listItems = dal.GetListPisos();
-            
-            listPisos = (from item in listItems
-                        select new Piso {
-                            DESCR_SERV  = String.Format("{0} ({1})", item.DESCR_SERV, item.COD_SERV),
-                            COD_SERV    = item.COD_SERV
-                        }).ToList();
+            if (listItems!=null)
+            {
+                listPisos = (from item in listItems
+                             select new Piso
+                             {
+                                 DESCR_SERV = String.Format("{0} ({1})", item.DESCR_SERV, item.COD_SERV),
+                                 COD_SERV = item.COD_SERV
+                             }).ToList();
+            }
+           
         }
     }
 

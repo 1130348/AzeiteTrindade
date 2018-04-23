@@ -70,12 +70,12 @@ namespace LusiadasDAL
             return res;
         }
 
-        public List<VwDesloc> GetHistDesloc(string tdoente, string doente)
+        public List<VwDesloc> GetHistDesloc(string tdoente, string doente, string numCons)
         {
             try
             {
                 DBDeslocacoesContext efInt = new DBDeslocacoesContext();
-                return efInt.vwDesloc.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente).ToList();
+                return efInt.vwDesloc.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente && q.N_CONS==numCons).ToList();
             }
             catch (Exception err)
             {
@@ -84,12 +84,12 @@ namespace LusiadasDAL
             return null;
         }
 
-        public List<VwDeslocProd> ListDeslocProd(string tdoente, string doente)
+        public List<VwDeslocProd> ListDeslocProd(string tdoente, string doente, string numCons)
         {
             try
             {
                 DBDeslocacoesContext efInt = new DBDeslocacoesContext();
-                return efInt.vwDeslocProd.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente).ToList();
+                return efInt.vwDeslocProd.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente && q.N_CONS==numCons).ToList();
             }
             catch (Exception err)
             {
@@ -122,7 +122,21 @@ namespace LusiadasDAL
             try
             {
                 DBDeslocacoesContext efInt = new DBDeslocacoesContext();
-                List<VwDoentesPresentes> list = efInt.vwDoentesPresentes.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente).OrderByDescending(q => q.DT_CONS).ToList();
+                List<VwDoentesPresentes> list = efInt.vwDoentesPresentes.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente  ).OrderByDescending(q => q.DT_CONS).ToList();//&& q.N_CONS ==
+                return list.First();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public VwDoentesPresentes GetDeslocUserComNcons(string tdoente, string doente,string ncons)
+        {
+            try
+            {
+                DBDeslocacoesContext efInt = new DBDeslocacoesContext();
+                List<VwDoentesPresentes> list = efInt.vwDoentesPresentes.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente && q.N_CONS == ncons).OrderByDescending(q => q.DT_CONS).ToList();//&& q.N_CONS ==
                 return list.First();
             }
             catch
@@ -134,12 +148,24 @@ namespace LusiadasDAL
         #endregion
 
 
-        public VwDeslocProd GetDeslocProdUser(string tdoente, string doente)
+        public VwDeslocProd GetDeslocProdUser(string tdoente, string doente, string numCons)
         {
             try
             {
                 DBDeslocacoesContext efInt = new DBDeslocacoesContext();
-                List<VwDeslocProd> list = efInt.vwDeslocProd.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente).OrderByDescending(q => q.DT_CRI).ToList();
+                List<VwDeslocProd> list;
+
+                if (!String.IsNullOrEmpty(numCons))
+                {
+                    list= efInt.vwDeslocProd.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente && q.N_CONS == numCons).OrderByDescending(q => q.DT_CRI).ToList();
+                }
+                else
+                {
+
+                    list = efInt.vwDeslocProd.Where(q => q.T_DOENTE == tdoente && q.DOENTE == doente).OrderByDescending(q => q.DT_CRI).ToList();
+                }
+               
+               
                 return list.First();
             }
             catch

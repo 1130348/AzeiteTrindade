@@ -10,10 +10,10 @@ namespace LusiadasSolucaoWeb.Models
     {
         public List<Deslocacao> listDesloc = new List<Deslocacao>();
 
-        public void LoadHistDesloc(string tdoente, string doente)
+        public void LoadHistDesloc(string tdoente, string doente, string numCons)
         {
             DALDeslocacoes dal = new DALDeslocacoes();
-            List<VwDesloc> listItems = dal.GetHistDesloc(tdoente, doente);
+            List<VwDesloc> listItems = dal.GetHistDesloc(tdoente, doente,numCons);
 
             listDesloc = (from vw in listItems  
                           select new Deslocacao

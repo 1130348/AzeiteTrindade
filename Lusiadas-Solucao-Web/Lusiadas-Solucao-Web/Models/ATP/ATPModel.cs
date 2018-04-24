@@ -376,7 +376,7 @@ namespace LusiadasSolucaoWeb.Models
 
                                 }
 
-                                if (name.ToUpper().Contains("MAGNE"))
+                                if (name.ToUpper().Contains("RESSO"))
                                 {
                                    
                                     nota += "<img src='/Content/img/rm.png' >";
@@ -427,7 +427,7 @@ namespace LusiadasSolucaoWeb.Models
 
                             }
 
-                            if (loc.ToUpper().Contains("MAGNE"))
+                            if (loc.ToUpper().Contains("RESSO"))
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";
@@ -446,7 +446,7 @@ namespace LusiadasSolucaoWeb.Models
 
                         
                     }
-                    else if (imDesloc<imPedi)
+                    else if (imDesloc<1)
                     {
 
                         nota = "<div class='row'>";
@@ -485,7 +485,7 @@ namespace LusiadasSolucaoWeb.Models
 
                                 }
 
-                                if (name.ToUpper().Contains("MAGNE"))
+                                if (name.ToUpper().Contains("RESSO"))
                                 {
 
                                     nota += "<img src='/Content/img/rm.png' >";
@@ -538,7 +538,7 @@ namespace LusiadasSolucaoWeb.Models
 
                             }
 
-                            if (loc.ToUpper().Contains("MAGNE"))
+                            if (loc.ToUpper().Contains("RESSO"))
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";
@@ -596,7 +596,7 @@ namespace LusiadasSolucaoWeb.Models
 
                                 }
 
-                                if (name.ToUpper().Contains("MAGNE"))
+                                if (name.ToUpper().Contains("RESSO"))
                                 {
 
                                     nota += "<img src='/Content/img/rm.png' >";
@@ -650,7 +650,7 @@ namespace LusiadasSolucaoWeb.Models
 
                             }
 
-                            if (loc.ToUpper().Contains("MAGNE"))
+                            if (loc.ToUpper().Contains("RESSO"))
                             {
                                 nota += "<div class='col-xs-12'>";
                                 nota += "<img src='/Content/img/rm.png'><br>";

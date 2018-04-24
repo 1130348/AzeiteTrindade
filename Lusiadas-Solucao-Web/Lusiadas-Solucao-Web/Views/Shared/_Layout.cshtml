@@ -297,13 +297,13 @@
                             <i class="fa fa-briefcase"></i> <span>Gestão Administrativa</span>
                         </a>
                         <ul class="treeview-menu menu-open">
-                            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-plane"></i> Deslocações</a></li>
+                            <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-plane"></i> Deslocações</a></li>
                             @*<li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-coffee"></i> Teste</a></li>*@
                         </ul>
                       
                     </li>
 
-                    <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
+                    <li >
                         <a href="/Dash" target="_blank">
                             <i class="fa fa-line-chart"></i> <span>Live Dashboard</span>
                         </a>

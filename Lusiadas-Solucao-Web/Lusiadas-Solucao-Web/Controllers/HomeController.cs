@@ -42,6 +42,7 @@ namespace LusiadasSolucaoWeb.Controllers
                 {
                     if (login.IsValid())
                     {
+                        Session[Constants.SS_LOCAL_CONN] = "BD" + login.LocalConnection + "QLD";
                         UserInfo uinfo = login.GetUserInfo();
                         if (String.IsNullOrEmpty(uinfo.numMecan))
                             ModelState.AddModelError("error", "Utilizador inexistente na listagem de pessoal hospitalar");

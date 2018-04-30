@@ -30,7 +30,27 @@ namespace LusiadasSolucaoWeb.Models
 
 
             //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
-            dbParams = new LDFTableDBParams("BDHLUQLD", "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
+            string nome = "";
+            try
+            {
+                if (String.IsNullOrEmpty(HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString()))
+                {
+                    nome = "BDHLUQLD";
+
+                }
+                else
+                {
+                    nome = HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString();
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                nome = "BDHLUQLD";
+            }
+           
+            dbParams = new LDFTableDBParams(nome, "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
             objType     = typeof(VwDashboardATP);
             //getDados();
 
@@ -45,7 +65,7 @@ namespace LusiadasSolucaoWeb.Models
            foreach(LDFTableHeader item in list_headers)
            {
                
-               if (item.headerID == "DT_CONS" || item.headerID == "COR_TRIAGEM" || item.headerID == "DT_NOTA_MEDICA" || item.headerID == "LOCALIZACAO" || item.headerID == "MEDICO_NOME" || item.headerID == "DOENTE" || item.headerID == "ANALISES_OK" || item.headerID == "MEDICACAO_PRESCRITA_PCE" || item.headerID == "IMAGIOLOGIA_REQUESITADOS" || item.headerID == "ECG_REQUESITADOS" || item.headerID == "CEXTERNA_REQUISITADOS")
+               if (item.headerID == "DT_CONS" || item.headerID == "IMAGEM" || item.headerID == "COR_TRIAGEM" || item.headerID == "DT_NOTA_MEDICA" || item.headerID == "LOCALIZACAO" || item.headerID == "MEDICO_NOME" || item.headerID == "DOENTE" || item.headerID == "ANALISES_OK" || item.headerID == "MEDICACAO_PRESCRITA_PCE" || item.headerID == "IMAGIOLOGIA_REQUESITADOS" || item.headerID == "ECG_REQUESITADOS" || item.headerID == "CEXTERNA_REQUISITADOS")
                    item.headerStyle.Add("text-align", "center");
            }
         }
@@ -73,20 +93,43 @@ namespace LusiadasSolucaoWeb.Models
                 dtnasc = Generic.GetItemValue(item, "DT_NASC");
                 if (!String.IsNullOrEmpty(dtnasc))
                     curdate = String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(dtnasc));
-                nomeDescr = "<div class='row'>";
-                nomeDescr += "<div class='col-xs-12'>" + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i>" +Generic.GetItemValue(item, "NOME")+ " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")"+" </div>";
+                nomeDescr = "<div class='row' >";
+                nomeDescr += "<div class='col-xs-12' style='line-height: 120%;'>" + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i>" + Generic.GetItemValue(item, "NOME") + " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")";
+
+                if (!String.IsNullOrEmpty(curdate))
+                {
+                nomeDescr += "<br>";
+                nomeDescr += "<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS") + "</div>";
+
+                }
+                else
+                {
+                    nomeDescr += "</div>";
+                }
+
+                nomeDescr+=" </div>";
                 ///nomeDescr += "<br>"+"<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS");
                 //nomeDescr += "<div class='col-xs-12'>" + "<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS") + "</div>";
                 nomeDescr += "</div>";
 
-                if (!String.IsNullOrEmpty(curdate))
-                {
-                    nomeDescr += "<div class='row'>";
-                    nomeDescr += "<div class='col-xs-12'>" + "<b>Obs: </b>"+" " + Generic.GetItemValue(item, "OBS_CONS") +"</div>";
-                    nomeDescr += "</div>";
-                }
+                
                 
                 item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = nomeDescr;
+
+                string imagem = "";
+                if (Generic.GetItemValue(item, "COD_SERV").Equals("1154")|| Generic.GetItemValue(item, "COD_SERV").Equals("1112"))
+                {
+                    imagem = "<div class='row'>";
+                    imagem += "<div class='col-xs-12'>" + " <img src ='/Content/img/bandage.png' height ='36' width ='36'> " + " </div>";
+                    imagem += "</div>";
+                }
+                else
+                {
+                    imagem = "<div class='row'>";
+                    imagem += "<div class='col-xs-12'>" + "<i class='fa fa-minus text-gray' aria-hidden='true'></i>" + " </div>";
+                    imagem += "</div>";
+                }
+                item.rowItems.First(q => q.itemColumnName == "IMAGEM").itemValue = imagem;
 
                 curdate = "";
                 /*hora = Generic.GetItemValue(item, "HR_CONS");
@@ -142,7 +185,7 @@ namespace LusiadasSolucaoWeb.Models
              
                 admissao = String.Format("{0:HH:mm}", Convert.ToDateTime(dataAdm));
                 admissao2 = String.Format("{0:dd/MM}", Convert.ToDateTime(dataAdm));
-                item.rowItems.First(q => q.itemColumnName == "DT_CONS").itemValue = "<b>"+admissao2+" "+admissao +"</b>"+"<br>"+"há " + HowLong(Convert.ToDateTime(dataAdm));
+                item.rowItems.First(q => q.itemColumnName == "DT_CONS").itemValue = "<div class='col-xs-12' style='line-height: 120%;'> <b>" + admissao2+" "+admissao +"</b>"+"<br>"+"há " + HowLong(Convert.ToDateTime(dataAdm)) + "</div>";
 
 
                 string local = "";
@@ -153,35 +196,35 @@ namespace LusiadasSolucaoWeb.Models
                 {
                     case "ESPERA":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-blue' style='font-size:24px;margin-top:10px;'></i>" + 
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle text-blue' style='font-size:24px;margin-top:10px;'></i>" + 
                             "<br>"+ String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM")))+" </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
                     case "BOX":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle' style='color:#cccc00;font-size:24px;margin-top:10px;'></i>" +
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle' style='color:#cccc00;font-size:24px;margin-top:10px;'></i>" +
                             "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
                     case "RS":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-orange' style='font-size:24px;margin-top:10px;'></i>" +
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle text-orange' style='font-size:24px;margin-top:10px;'></i>" +
                             "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
                     case "ESPERAGP":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-circle text-green' style='font-size:24px;margin-top:10px;'></i>" +
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle text-green' style='font-size:24px;margin-top:10px;'></i>" +
                             "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
                     default:
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-grey' aria-hidden='true'></i>" + " </div>";
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-pause text-grey' aria-hidden='true'></i>" + " </div>";
                         local += "</div>";
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
@@ -349,39 +392,39 @@ namespace LusiadasSolucaoWeb.Models
                             
                             List<string> names = loc.Split(';').ToList<string>();
                             //names.Reverse();
-                            nota += "<div class='block' style='margin-bottom: 10px;'>";
+                           
                           
                             foreach (string name in names)
                             {
                                 if (name.ToUpper().Contains("RADIO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/xray.png' height='36' width='36'>";
-                                   
-                                   
+                                    nota += "</div>";
+
                                 }
 
                                 if (name.ToUpper().Contains("ECO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/ultra.png' height='36' width='36'>";
-                                   
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("AXIAL"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/xcat.png' height='36' width='36'>";
-                                   
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("RESSO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/rm.png' height='36' width='36'>";
-                                  
+                                    nota += "</div>";
 
                                 }
 
@@ -391,11 +434,11 @@ namespace LusiadasSolucaoWeb.Models
 
                
 
-                            nota += "</div>";
+                            
 
-                            nota += "<div class='block'>";
-                            nota += "<br><i class='fa fa-check text-green' aria-hidden='true' style='margin-bottom: 10px;'></i>";
-                            nota += "<br>" + (imReal) + "/" + (imPedi);
+                            nota += "<div class='block' style='line-height:150%;' >";
+                            nota += "<i class='fa fa-check text-green' aria-hidden='true'></i>";
+                            nota += " <br> " + (imReal) + "/" + (imPedi);
                             nota += "</div></div>";
 
                             item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
@@ -464,53 +507,52 @@ namespace LusiadasSolucaoWeb.Models
 
                             List<string> names = loc.Split(';').ToList<string>();
                             //names.Reverse();
-                            nota += "<div class='block' style='margin-bottom: 10px;'>";
+                   
                      
                             foreach (string name in names)
                             {
                                 if (name.ToUpper().Contains("RADIO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/xray.png' height='36' width='36'>";
-
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("ECO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/ultra.png' height='36' width='36'>";
-
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("AXIAL"))
                                 {
-                                    nota += "<br>";
-                                    nota += "<img src='/Content/img/xcat.png' height='36' width='36' >";
-
+                                    nota += "<div class='block'>";
+                                    nota += "<img src='/Content/img/xcat.png' height='36' width='36'>";
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("RESSO"))
                                 {
-                                    nota += "<br>";
+                                    nota += "<div class='block'>";
                                     nota += "<img src='/Content/img/rm.png' height='36' width='36'>";
-
+                                    nota += "</div>";
 
                                 }
 
 
-                             
+
 
                             }
 
-                            nota += "</div>";
 
-                            nota += "<div class='block'>";
-                            nota += "<br><i class='fa fa-pause text-orange' aria-hidden='true' style='margin-bottom: 10px;'></i>";
+                            nota += "<div class='block' style='line-height:150%;'>";
+                            nota += "<i class='fa fa-pause text-orange' aria-hidden='true' ></i>";
                             
-                            nota += "<br>" + (imReal) + "/" + (imPedi);
+                            nota +=" <br> " + (imReal) + " / " + (imPedi);
                             nota += "</div></div>";
 
                             item.rowItems.First(q => q.itemColumnName == "IMAGIOLOGIA_REQUESITADOS").itemValue = nota;
@@ -576,48 +618,48 @@ namespace LusiadasSolucaoWeb.Models
 
                             List<string> names = loc.Split(';').ToList<string>();
                             //names.Reverse();
-                            nota += "<div class='block' style='margin-bottom: 10px;'>";
+                    
                  
                             foreach (string name in names)
                             {
                                 if (name.ToUpper().Contains("RADIO"))
                                 {
-                                    nota += "<br>";
-                                    nota += "<img src='/Content/img/xray.png' height='36' width='36' style='margin-bottom:5px;'>";
-
+                                    nota += "<div class='block'>";
+                                    nota += "<img src='/Content/img/xray.png' height='36' width='36'>";
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("ECO"))
                                 {
-                                    nota += "<br>";
-                                    nota += "<img src='/Content/img/ultra.png' height='36' width='36' style='margin-bottom:5px;'>";
-
+                                    nota += "<div class='block'>";
+                                    nota += "<img src='/Content/img/ultra.png' height='36' width='36'>";
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("AXIAL"))
                                 {
-                                    nota += "<br>";
-                                    nota += "<img src='/Content/img/xcat.png' height='36' width='36' style='margin-bottom:5px;'>";
-
+                                    nota += "<div class='block'>";
+                                    nota += "<img src='/Content/img/xcat.png' height='36' width='36'>";
+                                    nota += "</div>";
 
                                 }
 
                                 if (name.ToUpper().Contains("RESSO"))
                                 {
-                                    nota += "<br>";
-                                    nota += "<img src='/Content/img/rm.png' height='36' width='36' style='margin-bottom:5px;'>";
-
+                                    nota += "<div class='block'>";
+                                    nota += "<img src='/Content/img/rm.png' height='36' width='36'>";
+                                    nota += "</div>";
 
                                 }
 
 
                             }
-                            nota +="</div>";
+                    
 
-                            nota += "<div class='block'>";
-                            nota += "<br><i class='fa fa-play' aria-hidden='true' style='color:#cccc00;' style='margin-bottom: 10px;'></i>";
+                            nota += "<div class='block' style='line-height:150%;'>";
+                            nota += "<i class='fa fa-play' aria-hidden='true' style='color:#cccc00;'></i>";
                             nota += "<br>" + (imReal) + "/" + (imPedi);
                             nota += "</div></div>";
 

@@ -16,7 +16,7 @@ namespace LusiadasDAL
         //a escolha da BD ainda nao é dinamica porque há metodos que devem ser da BD escolhida e outros da BD do utilizador
         //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
         public DBInternamentoContext()
-            : base("name=BDHLUQLD")
+            : base("name=" + HttpContext.Current.Session["CONN"])
         {
             Database.SetInitializer<DBInternamentoContext>(null);
         }

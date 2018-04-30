@@ -224,6 +224,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\ionicons.svg" />
     <Content Include="Content\img\addDesloc.png" />
+    <Content Include="Content\img\bandage.png" />
     <Content Include="Content\img\cleanFilters.png" />
     <Content Include="Content\img\clinic2.png" />
     <Content Include="Content\img\doctorAvatar.png" />

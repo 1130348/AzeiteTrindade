@@ -2,7 +2,15 @@
     string actionDescr      = ViewContext.RouteData.Values["Action"].ToString();
     string controllerDescr  = ViewContext.RouteData.Values["Controller"].ToString();
     int parent              = 0;
-    List<LusiadasDAL.TblOptionsMenu> listOptionsMenu = ((LusiadasSolucaoWeb.Models.UserInfo)Session[Constants.SS_USER]).listOptions;
+
+    if (Session[Constants.SS_USER]!=null) {
+        List<LusiadasDAL.TblOptionsMenu> listOptionsMenu = ((LusiadasSolucaoWeb.Models.UserInfo)Session[Constants.SS_USER]).listOptions;
+    }
+    else
+    {
+        List<LusiadasDAL.TblOptionsMenu> listOptionsMenu = new List<LusiadasDAL.TblOptionsMenu>();
+    }
+
 
     string menuActive = "", menuParentActive = "";
     //string menuCustomMedico = "false";
@@ -111,6 +119,27 @@
                                           supported by Chrome and Opera */
         }
 
+        .container {
+            width: auto;
+            height: auto; /*auto*/
+            /*position: relative;*/
+            text-align: center;
+            position: relative;
+            /*margin-bottom: 10px;*/
+        }
+
+        .block {
+            height: auto;
+            width: auto;
+            /*display: inline-table;*/
+            display: inline-block;
+            vertical-align: middle;
+            /*margin: auto;*/
+            margin-left: 10px;
+            margin-right: 10px;
+           
+        }   
+
 
 
         #actualiza {
@@ -123,12 +152,14 @@
         }
 
         #pesquisa {
-            width: 15px;
-            height: 15px;
+            width: 24px;
+            height: 24px;
             background-image: url(/Content/img/pesq.png);
             background-repeat: no-repeat;
             padding: 0;
             border: none;
+            margin: 10px;
+     
         }
 
         #actualizaATP {
@@ -293,18 +324,18 @@
                     *@
 
                     <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")">
-                        <a href=" #">
-                            <i class="fa fa-briefcase"></i> <span>Gestão Administrativa</span>
+                        <a href="@Url.Action("Index", "Deslocacoes")">
+                            <i class="fa fa-briefcase"></i> <span>Deslocações</span>
                         </a>
-                        <ul class="treeview-menu menu-open">
+                        @*<ul class="treeview-menu menu-open">
                             <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Deslocacoes" ? "active" : "")"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-plane"></i> Deslocações</a></li>
-                            @*<li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-coffee"></i> Teste</a></li>*@
-                        </ul>
+                            <li class="@menuActive"><a href="@Url.Action("Index", "Deslocacoes")"><i class="fa fa-coffee"></i> Teste</a></li>
+                        </ul>*@
                       
                     </li>
 
                     <li >
-                        <a href="/Dash" target="_blank">
+                        <a href="/Dashboard" target="_blank">
                             <i class="fa fa-line-chart"></i> <span>Live Dashboard</span>
                         </a>
                 

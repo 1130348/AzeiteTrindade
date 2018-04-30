@@ -157,6 +157,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Controllers\ATPDashController.cs" />
     <Compile Include="Controllers\ATPController.cs" />
     <Compile Include="Controllers\ConsultaDaDorController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ATP\ATPDashModel.cs" />
     <Compile Include="Models\ATP\ATPModel.cs" />
     <Compile Include="Models\ConsultaDaDor\AnestesistasModel.cs" />
     <Compile Include="Models\ConsultaDaDor\ConsultaDaDorModel.cs" />
@@ -1117,6 +1119,8 @@
     <Content Include="Views\ConsultaDaDor\_historicoDor.cshtml" />
     <Content Include="Views\ConsultaDaDor\_formularioEdit.cshtml" />
     <Content Include="Views\ATP\Dash.cshtml" />
+    <Content Include="Views\ATPDash\Dash.cshtml" />
+    <Content Include="Views\ATPDash\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

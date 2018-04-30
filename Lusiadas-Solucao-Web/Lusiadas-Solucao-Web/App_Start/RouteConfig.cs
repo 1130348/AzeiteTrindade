@@ -13,9 +13,14 @@ namespace LusiadasSolucaoWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            
 
-            routes.MapRoute("", "Dash",
-                 new { controller = "ATP", action = "Dash" });
+            routes.MapRoute("", "Dash/{num}",
+                 new { controller = "ATPDash", action = "Dash", num = UrlParameter.Optional });
+
+            routes.MapRoute("", "Dashboard",
+                 new { controller = "ATP", action = "Dash", num = UrlParameter.Optional });
+
 
             routes.MapRoute(
                 name: "Default",

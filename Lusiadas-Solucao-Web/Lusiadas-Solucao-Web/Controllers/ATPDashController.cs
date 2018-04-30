@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace LusiadasSolucaoWeb.Controllers
 {
-    public class ATPController : LDFTableController
+    public class ATPDashController : LDFTableController
     {
         UserInfo uinfo = new UserInfo();
 
@@ -20,20 +20,7 @@ namespace LusiadasSolucaoWeb.Controllers
         //[LogActionHandler(0, "Index ATP")]
         //[LogErrorHandler(Constants.WEB_GENERIC_ERROR)]
         //[Route("/Dash", Name = "DashBoard")]
-        public ActionResult Index()
-        {
-            if (Session[Constants.SS_USER]!=null)
-            {
-               
-                ATPModel atpTable = new ATPModel();
-                return View(atpTable);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            
-        }
+     
 
         /*public ActionResult Dashboard()
         {
@@ -45,51 +32,30 @@ namespace LusiadasSolucaoWeb.Controllers
         }*/
 
         //[Route("/Dash/{num}", Name = "DashBoard")]
-        public ActionResult Dash()
+        public ActionResult Dash(int num)
         {
-           
-            ATPModel atpTable = new ATPModel();
-            return View(atpTable);        
+            Session.Remove("Tabela");
+
+
+            Session["Tabela"] = num;
+            if (num==null||num<=0)
+            {
+
+
+                ATPDashModel atpTable = new ATPDashModel(20);
+                return View(atpTable);
+            }
+            else
+            {
+                
+                ATPDashModel atpTable = new ATPDashModel(num);
+                return View(atpTable);
+            }
+            
             
         }
 
-        [HttpGet]
-        public JsonResult LoadTable()
-        {
-            //if (Session[Constants.SS_USER] != null)
-            //{
-            //    uinfo = (UserInfo)Session[Constants.SS_USER];
-            //}
-
-            //int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings["PIMRowsPerPage"]);
-
-
-            //atpTable.LoadRows();
-            //Session["FULL_TABLE"] = Session["NEW_TABLE"] = atpTable.list_rows;
-            //Session["VWFULL_TABLE"] = atpTable.list_vwDashboardATP;
-
-            //atpTable.list_rows = atpTable.list_rows.Take(itemsPerPage).ToList();
-
-            //return Json(new { atpTable.list_rows, pageCount = atpTable.pageCount, rowCount = atpTable.rowCount });
-
-            
-            UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
-
-            List<LDFTableField> listFields = new List<LDFTableField>();
-
-
-            //Adicionar Filtros CodigoDoente
-            //listFields.Add(new LDFTableField("DOENTE", "563388"));
-
-            ATPModel atpModel = new ATPModel();
-            _model = atpModel;
-            _modelName = "LusiadasSolucaoWeb.Models.ATPModel";
-
-            JsonResult res=LoadLDFTable(1, null, JsonConvert.SerializeObject(listFields));
-
-            return res;
-
-        }
+       
 
         [HttpGet]
         public string GetDados()
@@ -129,11 +95,11 @@ namespace LusiadasSolucaoWeb.Controllers
             //Adicionar Filtros CodigoDoente
             //listFields.Add(new LDFTableField("DOENTE", "563388"));
 
-           
 
-            ATPModel atpModel = new ATPModel();
+
+            ATPDashModel atpModel = new ATPDashModel((int)Session["Tabela"]);
             _model = atpModel;
-            _modelName = "LusiadasSolucaoWeb.Models.ATPModel";
+            _modelName = "LusiadasSolucaoWeb.Models.ATPDashModel";
 
             JsonResult res = LoadLDFTableDash(pagen, null, JsonConvert.SerializeObject(listFields));
 

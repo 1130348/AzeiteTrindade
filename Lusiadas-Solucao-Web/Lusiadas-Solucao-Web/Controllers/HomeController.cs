@@ -9,16 +9,24 @@ namespace LusiadasSolucaoWeb.Controllers
     {
         public ActionResult Index()
         {
-            Session.Clear();
-            Session["Lisboa"] = CheckConnection("User Id=medico;Password=medico;Data Source=BDHLUQL2");
-            Session["Porto"] = CheckConnection("User Id=hpp;Password=hppnorte;Data Source=BDHPTQLD");
-            Session["Algarve"] = CheckConnection("User Id=hpp;Password=hppnorte;Data Source=BDHPTQLD");
-            return View();
+            try
+            {
+                Session.Clear();
+                Session["Lisboa"] = CheckConnection("User Id=medico;Password=medico;Data Source=BDHLU");
+                Session["Porto"] = CheckConnection("User Id=hpp;Password=hppnorte;Data Source=BDHPT");
+                Session["Algarve"] = CheckConnection("User Id=hpp;Password=hppnorte;Data Source=BDHPTQLD");
+                return View();
+            }
+            catch (Exception err)
+            {
+                return null;
+            }
+            
         }
 
         public bool CheckConnection(string cs)
         {
-            string connectionString = cs; //Get from configuraiton. User Id=medico;Password=medico;Data Source=BDHLUQL2
+            string connectionString = cs; 
             using (var conn = new OracleConnection(connectionString))
             {
                 try

@@ -123,17 +123,6 @@
 
 <body class="login-page noselect" style="background-color:white;">
 
-
-    <!-- Content Header (Page header) -->
-    <section class="content-header" style="background-color:white;">
-        <h1>
-            Atendimento Permanente
-            <small>Listagem de doentes</small>
-        </h1>
-
-    </section>
-
-
     <!-- Main content -->
     <section class="content" style="background-color:white;">
         <div class="row">
@@ -190,7 +179,7 @@
                             <label id="lastupdate" style="margin-left:1.5%;">
                                 Última Actualização: @data
                             </label>
-                            <label>&nbsp;|&nbsp;Legenda:&nbsp;&nbsp; </label><label>RX&nbsp;</label><img src='/Content/img/xray.png' height='36' width='36'><label>&nbsp;ECO&nbsp;</label><img src='/Content/img/ultra.png' height='36' width='36'><label>&nbsp;TAC&nbsp;</label><img src='/Content/img/xcat.png' height='36' width='36'><label>&nbsp;RM&nbsp;</label><img src='/Content/img/rm.png' height='36' width='36'>
+                            <label>&nbsp;|&nbsp;Legenda:&nbsp;&nbsp; </label><label>RX&nbsp;</label><img src='/Content/img/xray.png' height='24' width='24'><label>&nbsp;ECO&nbsp;</label><img src='/Content/img/ultra.png' height='24' width='24'><label>&nbsp;TAC&nbsp;</label><img src='/Content/img/xcat.png' height='24' width='24'><label>&nbsp;RM&nbsp;</label><img src='/Content/img/rm.png' height='24' width='24'>
 
 
                         </div>
@@ -206,6 +195,8 @@
 
 <script type="text/javascript">
     var count = 1;
+
+    getDados();
 
     function RefreshData()
     {

@@ -17,7 +17,7 @@
             text-align: center; /* Centered text */
             border-radius: 2px; /* Rounded borders */
             padding: 16px; /* Padding */
-            position: relative; /* Sit on top of the screen */
+            position: fixed; /* Sit on top of the screen */
             z-index: 1; /* Add a z-index if needed */
             left: 50%; /* Center the snackbar */
             bottom: 10%; /* 30px from the bottom */
@@ -116,7 +116,6 @@
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Início</a></li>
-            <li class="active">Gestão Administrativa</li>
             <li class="active">Deslocações</li>
         </ol>
     </section>
@@ -129,7 +128,7 @@
                 <div class="box-header" style="padding:6px;">
                     <h3 class="box-title" style="font-size:16px;">Filtro</h3>
                     <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -309,10 +308,18 @@
 {
         <script type="text/javascript">
 
+            $('form').keypress(function (e) {
+                var code = e.keyCode || e.which;
 
-        $('#modal-desloc-prod').on('hidden.bs.modal', function () {
-            FilterData(null);
-        })
+                if (code === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $('#modal-desloc-prod').on('hidden.bs.modal', function () {
+                FilterData(null);
+            });
 
 
         $(document).ajaxStart(function () {
@@ -333,6 +340,15 @@
             //    alert("De momento n\xE3o \xE9 poss\xEDvel satisfazer o pedido. Pedimos desculpa pelo incomodo");
             //    window.location = "/";
             //}
+        });
+
+  
+          
+        $("#pesquisaDoente").keyup(function (event) {
+            if (event.keyCode === 13) {
+                FilterData(null);
+                $("#pesquisaDoente").blur();
+            }   
         });
 
 

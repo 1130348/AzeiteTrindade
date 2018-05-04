@@ -16,26 +16,34 @@ namespace LusiadasSolucaoWeb.Controllers
     {
         UserInfo uinfo = new UserInfo();
 
-        //[AuthenticationHandler(Auth.VER_PAGINA, Constants.SS_AUTH)]
-        //[LogActionHandler(0, "Index ATP")]
-        //[LogErrorHandler(Constants.WEB_GENERIC_ERROR)]
-        //[Route("/Dash", Name = "DashBoard")]
-     
-
-        /*public ActionResult Dashboard()
-        {
-           
-            ConfigurationManager.AppSettings["TableRowsPerPage"] = 20.ToString();
-            ATPModel atpTable = new ATPModel(20);
-            return View(atpTable);
-
-        }*/
-
-        //[Route("/Dash/{num}", Name = "DashBoard")]
-        public ActionResult Dash(int num)
+        public ActionResult Dash(string hosp,int num)
         {
             Session.Remove("Tabela");
 
+            if (hosp.ToUpper().Equals("PORTO")|| hosp.ToUpper().Equals("LISBOA")|| hosp.ToUpper().Equals("ALGARVE"))
+            {
+
+                switch (hosp.ToUpper())
+                {
+
+                    case "PORTO":
+                        hosp = "HPT";
+                        break;
+                    case "LISBOA":
+                        hosp = "HLU";
+                        break;
+                    case "ALGARVE":
+                        hosp = "HSUL";
+                        break;
+                    default :
+                        hosp = "";
+                        break;
+                }
+
+                Session[Constants.SS_LOCAL_CONN] = "BD" + hosp + "QLD"; ;
+
+            }
+            
 
             Session["Tabela"] = num;
             if (num==null||num<=0)
@@ -70,31 +78,10 @@ namespace LusiadasSolucaoWeb.Controllers
 
         public JsonResult LoadTableDash(int pagen)
         {
-            //if (Session[Constants.SS_USER] != null)
-            //{
-            //    uinfo = (UserInfo)Session[Constants.SS_USER];
-            //}
-
-            //int itemsPerPage = Convert.ToInt32(ConfigurationManager.AppSettings["PIMRowsPerPage"]);
-
-
-            //atpTable.LoadRows();
-            //Session["FULL_TABLE"] = Session["NEW_TABLE"] = atpTable.list_rows;
-            //Session["VWFULL_TABLE"] = atpTable.list_vwDashboardATP;
-
-            //atpTable.list_rows = atpTable.list_rows.Take(itemsPerPage).ToList();
-
-            //return Json(new { atpTable.list_rows, pageCount = atpTable.pageCount, rowCount = atpTable.rowCount });
-
-
+           
             UserInfo uinfo = Session[Constants.SS_USER] as UserInfo;
 
             List<LDFTableField> listFields = new List<LDFTableField>();
-
-
-            //Adicionar Filtros CodigoDoente
-            //listFields.Add(new LDFTableField("DOENTE", "563388"));
-
 
 
             ATPDashModel atpModel = new ATPDashModel((int)Session["Tabela"]);
@@ -112,9 +99,20 @@ namespace LusiadasSolucaoWeb.Controllers
 
             try
             {
+                string oradb = "";
+                if (Session[Constants.SS_LOCAL_CONN].ToString().Contains("HPT")) {
 
-                //get data 
-                string oradb = "User Id=medico;Password=medico;Data Source=BDHLUQL2";
+                    oradb = "User Id=hpp;Password=hppnorte;Data Source=BDHPT";
+                }
+                else if (Session[Constants.SS_LOCAL_CONN].ToString().Contains("HLU"))
+                {
+                    oradb = "User Id=medico;Password=medico;Data Source=BDHLU";
+                }
+                else
+                {
+                    oradb = "User Id=hpp;Password=hppnorte;Data Source=BDHPTQLD";
+                }
+               
                 OracleConnection conn = new Oracle.ManagedDataAccess.Client.OracleConnection(oradb);  // C#
                 conn.Open();
                 OracleCommand cmd = new OracleCommand();
@@ -199,19 +197,6 @@ namespace LusiadasSolucaoWeb.Controllers
 
 
         }
-
-        //[HttpPost]
-        //public JsonResult PageTable(int pageNumber, string[] orderData)
-        //{
-        //    var listItems = Session["FULL_TABLE"];
-        //    if (Session["NEW_TABLE"] != null)
-        //        listItems = Session["NEW_TABLE"];
-
-        //    atpTable.PageTable(listItems, pageNumber, orderData);
-
-        //    return Json(new { atpTable.list_rows, pageCount = atpTable.pageCount, rowCount = atpTable.rowCount });
-        //}
-
 
     }
 }

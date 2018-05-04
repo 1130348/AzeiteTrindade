@@ -77,56 +77,56 @@
                     <select required id="dropdown-unidade" name="LocalConnection" class="form-control">
                         <option value="" disabled selected hidden>Unidade Hospitalar para consultar</option>
                         @{
-                            try
-                            {
+                try
+                {
 
 
-                                if ((bool)Session["Lisboa"])
-                                {
-                                    Session["Lisboa"] = "- On ✅";
-                                    Session["LisboaStatus"] = "";
-                                }
-                                else
-                                {
+                    if ((bool)Session["Lisboa"])
+                    {
+                        Session["Lisboa"] = "- On ✅";
+                        Session["LisboaStatus"] = "";
+                    }
+                    else
+                    {
 
-                                    Session["Lisboa"] = "- Off ❌";
-                                    Session["LisboaStatus"] = "disabled";
-                                }
-
-
-                                if ((bool)Session["Porto"])
-                                {
-                                    Session["Porto"] = "- On ✅";
-                                    Session["PortoStatus"] = "";
-
-                                }
-                                else
-                                {
-
-                                    Session["Porto"] = "- Off ❌";
-                                    Session["PortoStatus"] = "disabled";
-
-                                }
+                        Session["Lisboa"] = "- Off ❌";
+                        Session["LisboaStatus"] = "disabled";
+                    }
 
 
-                                if ((bool)Session["Algarve"])
-                                {
-                                    Session["Algarve"] = "- On ✅";
-                                    Session["AlgarveStatus"] = "";
-                                }
-                                else
-                                {
+                    if ((bool)Session["Porto"])
+                    {
+                        Session["Porto"] = "- On ✅";
+                        Session["PortoStatus"] = "";
 
-                                    Session["Algarve"] = "- Off ❌";
-                                    Session["AlgarveStatus"] = "disabled";
+                    }
+                    else
+                    {
 
-                                }
+                        Session["Porto"] = "- Off ❌";
+                        Session["PortoStatus"] = "disabled";
 
-                            }
-                            catch (Exception err)
-                            {
+                    }
 
-                            }
+
+                    if ((bool)Session["Algarve"])
+                    {
+                        Session["Algarve"] = "- On ✅";
+                        Session["AlgarveStatus"] = "";
+                    }
+                    else
+                    {
+
+                        Session["Algarve"] = "- Off ❌";
+                        Session["AlgarveStatus"] = "disabled";
+
+                    }
+
+                }
+                catch (Exception err)
+                {
+
+                }
 
                         }
 
@@ -142,7 +142,12 @@
                         <button type="submit" id="clickEnter" class="btn btn-primary btn-block btn-flat">Entrar</button>
                     </div>
                 </div>
-                
+                <div calss="row">
+                    <div>
+                        @Html.ValidationMessage("error", new { @class = "fa fa-warning" })
+                    </div>
+                </div>
+
             </form>
         </div>
         <div class="row" style="margin-top:10px;">

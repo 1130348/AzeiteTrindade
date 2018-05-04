@@ -159,14 +159,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\ATPDashController.cs" />
     <Compile Include="Controllers\ATPController.cs" />
-    <Compile Include="Controllers\ConsultaDaDorController.cs" />
-    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeslocacoesController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
-    <Compile Include="Controllers\LDFHelpers\JSONHelper.cs" />
     <Compile Include="Controllers\LDFHelpers\LDFTableController.cs" />
-    <Compile Include="Controllers\PIMController.cs" />
     <Compile Include="CostumFilterAttribute.cs" />
     <Compile Include="Generic.cs" />
     <Compile Include="Global.asax.cs">
@@ -174,11 +170,6 @@
     </Compile>
     <Compile Include="Models\ATP\ATPDashModel.cs" />
     <Compile Include="Models\ATP\ATPModel.cs" />
-    <Compile Include="Models\ConsultaDaDor\AnestesistasModel.cs" />
-    <Compile Include="Models\ConsultaDaDor\ConsultaDaDorModel.cs" />
-    <Compile Include="Models\ConsultaDaDor\EnfermeirosModel.cs" />
-    <Compile Include="Models\ConsultaDaDor\FormularioModel.cs" />
-    <Compile Include="Models\ConsultaDaDor\HistoricoDaDorModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocProdModel.cs" />
     <Compile Include="Models\Deslocacoes\DeslocHistModel.cs" />
     <Compile Include="Models\Error.cs" />
@@ -186,7 +177,6 @@
     <Compile Include="Models\Deslocacoes\DeslocacoesModel.cs" />
     <Compile Include="Models\Objects\VDeslocProd.cs" />
     <Compile Include="Models\Objects\VDoentesPresentes.cs" />
-    <Compile Include="Models\PIM\PIMModel.cs" />
     <Compile Include="Models\Objects\ParameterModel.cs" />
     <Compile Include="Models\Objects\ValenciaModel.cs" />
     <Compile Include="Models\Objects\PisosModel.cs" />
@@ -1097,9 +1087,6 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\PIM\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Deslocacoes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -1115,10 +1102,6 @@
     <Content Include="Views\ATP\Index.cshtml" />
     <Content Include="Views\Error\General.cshtml" />
     <Content Include="Views\Error\Error404.cshtml" />
-    <Content Include="Views\ConsultaDaDor\Index.cshtml" />
-    <Content Include="Views\ConsultaDaDor\_formulario.cshtml" />
-    <Content Include="Views\ConsultaDaDor\_historicoDor.cshtml" />
-    <Content Include="Views\ConsultaDaDor\_formularioEdit.cshtml" />
     <Content Include="Views\ATP\Dash.cshtml" />
     <Content Include="Views\ATPDash\Dash.cshtml" />
     <Content Include="Views\ATPDash\Index.cshtml" />

@@ -15,11 +15,11 @@ namespace LusiadasSolucaoWeb
 
             
 
-            routes.MapRoute("", "Dash/{num}",
-                 new { controller = "ATPDash", action = "Dash", num = UrlParameter.Optional });
+            routes.MapRoute("", "Dash/{hosp}/{num}",
+                 new { controller = "ATPDash", action = "Dash", hosp = UrlParameter.Optional, num = UrlParameter.Optional });
 
-            routes.MapRoute("", "Dashboard",
-                 new { controller = "ATP", action = "Dash", num = UrlParameter.Optional });
+            routes.MapRoute("", "Dashboard/{hosp}",
+                 new { controller = "ATP", action = "Dash", hosp = UrlParameter.Optional });
 
 
             routes.MapRoute(

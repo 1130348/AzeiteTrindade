@@ -10,26 +10,33 @@ namespace LusiadasSolucaoWeb.Models
     {
         public List<Deslocacao> listDesloc = new List<Deslocacao>();
 
-        public void LoadHistDesloc(string tdoente, string doente, string numCons)
+        public bool LoadHistDesloc(string tdoente, string doente, string numCons)
         {
-            DALDeslocacoes dal = new DALDeslocacoes();
-            List<VwDesloc> listItems = dal.GetHistDesloc(tdoente, doente,numCons);
+            try
+            {
+                DALDeslocacoes dal = new DALDeslocacoes();
+                List<VwDesloc> listItems = dal.GetHistDesloc(tdoente, doente, numCons);
 
-            listDesloc = (from vw in listItems  
-                          select new Deslocacao
-                          {
-                              T_EPISODIO    = vw.T_EPISODIO,
-                              EPISODIO      = vw.EPISODIO,
-                              DT_DESLOC     = vw.DT_DESL,
-                              COD_SERV      = vw.COD_SERV,
-                              DESCR_SERV    = vw.DESCR_SERV,
-                              CONTACTO_SERV = vw.CONTACTO_SERV,
-                              NOME_USER = String.Format("{0} {1}", vw.TITULO, vw.NOME)
+                listDesloc = (from vw in listItems
+                              select new Deslocacao
+                              {
+                                  T_EPISODIO = vw.T_EPISODIO,
+                                  EPISODIO = vw.EPISODIO,
+                                  DT_DESLOC = vw.DT_DESL,
+                                  COD_SERV = vw.COD_SERV,
+                                  DESCR_SERV = vw.DESCR_SERV,
+                                  CONTACTO_SERV = vw.CONTACTO_SERV,
+                                  NOME_USER = String.Format("{0} {1}", vw.TITULO, vw.NOME)
 
-                              //NOME_USER     = String.Format("{0} {1}", vw.TITULO, vw.ABR)
-                              //NOME_USER = vw.USER_CRI
+                              }).ToList();
 
-                          }).ToList();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            
         }
     }
 

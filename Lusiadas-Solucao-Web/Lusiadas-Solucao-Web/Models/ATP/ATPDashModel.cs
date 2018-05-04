@@ -19,40 +19,21 @@ namespace LusiadasSolucaoWeb.Models
 
         #region ATPDashModel
 
+        
+
+        private string schema = "MEDICO";
+        private string tabela = "V_DASH_DESLOC_ATP_V3";
+        private string query = "*";
+        private string condition = "";
+        private string orderQ = "DT_CONS";
+
         public ATPDashModel()
         {
-            //ConfigurationManager.AppSettings["TableRowsPerPage"] = 20.ToString();
-            pageSize = (int)HttpContext.Current.Session["Tabela"];//Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
 
-            //como a tabela dashboard nao existe  nas outras BD a escolha ainda nao é dinamica
-            //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
-            //dbParams = new LDFTableDBParams("BDHPTQLD", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
-
-
-            //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
-            string nome = "";
-            try
-            {
-                if (String.IsNullOrEmpty(HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString()))
-                {
-                    nome = "BDHLUQLD";
-
-                }
-                else
-                {
-                    nome = HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString();
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                nome = "BDHLUQLD";
-            }
-            dbParams = new LDFTableDBParams(nome, "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
+            pageSize = (int)HttpContext.Current.Session["Tabela"];  
+            
+            dbParams = new LDFTableDBParams(GetConnectionString(), schema, tabela, query, condition, orderQ, null, null);
             objType = typeof(VwDashboardATP);
-            //getDados();
-
 
             LDFTableHeaders();
             ReArrangeHeaders();
@@ -63,20 +44,23 @@ namespace LusiadasSolucaoWeb.Models
         public ATPDashModel(int num)
         {
 
-            pageSize = num;//num;
+            pageSize = num;
 
-            //como a tabela dashboard nao existe  nas outras BD a escolha ainda nao é dinamica
-            //ToDo : (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
-            //dbParams = new LDFTableDBParams("BDHPTQLD", "MEDICO", "V_DASHBOARD_ATP", "*", "", "", null, null);
+            dbParams = new LDFTableDBParams(GetConnectionString(), schema, tabela, query, condition, orderQ, null, null);
+            objType = typeof(VwDashboardATP);
 
+            LDFTableHeaders();
+            ReArrangeHeaders();
+        }
 
-            //Dinamico: (string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN]
+        private string GetConnectionString()
+        {
             string nome = "";
             try
             {
                 if (String.IsNullOrEmpty(HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString()))
                 {
-                    nome = "BDHLUQLD";
+                    nome = "BDHPTQLD";
 
                 }
                 else
@@ -85,18 +69,14 @@ namespace LusiadasSolucaoWeb.Models
 
                 }
 
+                return nome;
+
             }
             catch (Exception e)
             {
-                nome = "BDHLUQLD";
+                nome = "BDHPTQLD";
+                return nome;
             }
-            dbParams = new LDFTableDBParams(nome, "MEDICO", "V_DASH_DESLOC_ATP_V3", "*", "", "DT_CONS", null, null);
-            objType = typeof(VwDashboardATP);
-            //getDados();
-
-
-            LDFTableHeaders();
-            ReArrangeHeaders();
         }
 
         private void ReArrangeHeaders()
@@ -113,10 +93,6 @@ namespace LusiadasSolucaoWeb.Models
         public void LDFTableTreatData()
         {
 
-            //getDados();
-
-
-
             string nomeDescr = "", curdate = "", dtnasc = "";
             string medicacao_presc;
             int medAMB, medPCE, medAGL, mEDPGL;
@@ -125,15 +101,16 @@ namespace LusiadasSolucaoWeb.Models
             foreach (LDFTableRow item in list_rows)
             {
 
+                #region NumeroDoente
                 item.rowItems.First(q => q.itemColumnName == "DOENTE").itemValue = Generic.GetItemValue(item, "DOENTE");
+                #endregion
 
-
-
+                #region Nome Doente
                 dtnasc = Generic.GetItemValue(item, "DT_NASC");
                 if (!String.IsNullOrEmpty(dtnasc))
                     curdate = String.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(dtnasc));
                 nomeDescr = "<div class='row' >";
-                nomeDescr += "<div class='col-xs-12' style='line-height: 120%;'>" + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i>" + Generic.GetItemValue(item, "NOME") + " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")";
+                nomeDescr += "<div class='col-xs-12' style='line-height: 120%;'>" + " <i class='fa fa-" + ((Generic.GetItemValue(item, "SEXO") == "F") ? "venus text-pink" : "mars text-blue") + "'></i>&nbsp;" + Generic.GetItemValue(item, "NOME") + " (" + GetBirthDate(Convert.ToDateTime(dtnasc)) + ")";
 
                 if (!String.IsNullOrEmpty(curdate))
                 {
@@ -147,16 +124,19 @@ namespace LusiadasSolucaoWeb.Models
                 }
 
                 nomeDescr += " </div>";
-                ///nomeDescr += "<br>"+"<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS");
-                //nomeDescr += "<div class='col-xs-12'>" + "<b>Obs: </b>" + " " + Generic.GetItemValue(item, "OBS_CONS") + "</div>";
                 nomeDescr += "</div>";
 
 
 
                 item.rowItems.First(q => q.itemColumnName == "NOME").itemValue = nomeDescr;
 
+                #endregion
+
+
+                #region Bandage
+
                 string imagem = "";
-                if (Generic.GetItemValue(item, "COD_SERV").Equals("1154") || Generic.GetItemValue(item, "COD_SERV").Equals("1112"))
+                if (Generic.GetItemValue(item, "COD_SERV").Equals("2154") || Generic.GetItemValue(item, "COD_SERV").Equals("2155") || Generic.GetItemValue(item, "COD_SERV").Equals("1154") || Generic.GetItemValue(item, "COD_SERV").Equals("1112"))
                 {
                     imagem = "<div class='row'>";
                     imagem += "<div class='col-xs-12'>" + " <img src ='/Content/img/bandage.png' height ='36' width ='36'> " + " </div>";
@@ -170,41 +150,11 @@ namespace LusiadasSolucaoWeb.Models
                 }
                 item.rowItems.First(q => q.itemColumnName == "IMAGEM").itemValue = imagem;
 
+                #endregion
+
+
+                #region NomeMedico
                 curdate = "";
-                /*hora = Generic.GetItemValue(item, "HR_CONS");
-                if (!String.IsNullOrEmpty(hora))
-                    curdate = String.Format("{0:HH:mm:ss}", Convert.ToDateTime(hora));
-
-                item.rowItems.First(q => q.itemColumnName == "HR_CONS").itemValue = curdate;*/
-
-
-                /*triagem = Generic.GetItemValue(item, "TRIAGEM");
-                nota_medica = Generic.GetItemValue(item, "NOTA_MEDICA");
-                box_aplicavel = Generic.GetItemValue(item, "BOX_APLICAVEL");
-                penso_aplicavel = Generic.GetItemValue(item, "PENSO_APLICAVEL");
-                
-                medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
-
-                medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
-                medPCE = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE"));
-                medAGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_GLINTT"));
-                mEDPGL = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT"));*/
-                //analises_ok = Convert.ToInt32(Generic.GetItemValue(item, "ANALISES_OK"));
-
-                /*GetFieldCircle(item, "TRIAGEM", ((triagem == "S") ? green : red));
-                GetFieldCircle(item, "NOTA_MEDICA", ((nota_medica == "S") ? green : red));*/
-
-                //field = gray;
-                //if (Generic.GetItemValue(item, "CADEIRAO_PRESENTE") == "S")
-                //    field = green;
-                //GetFieldCircle(item, "CADEIRAO_PRESENTE", field);
-
-                //field = green;
-                //if (Generic.GetItemValue(item, "BOX_APLICAVEL") == "N")
-                //    field = gray;
-                //else if (Generic.GetItemValue(item, "BOX_PRESENTE") == "N")
-                //    field = red;
-                //GetFieldCircle(item, "BOX_APLICAVEL", field);
 
                 if (Generic.GetItemValue(item, "MEDICO_NOME") != null)
                 {
@@ -218,15 +168,33 @@ namespace LusiadasSolucaoWeb.Models
                     item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
 
                 }
+                #endregion
+
+
+                #region DataConsulta
 
                 string admissao, admissao2;
                 string dataAdm = Generic.GetItemValue(item, "DT_CONS");
 
                 admissao = String.Format("{0:HH:mm}", Convert.ToDateTime(dataAdm));
                 admissao2 = String.Format("{0:dd/MM}", Convert.ToDateTime(dataAdm));
+                DateTime thisDay = DateTime.Today;
+                if (Convert.ToDateTime(dataAdm).DayOfYear+1==thisDay.DayOfYear)
+                {
+                    admissao2 = "Ontem,";
+                }else if (Convert.ToDateTime(dataAdm).DayOfYear == thisDay.DayOfYear)
+                {
+                    admissao2 = "";
+                }
+
+             
+
                 item.rowItems.First(q => q.itemColumnName == "DT_CONS").itemValue = "<div class='col-xs-12' style='line-height: 120%;'> <b>" + admissao2 + " " + admissao + "</b>" + "<br>" + "há " + HowLong(Convert.ToDateTime(dataAdm)) + "</div>";
 
+                #endregion
 
+
+                #region Triagem
                 string local = "";
                 string tria = Generic.GetItemValue(item, "COR_TRIAGEM");
 
@@ -235,9 +203,31 @@ namespace LusiadasSolucaoWeb.Models
                 {
                     case "ESPERA":
                         local = "<div class='row'>";
-                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle text-blue' style='font-size:24px;margin-top:10px;'></i>" +
-                            "<br>" + String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM"))) + " </div>";
+
+
+                        dataAdm = Generic.GetItemValue(item, "DT_TRIAGEM");
+
+                        admissao = String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM")));
+                        admissao2 = String.Format("{0:dd/MM}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_TRIAGEM")));
+                        thisDay = DateTime.Today;
+                        if (Convert.ToDateTime(dataAdm).DayOfYear + 1 == thisDay.DayOfYear)
+                        {
+                            admissao2 = "Ontem,";
+                        }
+                        else if (Convert.ToDateTime(dataAdm).DayOfYear == thisDay.DayOfYear)
+                        {
+                            admissao2 = "";
+                        }
+
+                        local += "<div class='col-xs-12' style='line-height: 120%;'>" + "<i class='fa fa-circle text-blue' style='font-size:24px;margin-top:10px;'></i>";
+                        if (!admissao2.Equals(""))
+                        {
+                            local += "<br>" + admissao2;
+                        }
+                         
+                        local+="<br>" + admissao + " </div>";
                         local += "</div>";
+
                         item.rowItems.First(q => q.itemColumnName == "COR_TRIAGEM").itemValue = local;
                         break;
                     case "BOX":
@@ -269,8 +259,10 @@ namespace LusiadasSolucaoWeb.Models
                         break;
                 }
 
+                #endregion
 
 
+                #region Local
                 if (!Generic.GetItemValue(item, "LOCALIZACAO").IsEmpty())
                 {
                     item.rowItems.First(q => q.itemColumnName == "LOCALIZACAO").itemValue = Generic.GetItemValue(item, "LOCALIZACAO");
@@ -282,26 +274,61 @@ namespace LusiadasSolucaoWeb.Models
                     local += "</div>";
                     item.rowItems.First(q => q.itemColumnName == "LOCALIZACAO").itemValue = local;
                 }
+                #endregion
+
+                #region NotaMedica
 
                 string nota = "";
                 string dtnota = Generic.GetItemValue(item, "DT_NOTA_MEDICA");
-                if (!String.IsNullOrEmpty(dtnota))
-                {
-                    string dtnota2 = String.Format("{0:HH:mm}", Convert.ToDateTime(dtnota));
-                    nota = "<div class='row'>";
-                    nota += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>"
-                    + "<br>" + dtnota2 + " </div>";
-                    nota += "</div>";
-                    item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
 
+
+                dataAdm = Generic.GetItemValue(item, "DT_NOTA_MEDICA");
+
+                try
+                {
+                    admissao = String.Format("{0:HH:mm}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_NOTA_MEDICA")));
+                    admissao2 = String.Format("{0:dd/MM}", Convert.ToDateTime(Generic.GetItemValue(item, "DT_NOTA_MEDICA")));
+                    thisDay = DateTime.Today;
+                    if (Convert.ToDateTime(dataAdm).DayOfYear + 1 == thisDay.DayOfYear)
+                    {
+                        admissao2 = "Ontem,";
+                    }
+                    else if (Convert.ToDateTime(dataAdm).DayOfYear == thisDay.DayOfYear)
+                    {
+                        admissao2 = "";
+                    }
+
+                    if (!String.IsNullOrEmpty(dtnota))
+                    {
+                        string dtnota2 = String.Format("{0:HH:mm}", Convert.ToDateTime(dtnota));
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-check text-green' aria-hidden='true'></i>"
+                        + "<br>" + admissao2 + "&nbsp;"
+                        + admissao + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
+
+                    }
+                    else
+                    {
+                        nota = "<div class='row'>";
+                        nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + " </div>";
+                        nota += "</div>";
+                        item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
+                    }
                 }
-                else
+                catch (Exception e)
                 {
                     nota = "<div class='row'>";
                     nota += "<div class='col-xs-12'>" + "<i class='fa fa-pause text-orange' aria-hidden='true'></i>" + " </div>";
                     nota += "</div>";
                     item.rowItems.First(q => q.itemColumnName == "DT_NOTA_MEDICA").itemValue = nota;
+
                 }
+               
+                #endregion
+
+                #region Analises
 
                 string anal = "";
                 int analisesEntregues = Convert.ToInt32(Generic.GetItemValue(item, "ENTREGUE_LAB"));
@@ -361,9 +388,11 @@ namespace LusiadasSolucaoWeb.Models
 
                 }
 
+                #endregion
 
 
 
+                #region Medicacao
                 medicacao_presc = Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE");
 
                 medAMB = Convert.ToInt32(Generic.GetItemValue(item, "MEDICACAO_ADMINISTRADA_AMB"));
@@ -401,9 +430,12 @@ namespace LusiadasSolucaoWeb.Models
 
                 }
 
+                #endregion
 
 
 
+
+                #region Imagiologia
 
                 if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) <= 0)
                 {
@@ -753,8 +785,10 @@ namespace LusiadasSolucaoWeb.Models
                     }
                 }
 
+                #endregion
 
 
+                #region EGC
 
                 if (Convert.ToInt32(Generic.GetItemValue(item, "ECG_REQUESITADOS")) <= 0)
                 {
@@ -788,7 +822,10 @@ namespace LusiadasSolucaoWeb.Models
 
                 }
 
+                #endregion
 
+
+                #region ConsultaExterna
 
                 if (String.IsNullOrEmpty(Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS")))
                 {
@@ -830,55 +867,8 @@ namespace LusiadasSolucaoWeb.Models
 
                 }
 
+                #endregion
 
-                /*field = green;
-                if (Generic.GetItemValue(item, "PENSO_APLICAVEL") == "N")
-                    field = gray;
-                else if (Generic.GetItemValue(item, "PENSO_REGISTO") == "N")
-                    field = red;
-                GetFieldCircle(item, "PENSO_APLICAVEL", field);
-
-                field = green;
-                if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "N")
-                    field = gray;
-                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "N" && analises_ok == 0)
-                    field = yellow;
-                else if (Generic.GetItemValue(item, "ANALISES_SOLICITADAS") == "S" && Generic.GetItemValue(item, "COLHEITA_OK") == "S" && analises_ok == 0)
-                    field = red;
-                GetFieldCircle(item, "ANALISES_OK", field);*/
-
-
-
-                /*field = green;
-                if (Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_PCE") == "0" && Generic.GetItemValue(item, "MEDICACAO_PRESCRITA_GLINTT") == "0")
-                    field = gray;
-                else if (medAMB < medPCE || medAGL < mEDPGL)
-                    field = red;
-                GetFieldCircle(item, "MEDICACAO_PRESCRITA_PCE", field);
-
-                field = green;
-                if (Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS") == "0")
-                    field = gray;
-                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) > Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS")))
-                    field = yellow;
-                else if (Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS")) == Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS"))
-                            && IsDoenteMoved(Generic.GetItemValue(item, "DOENTE"), Generic.GetItemValue(item, "N_CONS")))
-                    field = red;
-                GetFieldCircle(item, "IMAGIOLOGIA_REQUESITADOS", field);
-
-                field = green;
-                if (Generic.GetItemValue(item, "ECG_REQUESITADOS") == "0")
-                    field = gray;
-                else if (Convert.ToInt32(Generic.GetItemValue(item, "ECG_REQUESITADOS")) <= Convert.ToInt32(Generic.GetItemValue(item, "ECG_REALIZADOS")))
-                    field = red;
-                GetFieldCircle(item, "ECG_REQUESITADOS", field);
-
-                field = green;
-                if (Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS") == "0")
-                    field = gray;
-                else if (Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REALIZADOS")) < Convert.ToInt32(Generic.GetItemValue(item, "CEXTERNA_REQUISITADOS")))
-                    field = red;
-                GetFieldCircle(item, "CEXTERNA_REQUISITADOS", field);*/
             }
         }
 
@@ -911,16 +901,23 @@ namespace LusiadasSolucaoWeb.Models
         {
 
             DateTime now = DateTime.Now;
-            TimeSpan span = now.Subtract(data);   
+            TimeSpan span = now.Subtract(data);
+
+            if (span.Minutes<1)
+            {
+                return (int)span.TotalHours + "h ";
+            }else if (span.TotalHours<1)
+            {
+                return (int)span.Minutes + "m";
+            }
+            else
+            {
+                return (int)span.TotalHours + "h " + span.Minutes + "m";
+            }
           
-            return (int)span.TotalHours+"h "+span.Minutes+"m";
+            
 
         }
-
-        /*private void GetFieldCircle(LDFTableRow item, string rowName, string value)
-        {
-            item.rowItems.First(q => q.itemColumnName == rowName).itemValue  = "<i class='fa fa-circle lg " + value + "'></i>";
-        }*/
 
         private bool IsDoenteMoved(string doente, string ncons)
         {

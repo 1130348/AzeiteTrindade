@@ -43,9 +43,7 @@ namespace LusiadasSolucaoWeb.Models
             bool isAuthed = false;
 
             LDFAuthentication auth = new LDFAuthentication(ConfigurationManager.AppSettings["LDAPServer"], ConfigurationManager.AppSettings["Domain"], ConfigurationManager.ConnectionStrings["DBGeneral"].ConnectionString, true);
-
-
-            
+        
             if (autoLogin && _password == ConfigurationManager.AppSettings[Constants.GLB_Login_Key])
             {
                 isAuthed = auth.ValidateUser(ConfigurationManager.AppSettings[Constants.GLB_Login_ADUser], ConfigurationManager.AppSettings[Constants.GLB_Login_ADPass], UserName);
@@ -59,9 +57,6 @@ namespace LusiadasSolucaoWeb.Models
                  HttpContext.Current.Session[Constants.SS_AUTH] = auth;
              }
 
-            //HttpContext.Current.Session[Constants.SS_AUTH] = auth;
-            //return true;
-
             return isAuthed;
         }
 
@@ -72,30 +67,14 @@ namespace LusiadasSolucaoWeb.Models
             DALMenu                 dalMenu     = new DALMenu();
             uinfo.listOptions                   = new List<TblOptionsMenu>();
             
-            List<TblSDPessHosp>     listPess    = dal.GetInfoPessHosp(UserName);
-           
+            List<TblSDPessHosp>     listPess    = dal.GetInfoPessHosp(UserName);   
             List<TblMenu>           listMenu    = dalMenu.GetMenus(((LDFAuthentication)HttpContext.Current.Session[Constants.SS_AUTH]).listGroups);
-            //List<TblMenu> listMenu = dalMenu.GetMenus(listaGrupos);
-
             List<TblMenu>           listMenuD   = listMenu.Distinct().ToList();
-
-            //uinfo.numMecan = "0010001";
-            //uinfo.nome = "teste";
-            //uinfo.titulo = "TesteTitulo";
-            //uinfo.userID = UserName;
-            //uinfo.catProfissional = "ENF";
 
 
             if (listPess != null && listPess.Count > 0)
             {
                 TblSDPessHosp pess = listPess.First();
-
-              /*uinfo.numMecan          = "0010001";
-                uinfo.nome              = "teste";
-                uinfo.titulo            = "TesteTitulo";
-                uinfo.userID            = UserName;
-                uinfo.catProfissional   = "ENF";*/
-
 
                 uinfo.numMecan = pess.N_MECAN;
                 uinfo.nome = pess.ABR;
@@ -103,11 +82,10 @@ namespace LusiadasSolucaoWeb.Models
                 uinfo.userID = UserName;
                 uinfo.catProfissional = pess.T_PESS_HOSP;
 
-                //uinfo.cedProfissional   = "MED";
-               foreach (TblSDPessHosp item in listPess.Where(q => q.COD_SERV != null).ToList())
-               {
+                foreach (TblSDPessHosp item in listPess.Where(q => q.COD_SERV != null).ToList())
+                {
                     uinfo.listCodServ.Add(item.COD_SERV);
-               }
+                }
 
                 uinfo.listOptions.AddRange(dalMenu.GetListOptions(listMenuD));
 
@@ -120,6 +98,8 @@ namespace LusiadasSolucaoWeb.Models
 
     public class UserInfo
     {
+
+
         public string numMecan { get; set; }
         public string titulo { get; set; }
         public string nome { get; set; }
@@ -132,8 +112,14 @@ namespace LusiadasSolucaoWeb.Models
         public string catProfissional { get;  set; }
         public string cedProfissional { get; set; }
 
-		
-		public string getcedProfissional()
+        public UserInfo()
+        {
+            listCodServ = new List<string>();
+            listValenciasParametrizadas = new List<string>();
+            listValenciasParametrizadasProdutos = new List<string>();
+        }
+
+        public string getcedProfissional()
 		{
             if (this.catProfissional == "MED" || this.catProfissional == "ENF")
                 return cedProfissional;
@@ -153,12 +139,7 @@ namespace LusiadasSolucaoWeb.Models
 			}
 		}
 
-        public UserInfo()
-        {
-            listCodServ = new List<string>();
-            listValenciasParametrizadas = new List<string>();
-            listValenciasParametrizadasProdutos = new List<string>();
-        }
+       
     }
 
 }

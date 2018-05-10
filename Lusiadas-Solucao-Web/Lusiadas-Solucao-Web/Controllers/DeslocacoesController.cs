@@ -39,16 +39,7 @@ namespace LusiadasSolucaoWeb.Controllers
                     valencias.LoadValenciasParametrizadas(uinfo.listValenciasParametrizadas);
                     valencias.LoadValenciasParametrizadasProdutos(uinfo.listValenciasParametrizadas);
                     valencias.LoadValencias(uinfo.listCodServ);
-                    //Pesquisar como fazer union das duas listas
-
-                    //var lista = ((from c in valencias.listValencias
-                    //                          select new Valencia(){COD_SERV = c.COD_SERV, DESCR_SERV= c.DESCR_SERV, ISMINE= c.ISMINE}).Union(
-                    //                          (from e in pisos.listPisos
-                    //                               select new Valencia(){COD_SERV=e.COD_SERV, DESCR_SERV=e.DESCR_SERV, ISMINE=false}))).ToList();
-
-
-                    //valencias.listValencias = (List<Valencia>)Convert.ChangeType(lista, typeof(List<Valencia>));
-
+                
                     Session["InfADValencias"] = valencias;
                     Session["InfADPisos"] = pisos;
 
@@ -71,7 +62,7 @@ namespace LusiadasSolucaoWeb.Controllers
             }
             catch (Exception e)
             {
-                return null;
+                return View();
             }
            
             

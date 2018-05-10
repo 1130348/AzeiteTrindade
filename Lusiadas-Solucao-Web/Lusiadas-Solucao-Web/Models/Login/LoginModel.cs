@@ -60,6 +60,8 @@ namespace LusiadasSolucaoWeb.Models
             return isAuthed;
         }
 
+
+
         public UserInfo GetUserInfo()
         {
             UserInfo                uinfo       = new UserInfo();
@@ -121,7 +123,7 @@ namespace LusiadasSolucaoWeb.Models
 
         public string getcedProfissional()
 		{
-            if (this.catProfissional == "MED" || this.catProfissional == "ENF")
+            if (this.catProfissional == "MED" || this.catProfissional == "ENF" || this.catProfissional=="AUX")
                 return cedProfissional;
             else
                 return "";

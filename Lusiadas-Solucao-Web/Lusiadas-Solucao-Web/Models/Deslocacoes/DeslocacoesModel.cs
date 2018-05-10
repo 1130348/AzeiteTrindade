@@ -2,6 +2,7 @@
 using LDFHelper.Helpers;
 using LusiadasDAL;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace LusiadasSolucaoWeb.Models
         public DeslocacoesModel()
         {
             pageSize    = Convert.ToInt32(ConfigurationManager.AppSettings["TableRowsPerPage"]);
-            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session[Constants.SS_LOCAL_CONN], schema, tabela, query, condition,orderQ, null, null);
+            dbParams = new LDFTableDBParams((string)HttpContext.Current.Session["PERMA"], schema, tabela, query, condition,orderQ, null, null);
             objType     = typeof(VDoentesPresentes);
 
             LDFTableHeaders();
@@ -31,7 +32,8 @@ namespace LusiadasSolucaoWeb.Models
 
         public void FillHeader()
         {
-            list_headers.Add(new LDFTableHeader() { headerID = "LOCAL_ATUAL", headerName = "Local Atual" });
+            
+            list_headers.Add(new LDFTableHeader() { headerID = "LOCAL_ATUAL", headerName = "Local Atual"});
             list_headers.Add(new LDFTableHeader() { headerID = "COL_CLICKABLE" });
         }
 

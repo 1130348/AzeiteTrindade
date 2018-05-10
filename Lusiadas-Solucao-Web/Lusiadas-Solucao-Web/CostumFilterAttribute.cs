@@ -16,6 +16,8 @@ namespace LusiadasSolucaoWeb
             var user = filterContext.HttpContext.User;
             LoginModel userTmp = new LoginModel();
             UserInfo userLogged = new UserInfo();
+
+       
             
             userLogged = (UserInfo)filterContext.HttpContext.Session.Contents[Constants.SS_USER];
             if (userLogged.catProfissional != "MED")
@@ -47,6 +49,7 @@ namespace LusiadasSolucaoWeb
 
             }
         }
+
 
 
     }

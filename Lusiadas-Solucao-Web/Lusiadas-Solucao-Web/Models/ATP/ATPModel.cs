@@ -42,14 +42,14 @@ namespace LusiadasSolucaoWeb.Models
             string nome = "";
             try
             {
-                if (String.IsNullOrEmpty(HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString()))
+                if (String.IsNullOrEmpty(HttpContext.Current.Session["PERMA"].ToString()))
                 {
-                    nome = "BDHLUQLD";
+                    nome = "BDHPT";
 
                 }
                 else
                 {
-                    nome = HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString();
+                    nome = HttpContext.Current.Session["PERMA"].ToString();
 
                 }
 
@@ -58,7 +58,7 @@ namespace LusiadasSolucaoWeb.Models
             }
             catch (Exception e)
             {
-                nome = "BDHLUQLD";
+                nome = "BDHPT";
                 return nome;
             }
         }
@@ -878,16 +878,32 @@ namespace LusiadasSolucaoWeb.Models
 
             if (dt != null)
             {
-                curDate = curDate.AddTicks(dt.Value.Ticks * -1);
-                if (curDate.Year > 0)
-                    res = curDate.Year + " anos";
+
+                var today = DateTime.Today;
+                // Calculate the age.
+                var age = today.Year - dt.Value.Year;
+                // Go back to the year the person was born in case of a leap year
+                if (dt > today.AddYears(-age)) age--;
+
+                if (age > 0)
+                {
+                    return age.ToString() + " anos";
+                }
                 else
                 {
-                    res = curDate.Month + " meses e " + curDate.Day + " dia";
+                    curDate = curDate.AddTicks(dt.Value.Ticks * -1);
+                    if (curDate.Year > 2)
+                        res = curDate.Year + " anos";
+                    else
+                    {
+                        res = curDate.Month - 1 + " meses";
+                    }
+                    return res;
                 }
+
             }
 
-            return res;
+            return "Erro";
         }
 
 
@@ -932,7 +948,7 @@ namespace LusiadasSolucaoWeb.Models
 
 public static class Globals
 {
-
+    public static List<String> listaUsers=new List<string>();
     public static string nDoentes;
     public static string semTriagem;
     public static string semNota;

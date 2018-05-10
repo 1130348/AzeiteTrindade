@@ -159,6 +159,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\ATPDashController.cs" />
     <Compile Include="Controllers\ATPController.cs" />
+    <Compile Include="Controllers\SecretController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeslocacoesController.cs" />
     <Compile Include="Controllers\LayoutController.cs" />
@@ -1105,6 +1106,7 @@
     <Content Include="Views\ATP\Dash.cshtml" />
     <Content Include="Views\ATPDash\Dash.cshtml" />
     <Content Include="Views\ATPDash\Index.cshtml" />
+    <Content Include="Views\Secret\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

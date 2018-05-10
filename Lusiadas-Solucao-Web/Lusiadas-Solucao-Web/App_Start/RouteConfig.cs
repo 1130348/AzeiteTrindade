@@ -19,7 +19,7 @@ namespace LusiadasSolucaoWeb
                  new { controller = "ATPDash", action = "Dash", hosp = UrlParameter.Optional, num = UrlParameter.Optional });
 
             routes.MapRoute("", "Dashboard/{hosp}",
-                 new { controller = "ATP", action = "Dash", hosp = UrlParameter.Optional });
+                 new { controller = "ATPDash", action = "Dash", hosp = UrlParameter.Optional, num = 20});
 
 
             routes.MapRoute(

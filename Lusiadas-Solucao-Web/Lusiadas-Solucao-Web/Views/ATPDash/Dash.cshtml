@@ -14,6 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="refresh" content="300">
     <title>DashBoard</title>
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
     <META HTTP-EQUIV="EXPIRES" CONTENT="Mon, 22 Jul 2002 11:12:01 GMT">
@@ -106,7 +107,7 @@
             margin: auto;
             margin-left: 10px;
             margin-right: 10px;
-        }  
+        }
 
 
         #actualizaATP {
@@ -203,7 +204,7 @@
 
         $.ajax({
             url: '@Url.Action("LoadTableDash", "ATPDash")',
-            type: "get",
+            method: "get",
             data: { "pagen": count },
             cache: false,
             success: function (result) {
@@ -285,6 +286,20 @@
         RefreshATPTable();
 
 
+        rearrange();
+
+    }
+
+    function rearrange() {
+
+        var nFilter = document.getElementsByTagName('th');
+        var i = 0;
+        for (i = 0; i < nFilter.length; i++) {
+
+            //nFilter[i].setAttribute("style", "text-align:center;");
+            nFilter[i].style.textAlign = "center";
+    
+        }
 
     }
 
@@ -293,7 +308,7 @@
 
         $.ajax({
             url: '@Url.Action("GetDados", "ATPDash")',
-            type: "get",
+            method: "get",
             cache: false,
             success: function (result) {
 

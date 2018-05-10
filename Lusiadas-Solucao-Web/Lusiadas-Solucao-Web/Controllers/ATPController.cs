@@ -56,7 +56,7 @@ namespace LusiadasSolucaoWeb.Controllers
                         break;
                 }
 
-                Session[Constants.SS_LOCAL_CONN] = "BD" + hosp + "QLD"; ;
+                Session["PERMA"] = "BD" + hosp + "QLD"; ;
 
             }
 
@@ -122,18 +122,18 @@ namespace LusiadasSolucaoWeb.Controllers
             {
 
                 string oradb = "";
-                if (Session[Constants.SS_LOCAL_CONN].ToString().Contains("HPT"))
+                if (Session["PERMA"].ToString().Contains("HPT"))
                 {
 
-                    oradb = "User Id=hpp;Password=hppnorte;Data Source=BDHPT";
+                    oradb = ConfigurationManager.ConnectionStrings["BDHPTQLD"].ConnectionString;
                 }
-                else if (Session[Constants.SS_LOCAL_CONN].ToString().Contains("HLU"))
+                else if (Session["PERMA"].ToString().Contains("HLU"))
                 {
-                    oradb = "User Id=medico;Password=medico;Data Source=BDHLUQL2";
+                    oradb = ConfigurationManager.ConnectionStrings["BDHLUQLD"].ConnectionString;
                 }
                 else
                 {
-                    oradb = "User Id=hpp;Password=hppnorte;Data Source=BDHPTQLD";
+                    oradb = ConfigurationManager.ConnectionStrings["BDHSULQLD"].ConnectionString;
                 }
                 OracleConnection conn = new Oracle.ManagedDataAccess.Client.OracleConnection(oradb);  // C#
                 conn.Open();

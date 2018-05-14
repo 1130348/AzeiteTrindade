@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Timers;
 using System.Web.Mvc;
 
 namespace LusiadasSolucaoWeb.Controllers
@@ -43,6 +44,8 @@ namespace LusiadasSolucaoWeb.Controllers
                 Session[Constants.SS_LOCAL_CONN] = "BD" + hosp + "QLD"; ;
 
             }
+
+            AddIP();
             
 
             Session["Tabela"] = num;
@@ -63,7 +66,57 @@ namespace LusiadasSolucaoWeb.Controllers
             
         }
 
-       
+        private void AddIP()
+        {
+            if (!Globals.listaUsers.Contains(GetIPAddress()))
+            {
+                string ip = GetIPAddress();
+                Globals.listaUsers.Add(ip+ "-"+Environment.MachineName);
+
+                try
+                {
+                    System.Timers.Timer aTimer = new System.Timers.Timer();
+                    aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    aTimer.Interval = 1200000;
+                    aTimer.Enabled = true;
+
+
+                }
+                catch (Exception e)
+                {
+
+                }
+
+
+
+            }
+
+        }
+
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            Globals.listaUsers.RemoveAt(0);
+        }
+
+
+        protected string GetIPAddress()
+        {
+            System.Web.HttpContext context = System.Web.HttpContext.Current;
+            string ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                string[] addresses = ipAddress.Split(',');
+                if (addresses.Length != 0)
+                {
+                    return addresses[0];
+                }
+            }
+
+            return context.Request.ServerVariables["REMOTE_ADDR"];
+        }
+
+
 
         [HttpGet]
         public string GetDados()

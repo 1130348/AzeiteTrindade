@@ -3,6 +3,8 @@ using System;
 using System.Web.Mvc;
 using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
+using System.Threading;
+using System.Timers;
 
 namespace LusiadasSolucaoWeb.Controllers
 {
@@ -16,7 +18,8 @@ namespace LusiadasSolucaoWeb.Controllers
                 Session["Lisboa"] = CheckConnection(ConfigurationManager.ConnectionStrings["BDHLUQLD"].ConnectionString);
                 Session["Porto"] = CheckConnection(ConfigurationManager.ConnectionStrings["BDHPTQLD"].ConnectionString);
                 Session["Algarve"] = CheckConnection(ConfigurationManager.ConnectionStrings["BDHSULQLD"].ConnectionString);
-                Globals.listaUsers.Add(GetIPAddress());
+                AddIP();
+                
                 return View();
             }
             catch (Exception err)
@@ -25,6 +28,39 @@ namespace LusiadasSolucaoWeb.Controllers
             }
             
         }
+
+        private void AddIP()
+        {
+            if (!Globals.listaUsers.Contains(GetIPAddress()))
+            {
+                string ip = GetIPAddress();
+                Globals.listaUsers.Add(ip + "-" + Environment.MachineName);
+
+                try
+                {
+                    System.Timers.Timer aTimer = new System.Timers.Timer();
+                    aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+                    aTimer.Interval = 1200000;
+                    aTimer.Enabled = true;
+
+
+                }
+                catch (Exception e)
+                {
+
+                }
+               
+
+
+            }
+
+        }
+
+        private static void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            Globals.listaUsers.RemoveAt(0);
+        }
+
 
         protected string GetIPAddress()
         {

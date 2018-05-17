@@ -1,5 +1,6 @@
 ﻿using LDFHelper.Helpers;
 using LusiadasDAL;
+using LusiadasSolucaoWeb.Models.Secret;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
@@ -144,14 +145,72 @@ namespace LusiadasSolucaoWeb.Models
 
                     if (Generic.GetItemValue(item, "MEDICO_NOME") != null)
                     {
+                        if (Generic.GetItemValue(item, "MEDICO_NOME").Equals("A Designar Médico"))
+                        {
 
-                        item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = Generic.GetItemValue(item, "MEDICO_NOME");
+                            try
+                            {
+
+                                string oradb = GetConnectionString();
+                                OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings[HttpContext.Current.Session[Constants.SS_LOCAL_CONN].ToString()].ConnectionString);  // C#
+                                conn.Open();
+                                OracleCommand cmd = new OracleCommand();
+                                cmd.Connection = conn;
+                                string medicoID = Generic.GetItemValue(item, "N_CONS");
+                                cmd.CommandText = "select DIAMED_MEDICO from DIARIO_MEDICO where N_CONS =" + medicoID;
+                                cmd.CommandType = CommandType.Text;
+                                OracleDataReader dr = cmd.ExecuteReader();
+                                dr.Read();
+                                string label1 = dr.GetString(0);
+
+
+
+                                cmd = new OracleCommand();
+                                cmd.Connection = conn;
+
+                                cmd.CommandText = "select NOME from SD_PESS_HOSP_DEF where N_MECAN =" + "'" + label1 + "'";
+                                cmd.CommandType = CommandType.Text;
+                                dr = cmd.ExecuteReader();
+                                dr.Read();
+                                string label2 = dr.GetString(0);
+                                conn.Dispose();
+
+                                if (label2 != null)
+                                {
+                                    item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = label2;
+
+
+                                }
+                                else
+                                {
+                                    item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+                                item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
+                            }
+
+
+
+                            //item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = Generic.GetItemValue(item, "MEDICO_NOME");
+                        }
+                        else
+                        {
+                            item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = Generic.GetItemValue(item, "MEDICO_NOME");
+                        }
 
                     }
                     else
                     {
 
-                        item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
+                        if (Generic.GetItemValue(item, "MEDICO_ID") == null)
+                        {
+                            item.rowItems.First(q => q.itemColumnName == "MEDICO_NOME").itemValue = "A Designar Médico";
+
+                        }
+
 
                     }
                     #endregion
@@ -441,7 +500,7 @@ namespace LusiadasSolucaoWeb.Models
                         int imReal = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REALIZADOS"));
                         int imPedi = Convert.ToInt32(Generic.GetItemValue(item, "IMAGIOLOGIA_REQUESITADOS"));
                         int imDesloc = Convert.ToInt32(Generic.GetItemValue(item, "IMAG_DESLOC"));
-                        if (imReal >= imPedi)
+                        if (imReal >= 1)
                         {
                             nota = "<div class='container'>";
 
@@ -948,7 +1007,7 @@ namespace LusiadasSolucaoWeb.Models
 
 public static class Globals
 {
-    public static List<String> listaUsers=new List<string>();
+    public static List<Pcs> listaUsers=new List<Pcs>();
     public static string nDoentes;
     public static string semTriagem;
     public static string semNota;

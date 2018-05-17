@@ -14,8 +14,11 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>DashBoard</title>
     <meta http-equiv="refresh" content="300">
+    <title>DashBoard</title>
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <META HTTP-EQUIV="EXPIRES" CONTENT="Mon, 22 Jul 2002 11:12:01 GMT">
+
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <script src="~/Content/plugins/jQuery/jquery-3.3.1.min.js"></script>
@@ -107,7 +110,6 @@
         }
 
 
-
         #actualizaATP {
             width: 35px;
             height: 35px;
@@ -116,13 +118,73 @@
             padding: 0;
             border: none;
         }
+
+
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+            /* Hide default HTML checkbox */
+            .switch input {
+                display: none;
+            }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
     </style>
 
 </head>
 
 <body class="login-page noselect" style="background-color:white;">
-
-
 
     <!-- Main content -->
     <section class="content" style="background-color:white;">
@@ -182,6 +244,19 @@
                             </label>
                             <label>&nbsp;|&nbsp;Legenda:&nbsp;&nbsp; </label><label>RX&nbsp;</label><img src='/Content/img/xray.png' height='24' width='24'><label>&nbsp;ECO&nbsp;</label><img src='/Content/img/ultra.png' height='24' width='24'><label>&nbsp;TAC&nbsp;</label><img src='/Content/img/xcat.png' height='24' width='24'><label>&nbsp;RM&nbsp;</label><img src='/Content/img/rm.png' height='24' width='24'>
 
+                            <label class="switch" style="float:right;margin-right:20px;">
+                                <input id="ciclo" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+
+                            <label id="textoCiclo" class="switch" style="float:right;margin-top:10px;"></label>
+                            <label style="float:right;margin-right:10px;">
+                                <input type="button" onclick="startRefresh()" id="actualizaATP" />
+
+                            </label>
+
+
+
                         </div>
                         <div class="row listwrapper no-border">@Html.TableRender(Model, new LDFTableAttributes() { ID = "atpTable", className = "tableInternal" })</div>
                     </div>
@@ -194,6 +269,71 @@
 </html>
 
 <script type="text/javascript">
+
+    var x = document.getElementById("actualizaATP");
+
+
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function eraseCookie(name) {
+        document.cookie = name + '=; Max-Age=-99999999;';
+    }
+
+    if (getCookie("ciclo") != null) {
+        if (getCookie("ciclo")) {
+            $('#ciclo').prop("checked", true);
+            $("#textoCiclo").empty();
+            $("#textoCiclo").append("Ciclo -");
+            x.style.display = "none";
+        } else {
+            $('#ciclo').prop("checked", false);
+            $("#textoCiclo").empty();
+            $("#textoCiclo").append("Parado -");
+            x.style.display = "block";
+        }
+
+    } else {
+        $('#ciclo').prop("checked", true);
+        $("#textoCiclo").empty();
+        $("#textoCiclo").append("Ciclo -");
+        x.style.display = "none";
+        setCookie("ciclo",true,30);
+    }
+
+
+    $('#ciclo').click(function () {
+        if ($('#ciclo').is(':checked')) {
+            $("#textoCiclo").empty();
+            $("#textoCiclo").append("Ciclo -");
+            x.style.display = "none";
+            setCookie("ciclo", true, 30);
+        } else {
+            $("#textoCiclo").empty();
+            $("#textoCiclo").append("Parado -");
+            x.style.display = "block";
+            setCookie("ciclo", false, 30);
+        }
+
+    });
+
     var count = 1;
 
     getDados();
@@ -202,7 +342,7 @@
     {
 
         $.ajax({
-            url: '@Url.Action("LoadTableDash", "ATP")',
+            url: '@Url.Action("LoadTableDash", "ATPDash")',
             method: "get",
             data: { "pagen": count },
             cache: false,
@@ -245,7 +385,9 @@
         var sem = "Sem Dados";
 
         if (sem.localeCompare(max)) {
-            var max2 = max / 20;
+            var lul = @Session["Tabela"];
+            //alert(lul);
+            var max2 = max / lul;
 
             if (count < max2) {
                 count++;
@@ -254,8 +396,11 @@
                 count = 1;
             }
         }
-
-        setTimeout(startRefresh, 30000);
+        if ($('#ciclo').is(':checked')) {
+            setTimeout(startRefresh, 30000);
+        } else {
+            setTimeout(startRefresh, 60000);
+        }
 
         var date = new Date;
 
@@ -282,7 +427,14 @@
         //$("#lastupdate") = "Última Actualização: "+hour + ":" + minutes + ":" + seconds;
         RefreshATPTable();
 
+
         rearrange();
+
+    }
+
+    function refreshTotal() {
+
+        location.reload();
 
     }
 
@@ -303,7 +455,7 @@
     function getDados() {
 
         $.ajax({
-            url: '@Url.Action("GetDados", "ATP")',
+            url: '@Url.Action("GetDados", "ATPDash")',
             method: "get",
             cache: false,
             success: function (result) {
@@ -324,7 +476,6 @@
                 $("#semNota").append(semNota);
 
             },
-            timeout: 10000,
             error: function (xhr, ajaxOptions, thrownError) {
 
                 console.log(xhr);

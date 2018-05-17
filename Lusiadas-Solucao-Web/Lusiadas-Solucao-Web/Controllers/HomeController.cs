@@ -5,6 +5,8 @@ using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 using System.Threading;
 using System.Timers;
+using System.Web;
+using LusiadasSolucaoWeb.Models.Secret;
 
 namespace LusiadasSolucaoWeb.Controllers
 {
@@ -31,35 +33,71 @@ namespace LusiadasSolucaoWeb.Controllers
 
         private void AddIP()
         {
-            if (!Globals.listaUsers.Contains(GetIPAddress()))
+
+            foreach (Pcs str in Globals.listaUsers)
             {
-                string ip = GetIPAddress();
-                Globals.listaUsers.Add(ip + "-" + Environment.MachineName);
 
-                try
+                if (str.getIp().Equals(GetIPAddress()))
                 {
-                    System.Timers.Timer aTimer = new System.Timers.Timer();
-                    aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-                    aTimer.Interval = 1200000;
-                    aTimer.Enabled = true;
-
-
+                    Globals.listaUsers.Remove(str);
+                    break;
                 }
-                catch (Exception e)
-                {
-
-                }
-               
-
 
             }
 
+
+            try
+            {
+                string ip = GetIPAddress();
+
+                HttpBrowserCapabilitiesBase bc = Request.Browser;
+                Globals.listaUsers.Add(new Pcs(ip, GetUserEnvironment(Request), Request.Url.ToString()));
+
+            }
+            catch (Exception e)
+            {
+                e.ToString();
+            }
+
+
         }
 
-        private static void OnTimedEvent(object source, ElapsedEventArgs e)
+        public String GetUserEnvironment(HttpRequestBase request)
         {
-            Globals.listaUsers.RemoveAt(0);
+            var browser = request.Browser;
+            var platform = GetUserPlatform(request);
+            return string.Format("{0} {1} / {2}", browser.Browser, browser.Version, platform);
         }
+
+        public String GetUserPlatform(HttpRequestBase request)
+        {
+            var ua = request.UserAgent;
+
+            if (ua.Contains("Mac OS"))
+                return "Mac OS";
+
+            if (ua.Contains("Windows NT 5.1") || ua.Contains("Windows NT 5.2"))
+                return "Windows XP";
+
+            if (ua.Contains("Windows NT 6.0"))
+                return "Windows Vista";
+
+            if (ua.Contains("Windows NT 6.1"))
+                return "Windows 7";
+
+            if (ua.Contains("Windows NT 6.2"))
+                return "Windows 8";
+
+            if (ua.Contains("Windows NT 6.3"))
+                return "Windows 8.1";
+
+            if (ua.Contains("Windows NT 10"))
+                return "Windows 10";
+
+            //fallback to basic platform:
+            return request.Browser.Platform + (ua.Contains("Mobile") ? " Mobile " : "");
+        }
+
 
 
         protected string GetIPAddress()
